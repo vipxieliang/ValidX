@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ public class FutureDateValidationChainTest {
 
     @Test
     public void testValidFutureDate() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用明天的日期进行测试
         String futureDate = java.time.LocalDate.now().plusDays(1).toString();
         chain = chain.isFutureDate((Object)futureDate, false);
@@ -33,14 +33,14 @@ public class FutureDateValidationChainTest {
         
         // 使用未来的日期时间进行测试
         String futureDateTime = java.time.LocalDateTime.now().plusDays(1).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isFutureDate((Object)futureDateTime, false);
         assertTrue(chain.passed(), "有效的未来日期时间应该通过验证");
     }
 
     @Test
     public void testInvalidFutureDate() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用昨天的日期进行测试
         String pastDate = java.time.LocalDate.now().minusDays(1).toString();
         chain = chain.isFutureDate((Object)pastDate, false);
@@ -50,14 +50,14 @@ public class FutureDateValidationChainTest {
         
         // 使用今天的日期进行测试（不是未来日期）
         String today = java.time.LocalDate.now().toString();
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isFutureDate((Object)today, false);
         assertFalse(chain.passed(), "今天的日期不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("日期必须是未来的日期", chain.getErrors().get(0));
         
         // 使用无效的日期格式进行测试
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isFutureDate((Object)"invalid-date", false);
         assertFalse(chain.passed(), "无效的日期格式不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -67,12 +67,12 @@ public class FutureDateValidationChainTest {
     @Test
     public void testNullAndEmptyFutureDate() {
         // 测试null值应该通过验证
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isFutureDate(null, false);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isFutureDate((Object)"", false);
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

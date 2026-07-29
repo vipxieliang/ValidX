@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.vehicle;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ public class VinValidationChainTest {
 
     @Test
     public void testValidVin() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isVIN("1M8GDM9AXKP042788");
         assertTrue(chain.passed());
         assertEquals(0, chain.getErrors().size());
@@ -33,7 +33,7 @@ public class VinValidationChainTest {
 
     @Test
     public void testInvalidVin() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isVIN("invalid-vin");
         assertFalse(chain.passed());
         assertEquals(1, chain.getErrors().size());
@@ -43,12 +43,12 @@ public class VinValidationChainTest {
     @Test
     public void testNullAndEmptyVIN() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isVIN(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isVIN("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

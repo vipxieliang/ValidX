@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.base;
 
 import io.github.vipxieliang.validx.annotations.JSON;
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_Object() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"name\":\"John\",\"age\":30}");
 
         assertTrue(validator.passed(), "有效的JSON对象应该通过验证");
@@ -42,7 +42,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_Array() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("[1,2,3,4,5]");
 
         assertTrue(validator.passed(), "有效的JSON数组应该通过验证");
@@ -50,7 +50,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_NestedStructure() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         String json = "{\"users\":[{\"name\":\"Alice\",\"age\":25},{\"name\":\"Bob\",\"age\":30}]}";
         validator.isJSON(json);
 
@@ -59,7 +59,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testInvalidJSON_MalformedString() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{invalid json}");
 
         assertFalse(validator.passed(), "格式错误的JSON应该验证失败");
@@ -72,7 +72,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_OnlyObject() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"key\":\"value\"}", JSON.JSONType.OBJECT);
 
         assertTrue(validator.passed(), "指定OBJECT类型时，对象应该通过验证");
@@ -80,7 +80,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testInvalidJSON_ArrayWhenObjectRequired() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("[1,2,3]", JSON.JSONType.OBJECT);
 
         assertFalse(validator.passed(), "指定OBJECT类型时，数组应该验证失败");
@@ -88,7 +88,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_OnlyArray() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("[1,2,3]", JSON.JSONType.ARRAY);
 
         assertTrue(validator.passed(), "指定ARRAY类型时，数组应该通过验证");
@@ -96,7 +96,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testInvalidJSON_ObjectWhenArrayRequired() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"key\":\"value\"}", JSON.JSONType.ARRAY);
 
         assertFalse(validator.passed(), "指定ARRAY类型时，对象应该验证失败");
@@ -106,7 +106,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_WithinDepthLimit() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"a\":{\"b\":{\"c\":1}}}", JSON.JSONType.ANY, true, 5, 0);
 
         assertTrue(validator.passed(), "深度在限制内应该通过验证");
@@ -114,7 +114,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testInvalidJSON_ExceedDepthLimit() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"a\":{\"b\":{\"c\":{\"d\":{\"e\":{\"f\":1}}}}}}",
                         JSON.JSONType.ANY, true, 5, 0);
 
@@ -125,7 +125,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testValidJSON_WithinLengthLimit() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"key\":\"value\"}", JSON.JSONType.ANY, true, 0, 100);
 
         assertTrue(validator.passed(), "长度在限制内应该通过验证");
@@ -133,7 +133,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testInvalidJSON_ExceedLengthLimit() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"key\":\"this is a very long value that exceeds the limit\"}",
                         JSON.JSONType.ANY, true, 0, 20);
 
@@ -144,7 +144,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testNullJSON() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON(null);
 
         assertTrue(validator.passed(), "null值应该通过验证");
@@ -153,7 +153,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testEmptyStringJSON() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("");
 
         assertTrue(validator.passed(), "空字符串应该通过验证");
@@ -163,7 +163,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testChainedValidation_MultiplePassing() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"name\":\"Alice\"}")
                 .isJSON("[1,2,3]")
                 .isJSON("{\"nested\":{\"value\":true}}");
@@ -174,7 +174,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testChainedValidation_OneFailing() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"name\":\"Alice\"}")
                 .isJSON("{invalid json}")
                 .isJSON("[1,2,3]");
@@ -185,7 +185,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testChainedValidation_MixedTypes() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"key\":\"value\"}", JSON.JSONType.OBJECT)
                 .isJSON("[1,2,3]", JSON.JSONType.ARRAY)
                 .isJSON("{}");
@@ -195,7 +195,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testChainedValidation_AllFailing() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{invalid1}")
                 .isJSON("[invalid2]}")
                 .isJSON("not json");
@@ -208,7 +208,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testMixedValidation_JSONAndEmail() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{\"email\":\"test@example.com\"}")
                 .isEmail("test@example.com");
 
@@ -218,7 +218,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testMixedValidation_InvalidJSON_ValidEmail() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{invalid json}")
                 .isEmail("test@example.com");
 
@@ -230,7 +230,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testRealWorld_APIRequest() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         String apiRequest = "{\"method\":\"POST\",\"url\":\"/api/users\",\"body\":{\"name\":\"John\"}}";
         validator.isJSON(apiRequest, JSON.JSONType.OBJECT);
 
@@ -239,7 +239,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testRealWorld_ConfigFile() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         String config = "{\"database\":{\"host\":\"localhost\",\"port\":3306},\"cache\":{\"enabled\":true}}";
         validator.isJSON(config, JSON.JSONType.OBJECT);
 
@@ -248,7 +248,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testRealWorld_DataList() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         String dataList = "[{\"id\":1,\"name\":\"Item1\"},{\"id\":2,\"name\":\"Item2\"}]";
         validator.isJSON(dataList, JSON.JSONType.ARRAY);
 
@@ -257,7 +257,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testRealWorld_EmptyResponse() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isJSON("{}");
 
         assertTrue(validator.passed(), "空响应JSON应该通过验证");
@@ -265,7 +265,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testRealWorld_LargePayload() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         StringBuilder largeJson = new StringBuilder("{\"data\":[");
         for (int i = 0; i < 100; i++) {
             if (i > 0) largeJson.append(",");
@@ -280,7 +280,7 @@ public class JSONValidationChainTest {
 
     @Test
     public void testRealWorld_SpecialCharacters() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         String jsonWithSpecial = "{\"message\":\"Hello\\nWorld\\t!\",\"emoji\":\"😀\"}";
         validator.isJSON(jsonWithSpecial);
 

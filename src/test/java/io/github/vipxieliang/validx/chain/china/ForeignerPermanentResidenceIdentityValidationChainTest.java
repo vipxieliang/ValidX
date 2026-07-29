@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,22 +24,22 @@ public class ForeignerPermanentResidenceIdentityValidationChainTest {
 
     @Test
     public void testValidForeignerPermanentResidenceIdentity() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isForeignerPermanentResidenceIdentity("911124198108030024");
         assertTrue(chain.passed(), "有效的外国人永久居留身份证号码应该通过验证");
 
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isForeignerPermanentResidenceIdentity("931012199012010018");
         assertTrue(chain.passed(), "有效的外国人永久居留身份证号码应该通过验证");
     }
 
     @Test
     public void testInvalidForeignerPermanentResidenceIdentity() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isForeignerPermanentResidenceIdentity("111124198108030024"); // 不是以9开头
         assertFalse(chain.passed(), "无效的外国人永久居留身份证号码应该验证失败");
 
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isForeignerPermanentResidenceIdentity("91112419810803002"); // 长度不足
         assertFalse(chain.passed(), "无效的外国人永久居留身份证号码应该验证失败");
     }
@@ -47,12 +47,12 @@ public class ForeignerPermanentResidenceIdentityValidationChainTest {
     @Test
     public void testNullAndEmptyForeignerPermanentResidenceIdentity() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isForeignerPermanentResidenceIdentity(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isForeignerPermanentResidenceIdentity("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

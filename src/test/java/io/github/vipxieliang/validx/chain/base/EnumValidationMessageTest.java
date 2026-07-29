@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,7 +42,7 @@ public class EnumValidationMessageTest {
 
     @Test
     public void testEnumValidationMessage() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isEnum("INVALID_VALUE", TestEnum.class);
         assertFalse(chain.passed(), "无效的枚举值不应该通过验证");
         assertEquals(1, chain.getErrors().size());

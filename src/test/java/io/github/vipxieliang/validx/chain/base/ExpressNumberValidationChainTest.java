@@ -16,8 +16,8 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
-import io.github.vipxieliang.validx.chain.ValidationConfig;
+import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidXConfig;
 import io.github.vipxieliang.validx.annotations.ExpressNumber.ExpressCompany;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidSFExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012");
 
         assertTrue(chain.passed(), "12位数字应该是有效的顺丰快递单号");
@@ -40,7 +40,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testInvalidSFExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"12345");
 
         assertFalse(chain.passed(), "5位数字应该无效");
@@ -51,7 +51,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidYTOExpress_WithPrefix() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"YT1234567890123");
 
         assertTrue(chain.passed(), "YT开头的单号应该有效");
@@ -59,7 +59,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidYTOExpress_PureNumbers() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"1234567890");
 
         assertTrue(chain.passed(), "10位纯数字应该有效");
@@ -69,7 +69,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidSTOExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012");
 
         assertTrue(chain.passed(), "12位数字应该是有效的申通快递单号");
@@ -79,7 +79,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidZTOExpress_Numbers() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012");
 
         assertTrue(chain.passed(), "12位数字应该是有效的中通快递单号");
@@ -87,7 +87,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidZTOExpress_AlphaNumeric() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"ZT1234567890");
 
         assertTrue(chain.passed(), "字母数字组合应该有效");
@@ -97,7 +97,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidYundaExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"1234567890123");
 
         assertTrue(chain.passed(), "13位数字应该是有效的韵达快递单号");
@@ -105,7 +105,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testInvalidYundaExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"12345"); // 5位太短
 
         assertFalse(chain.passed(), "5位数字应该无效");
@@ -116,7 +116,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidEMS_EFormat() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"E123456789CN");
 
         assertTrue(chain.passed(), "E+9位数字+CN应该有效");
@@ -124,7 +124,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidEMS_TwoLetterFormat() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"EA123456789CN");
 
         assertTrue(chain.passed(), "2位字母+9位数字+CN应该有效");
@@ -132,7 +132,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidEMS_LowerCase() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"e123456789cn");
 
         assertTrue(chain.passed(), "小写EMS格式应该有效");
@@ -140,7 +140,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testInvalidEMS_WrongFormat() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"E12345678"); // 只有8位数字
 
         assertFalse(chain.passed(), "E+8位数字应该无效");
@@ -151,7 +151,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidJDLogistics() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"JD1234567890123");
 
         assertTrue(chain.passed(), "JD+13位数字应该有效");
@@ -159,7 +159,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidJDLogistics_15Digits() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"JD123456789012345");
 
         assertTrue(chain.passed(), "JD+15位数字应该有效");
@@ -167,7 +167,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testInvalidJDLogistics_TooShort() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"JD12345"); // JD+5位数字，太短
 
         assertFalse(chain.passed(), "JD+5位数字应该无效");
@@ -178,7 +178,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidDeppon_8Digits() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"12345678");
 
         assertTrue(chain.passed(), "8位数字应该是有效的德邦快递单号");
@@ -186,7 +186,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidDeppon_9Digits() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789");
 
         assertTrue(chain.passed(), "9位数字应该是有效的德邦快递单号");
@@ -194,7 +194,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testInvalidDeppon_TooShort() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"1234567"); // 7位数字，太短
 
         assertFalse(chain.passed(), "7位数字应该无效");
@@ -205,7 +205,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidTTKDExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012");
 
         assertTrue(chain.passed(), "12位数字应该是有效的天天快递单号");
@@ -213,7 +213,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidTTKDExpress_14Digits() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"12345678901234");
 
         assertTrue(chain.passed(), "14位数字应该是有效的天天快递单号");
@@ -223,7 +223,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidBestExpress() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"1234567890");
 
         assertTrue(chain.passed(), "10位数字或字母应该是有效的百世快递单号");
@@ -231,7 +231,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidBestExpress_AlphaNumeric() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"BE12345678");
 
         assertTrue(chain.passed(), "10位字母数字组合应该有效");
@@ -241,7 +241,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testSpecificCompany_SFOnly() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012", ExpressCompany.SF_EXPRESS);
 
         assertTrue(chain.passed(), "顺丰格式应该有效");
@@ -249,7 +249,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testSpecificCompany_SFOnly_Invalid() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"YT1234567890123", ExpressCompany.SF_EXPRESS);
 
         assertFalse(chain.passed(), "圆通格式对于仅顺丰验证应该无效");
@@ -258,7 +258,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testSpecificCompany_EMSOnly() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"E123456789CN", ExpressCompany.EMS);
 
         assertTrue(chain.passed(), "EMS格式应该有效");
@@ -266,7 +266,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testSpecificCompany_MultipleCompanies() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012", ExpressCompany.SF_EXPRESS, ExpressCompany.STO_EXPRESS);
 
         assertTrue(chain.passed(), "12位数字应该匹配顺丰或申通");
@@ -276,7 +276,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidExpressNumber_Null() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber(null);
 
         assertTrue(chain.passed(), "null值应该通过验证");
@@ -284,7 +284,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testValidExpressNumber_Empty() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"");
 
         assertTrue(chain.passed(), "空字符串应该通过验证");
@@ -294,7 +294,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testMultipleValidations_AllValid() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012")
              .isExpressNumber((Object)"E123456789CN")
              .isExpressNumber((Object)"JD1234567890123");
@@ -305,7 +305,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testMultipleValidations_SomeInvalid() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isExpressNumber((Object)"123456789012")
              .isExpressNumber((Object)"invalid")
              .isExpressNumber((Object)"E123456789CN");
@@ -318,8 +318,8 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testWithGlobalNotNullConfig() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL);
 
         chain.isExpressNumber(null);
 
@@ -329,8 +329,8 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testWithLocalAllowNull() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL);
 
         chain.allowNull().isExpressNumber(null);
 
@@ -339,8 +339,8 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testWithGlobalNotEmptyConfig() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
         chain.isExpressNumber((Object)"");
 
@@ -350,8 +350,8 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testWithLocalAllowEmpty() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
         chain.allowEmpty().isExpressNumber((Object)"");
 
@@ -360,7 +360,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testWithFieldLabel() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.field("TrackingNumber").isExpressNumber((Object)"invalid");
 
         assertFalse(chain.passed(), "带字段标签的验证应该失败");
@@ -371,7 +371,7 @@ public class ExpressNumberValidationChainTest {
 
     @Test
     public void testEdgeCase_AllCompanies() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
 
         // 测试各个快递公司的有效单号
         chain.isExpressNumber((Object)"123456789012")      // 顺丰/申通/中通

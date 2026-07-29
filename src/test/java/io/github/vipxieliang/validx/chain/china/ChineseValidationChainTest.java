@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,20 +25,20 @@ public class ChineseValidationChainTest {
 
     @Test
     public void testValidChinese() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChinese((Object)"中文测试");
         assertTrue(chain.passed(), "有效的中文字符应该通过验证");
     }
 
     @Test
     public void testInvalidChinese() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChinese((Object)"123");
         assertFalse(chain.passed(), "纯数字不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("输入不是有效的中文字符", chain.getErrors().get(0));
 
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isChinese((Object)"!@#$%");
         assertFalse(chain.passed(), "特殊字符不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -48,12 +48,12 @@ public class ChineseValidationChainTest {
     @Test
     public void testNullAndEmptyChinese() {
         // 测试null值应该通过验证（交给@NotNull处理）
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChinese(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isChinese((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

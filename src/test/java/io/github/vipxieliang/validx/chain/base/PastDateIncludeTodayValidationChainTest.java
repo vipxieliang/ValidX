@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ public class PastDateIncludeTodayValidationChainTest {
 
     @Test
     public void testValidPastDateWithoutIncludeToday() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用昨天的日期进行测试
         String pastDate = LocalDate.now().minusDays(1).toString();
         chain = chain.isPastDate((Object)pastDate,false);
@@ -36,7 +36,7 @@ public class PastDateIncludeTodayValidationChainTest {
 
     @Test
     public void testInvalidTodayWithoutIncludeToday() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用今天的日期进行测试
         String today = LocalDate.now().toString();
         chain = chain.isPastDate((Object)today,false);
@@ -47,7 +47,7 @@ public class PastDateIncludeTodayValidationChainTest {
     
     @Test
     public void testValidTodayWithIncludeToday() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用今天的日期进行测试
         String today = LocalDate.now().toString();
         chain = chain.isPastDate((Object)today, true);
@@ -56,7 +56,7 @@ public class PastDateIncludeTodayValidationChainTest {
     
     @Test
     public void testValidPastDateWithIncludeToday() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用昨天的日期进行测试
         String pastDate = LocalDate.now().minusDays(1).toString();
         chain = chain.isPastDate((Object)pastDate, true);
@@ -65,7 +65,7 @@ public class PastDateIncludeTodayValidationChainTest {
     
     @Test
     public void testInvalidTomorrowWithIncludeToday() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         // 使用明天的日期进行测试
         String tomorrow = LocalDate.now().plusDays(1).toString();
         chain = chain.isPastDate((Object)tomorrow, true);

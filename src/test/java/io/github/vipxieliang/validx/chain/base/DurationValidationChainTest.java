@@ -16,8 +16,8 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
-import io.github.vipxieliang.validx.chain.ValidationConfig;
+import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidXConfig;
 import io.github.vipxieliang.validx.annotations.Duration.DurationFormat;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidIso8601_Hours() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT2H");
 
         assertTrue(chain.passed(), "PT2H应该通过验证");
@@ -40,7 +40,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidIso8601_HoursMinutes() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT2H30M");
 
         assertTrue(chain.passed(), "PT2H30M应该通过验证");
@@ -48,7 +48,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidIso8601_Full() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT1H30M15S");
 
         assertTrue(chain.passed(), "PT1H30M15S应该通过验证");
@@ -56,7 +56,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidIso8601_WithDays() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"P1DT2H30M");
 
         assertTrue(chain.passed(), "P1DT2H30M应该通过验证");
@@ -66,7 +66,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidSimple_Hours() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"2h");
 
         assertTrue(chain.passed(), "2h应该通过验证");
@@ -74,7 +74,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidSimple_HoursMinutes() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"2h30m");
 
         assertTrue(chain.passed(), "2h30m应该通过验证");
@@ -82,7 +82,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidSimple_Full() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"1h30m15s");
 
         assertTrue(chain.passed(), "1h30m15s应该通过验证");
@@ -90,7 +90,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidSimple_WithDays() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"1d12h30m");
 
         assertTrue(chain.passed(), "1d12h30m应该通过验证");
@@ -100,7 +100,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testInvalidFormat_NoUnits() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"123");
 
         assertFalse(chain.passed(), "纯数字应该失败");
@@ -109,7 +109,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testInvalidFormat_EmptyPT() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT");
 
         assertFalse(chain.passed(), "PT应该失败");
@@ -118,7 +118,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testInvalidFormat_InvalidCharacters() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"2h30x");
 
         assertFalse(chain.passed(), "无效字符应该失败");
@@ -129,7 +129,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testIso8601Only_AcceptsIso() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT2H30M", DurationFormat.ISO_8601);
 
         assertTrue(chain.passed(), "ISO_8601模式应该接受ISO格式");
@@ -137,7 +137,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testIso8601Only_RejectsSimple() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"2h30m", DurationFormat.ISO_8601);
 
         assertFalse(chain.passed(), "ISO_8601模式应该拒绝简化格式");
@@ -146,7 +146,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testSimpleOnly_AcceptsSimple() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"2h30m", DurationFormat.SIMPLE);
 
         assertTrue(chain.passed(), "SIMPLE模式应该接受简化格式");
@@ -154,7 +154,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testSimpleOnly_RejectsIso() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT2H30M", DurationFormat.SIMPLE);
 
         assertFalse(chain.passed(), "SIMPLE模式应该拒绝ISO格式");
@@ -165,7 +165,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidDuration_Null() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration(null);
 
         assertTrue(chain.passed(), "null值应该通过验证");
@@ -173,7 +173,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testValidDuration_Empty() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"");
 
         assertTrue(chain.passed(), "空字符串应该通过验证");
@@ -183,7 +183,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testMultipleValidations_AllValid() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT2H30M")
              .isDuration((Object)"2h30m")
              .isDuration((Object)"P1DT12H");
@@ -194,7 +194,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testMultipleValidations_SomeInvalid() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT2H30M")
              .isDuration((Object)"invalid")
              .isDuration((Object)"2h30m");
@@ -207,8 +207,8 @@ public class DurationValidationChainTest {
 
     @Test
     public void testWithGlobalNotNullConfig() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL);
 
         chain.isDuration(null);
 
@@ -218,8 +218,8 @@ public class DurationValidationChainTest {
 
     @Test
     public void testWithLocalAllowNull() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL);
 
         chain.allowNull().isDuration(null);
 
@@ -228,8 +228,8 @@ public class DurationValidationChainTest {
 
     @Test
     public void testWithGlobalNotEmptyConfig() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
         chain.isDuration((Object)"");
 
@@ -239,8 +239,8 @@ public class DurationValidationChainTest {
 
     @Test
     public void testWithLocalAllowEmpty() {
-        ValidationPlus chain = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY);
+        ValidaX chain = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
         chain.allowEmpty().isDuration((Object)"");
 
@@ -249,7 +249,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testWithFieldLabel() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.field("TaskDuration").isDuration((Object)"invalid");
 
         assertFalse(chain.passed(), "带字段标签的验证应该失败");
@@ -260,7 +260,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testEdgeCase_LargeValues() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"P999DT23H59M59S");
 
         assertTrue(chain.passed(), "大数值的时间段应该通过验证");
@@ -268,7 +268,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testEdgeCase_MinimalIso() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"PT1S");
 
         assertTrue(chain.passed(), "最小ISO格式应该通过验证");
@@ -276,7 +276,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testEdgeCase_MinimalSimple() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"1s");
 
         assertTrue(chain.passed(), "最小简化格式应该通过验证");
@@ -284,7 +284,7 @@ public class DurationValidationChainTest {
 
     @Test
     public void testMixedCase_Iso() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain.isDuration((Object)"pt2h30m");
 
         assertTrue(chain.passed(), "小写ISO格式应该通过验证");

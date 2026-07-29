@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,7 @@ public class NotInValidationChainTest {
     @Test
     public void testNullValue() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isNotIn(null, new String[]{"apple", "banana", "orange"});
         assertTrue(chain.passed(), "null值应该通过验证");
     }
@@ -34,7 +34,7 @@ public class NotInValidationChainTest {
     @Test
     public void testEmptyStringNotInArray() {
         // 测试空字符串（不在数组中）
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isNotIn((Object)"", new String[]{"apple", "banana", "orange"});
         assertTrue(chain.passed(), "空字符串不在数组中应该验证通过");
     }
@@ -43,21 +43,21 @@ public class NotInValidationChainTest {
     public void testEmptyStringInArray() {
         // 测试空字符串（在数组中）
         // 新行为：默认情况下，空字符串会跳过格式校验，验证通过
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isNotIn((Object)"", new String[]{"apple", "banana", ""});
         assertTrue(chain.passed(), "空字符串默认跳过校验，应该通过");
     }
 
     @Test
     public void testValidNotInWithDirectValue() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isNotIn((Object)"grape", new String[]{"apple", "banana", "orange"});
         assertTrue(chain.passed(), "有效的值应该通过验证");
     }
 
     @Test
     public void testInvalidNotInWithDirectValue() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isNotIn((Object)"apple", new String[]{"apple", "banana", "orange"});
         assertFalse(chain.passed(), "无效的值不应该通过验证");
         assertEquals(1, chain.getErrors().size());

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.financial;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ public class SWIFTValidationChainTest {
 
     @Test
     public void testValidSWIFTCode() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         
         // 测试有效的SWIFT代码
         validator.isSWIFT("COBADEFF");
@@ -42,7 +42,7 @@ public class SWIFTValidationChainTest {
 
     @Test
     public void testInvalidSWIFTCode() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         
         // 测试无效的SWIFT代码 (长度不足)
         validator.isSWIFT("INVALID");
@@ -50,7 +50,7 @@ public class SWIFTValidationChainTest {
         assertEquals(1, validator.getErrors().size());
         
         // 清除错误继续测试
-        validator = ValidationPlus.init();
+        validator = ValidaX.init();
         validator.isSWIFT("COBADEF$"); // 包含特殊字符
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
@@ -58,7 +58,7 @@ public class SWIFTValidationChainTest {
 
     @Test
     public void testNullAndEmptyValues() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         
         // 测试null值
         validator.isSWIFT(null);
@@ -73,7 +73,7 @@ public class SWIFTValidationChainTest {
 
     @Test
     public void testMultipleValidations() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         
         // 测试多个验证
         validator.isSWIFT("COBADEFF")
@@ -85,7 +85,7 @@ public class SWIFTValidationChainTest {
 
     @Test
     public void testMixedValidations() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         
         // 测试混合验证（有效和无效）
         validator.isSWIFT("COBADEFF")  // 有效

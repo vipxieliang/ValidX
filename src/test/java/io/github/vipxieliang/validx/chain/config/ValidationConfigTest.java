@@ -16,8 +16,8 @@
 
 package io.github.vipxieliang.validx.chain.config;
 
-import io.github.vipxieliang.validx.chain.ValidationConfig;
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidXConfig;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,7 +27,7 @@ public class ValidationConfigTest {
     // 测试默认行为（无配置）
     @Test
     public void testDefaultBehavior() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .isChinesePhone((Object)null)
             .isEmail((Object)"");
 
@@ -37,7 +37,7 @@ public class ValidationConfigTest {
     // 测试局部状态 - notNull()
     @Test
     public void testLocalNotNull() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notNull().isChinesePhone((Object)null);
 
         assertFalse(validator.isValid(), "notNull()要求字段非null");
@@ -50,7 +50,7 @@ public class ValidationConfigTest {
 
     @Test
     public void testLocalNotNullAllowsEmpty() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notNull().isChinesePhone((Object)"");
 
         assertTrue(validator.isValid(), "notNull()允许空字符串");
@@ -59,7 +59,7 @@ public class ValidationConfigTest {
     // 测试局部状态 - notEmpty()
     @Test
     public void testLocalNotEmpty() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notEmpty().isChinesePhone((Object)null);
 
         assertFalse(validator.isValid(), "notEmpty()要求字段非null");
@@ -67,7 +67,7 @@ public class ValidationConfigTest {
 
     @Test
     public void testLocalNotEmptyRejectsEmpty() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notEmpty().isChinesePhone((Object)"");
 
         assertFalse(validator.isValid(), "notEmpty()不允许空字符串");
@@ -81,8 +81,8 @@ public class ValidationConfigTest {
     // 测试全局配置 - GLOBAL_NOT_NULL
     @Test
     public void testGlobalNotNull() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL)
             .isChinesePhone((Object)null)
             .isEmail((Object)null);
 
@@ -92,8 +92,8 @@ public class ValidationConfigTest {
 
     @Test
     public void testGlobalNotNullAllowsEmpty() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL)
             .isChinesePhone((Object)"")
             .isEmail((Object)"");
 
@@ -103,8 +103,8 @@ public class ValidationConfigTest {
     // 测试全局配置 - GLOBAL_NOT_EMPTY
     @Test
     public void testGlobalNotEmpty() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY)
             .isChinesePhone((Object)null)
             .isEmail((Object)"");
 
@@ -115,8 +115,8 @@ public class ValidationConfigTest {
     // 测试局部覆盖全局 - allowNull()
     @Test
     public void testAllowNullOverridesGlobal() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL)
             .isChinesePhone((Object)"13812345678")  // 使用全局配置
             .allowNull().isEmail((Object)null);     // 局部覆盖
 
@@ -126,8 +126,8 @@ public class ValidationConfigTest {
     // 测试局部覆盖全局 - allowEmpty()
     @Test
     public void testAllowEmptyOverridesGlobal() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY)
             .isChinesePhone((Object)"13812345678")  // 使用全局配置
             .allowEmpty().isEmail((Object)"");      // 局部覆盖（允许空字符串）
 
@@ -136,8 +136,8 @@ public class ValidationConfigTest {
 
     @Test
     public void testAllowEmptyStillRejectsNull() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_EMPTY)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY)
             .allowEmpty().isEmail((Object)null);
 
         assertFalse(validator.isValid(), "allowEmpty()仍然要求非null");
@@ -147,12 +147,12 @@ public class ValidationConfigTest {
     @Test
     public void testAllowEmptyWithoutGlobalConfig() {
         // allowEmpty() 允许空字符串
-        ValidationPlus validator1 = ValidationPlus.init()
+        ValidaX validator1 = ValidaX.init()
             .allowEmpty().isEmail((Object)"");
         assertTrue(validator1.isValid(), "allowEmpty()应该允许空字符串");
 
         // allowEmpty() 不允许 null
-        ValidationPlus validator2 = ValidationPlus.init()
+        ValidaX validator2 = ValidaX.init()
             .allowEmpty().isEmail((Object)null);
         assertFalse(validator2.isValid(), "allowEmpty()不允许null");
     }
@@ -160,8 +160,8 @@ public class ValidationConfigTest {
     // 测试优先级：局部 > 全局 > 默认
     @Test
     public void testPriorityOrder() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL)
             .isEmail((Object)"test@example.com")      // 使用全局配置
             .notEmpty().isChinesePhone((Object)"")    // 局部状态覆盖全局
             .allowNull().isQQ((Object)null);          // 局部覆盖全局
@@ -173,7 +173,7 @@ public class ValidationConfigTest {
     // 测试field()方法
     @Test
     public void testCustomFieldLabel() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notNull().field("用户邮箱").isEmail((Object)null);
 
         assertFalse(validator.isValid());
@@ -182,7 +182,7 @@ public class ValidationConfigTest {
 
     @Test
     public void testDefaultFieldLabel() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notNull().isEmail((Object)null);
 
         assertFalse(validator.isValid());
@@ -192,7 +192,7 @@ public class ValidationConfigTest {
     // 测试状态重置
     @Test
     public void testLocalStateReset() {
-        ValidationPlus validator = ValidationPlus.init()
+        ValidaX validator = ValidaX.init()
             .notNull().isEmail((Object)"test@example.com")  // notNull()影响这个
             .isChinesePhone((Object)null);                   // 状态已重置，允许null
 
@@ -202,8 +202,8 @@ public class ValidationConfigTest {
     // 测试混合场景
     @Test
     public void testMixedScenario() {
-        ValidationPlus validator = ValidationPlus.init()
-            .config(ValidationConfig.GLOBAL_NOT_NULL)
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_NULL)
             .field("邮箱").isEmail((Object)"test@example.com")
             .field("手机").isChinesePhone((Object)"13812345678")
             .field("身份证").notEmpty().isChineseIdCard((Object)"")
@@ -219,12 +219,12 @@ public class ValidationConfigTest {
     @Test
     public void testIsEmptyWithDifferentTypes() {
         // String
-        ValidationPlus validator1 = ValidationPlus.init()
+        ValidaX validator1 = ValidaX.init()
             .notEmpty().isEmail((Object)"");
         assertFalse(validator1.isValid(), "空字符串应该被识别为空");
 
         // 有效字符串
-        ValidationPlus validator2 = ValidationPlus.init()
+        ValidaX validator2 = ValidaX.init()
             .notEmpty().isEmail((Object)"test@example.com");
         assertTrue(validator2.isValid(), "非空字符串应该通过");
     }

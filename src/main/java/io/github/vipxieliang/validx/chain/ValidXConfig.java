@@ -20,16 +20,16 @@ package io.github.vipxieliang.validx.chain;
  * 验证配置类
  * 用于配置全局验证要求
  */
-public class ValidationConfig {
+public class ValidXConfig {
 
     // 预定义配置常量
-    public static final ValidationConfig DEFAULT = new ValidationConfig(RequirementMode.NONE);
-    public static final ValidationConfig GLOBAL_NOT_NULL = new ValidationConfig(RequirementMode.NOT_NULL);
-    public static final ValidationConfig GLOBAL_NOT_EMPTY = new ValidationConfig(RequirementMode.NOT_EMPTY);
+    public static final ValidXConfig DEFAULT = new ValidXConfig(RequirementMode.NONE);
+    public static final ValidXConfig GLOBAL_NOT_NULL = new ValidXConfig(RequirementMode.NOT_NULL);
+    public static final ValidXConfig GLOBAL_NOT_EMPTY = new ValidXConfig(RequirementMode.NOT_EMPTY);
 
     private final RequirementMode requirementMode;
 
-    private ValidationConfig(RequirementMode mode) {
+    private ValidXConfig(RequirementMode mode) {
         this.requirementMode = mode;
     }
 

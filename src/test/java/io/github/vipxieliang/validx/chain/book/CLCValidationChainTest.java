@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.book;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ public class CLCValidationChainTest {
 
     @Test
     public void testValidCLC() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isCLC("TP311.138.S6");
         
         assertTrue(validator.passed());
@@ -36,7 +36,7 @@ public class CLCValidationChainTest {
 
     @Test
     public void testInvalidCLC() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isCLC("TP.311");
         
         assertFalse(validator.passed());
@@ -44,7 +44,7 @@ public class CLCValidationChainTest {
     
     @Test
     public void testMultipleValidations() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isCLC("TP311.138.S6")
                  .isCLC("A")
                  .isCLC("TP311.138.S63");
@@ -54,7 +54,7 @@ public class CLCValidationChainTest {
     
     @Test
     public void testMixedValidations() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isCLC("TP311.138.S6")
                  .isCLC("TP.311")  // 无效的
                  .isCLC("F272.3");
@@ -66,12 +66,12 @@ public class CLCValidationChainTest {
     @Test
     public void testNullAndEmptyCLC() {
         // 测试 null 值
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isCLC(null);
         assertTrue(validator.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        validator = ValidationPlus.init();
+        validator = ValidaX.init();
         validator.isCLC("");
         assertTrue(validator.passed(), "空字符串应该通过验证");
     }

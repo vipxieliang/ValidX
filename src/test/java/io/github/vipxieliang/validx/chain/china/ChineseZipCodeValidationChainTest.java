@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class ChineseZipCodeValidationChainTest {
 
     @Test
     public void testValidChineseZipCode() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChineseZipCode((Object)"100000");
         assertTrue(chain.passed(), "有效的邮政编码应该通过验证");
     }
 
     @Test
     public void testInvalidChineseZipCode() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChineseZipCode((Object)"12345");
         assertFalse(chain.passed(), "无效的邮政编码不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class ChineseZipCodeValidationChainTest {
     @Test
     public void testNullAndEmptyValues() {
         // 测试null值
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isChineseZipCode((Object)null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidationPlus.init();
+        validator = ValidaX.init();
         validator.isChineseZipCode((Object)"");
         assertTrue(validator.passed(), "empty string should pass validation");
     }

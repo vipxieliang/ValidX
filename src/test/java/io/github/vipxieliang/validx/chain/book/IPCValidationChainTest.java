@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.book;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,35 +25,35 @@ class IPCValidationChainTest {
 
     @Test
     void testValidIPC() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC("A01B1/00");
         assertTrue(chain.passed(), "有效的IPC应该通过验证");
     }
 
     @Test
     void testValidIPCWithSubgroup() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC("A01B1/01");
         assertTrue(chain.passed(), "有效的IPC（带分组）应该通过验证");
     }
 
     @Test
     void testValidIPCWithLongerMainGroup() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC("A01B12/00");
         assertTrue(chain.passed(), "有效的IPC（主组多位数）应该通过验证");
     }
 
     @Test
     void testValidIPCWithLongerSubgroup() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC("A01B1/1234");
         assertTrue(chain.passed(), "有效的IPC（分组多位数）应该通过验证");
     }
 
     @Test
     void testInvalidIPCWrongSection() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC("I01B1/00");
         assertFalse(chain.passed(), "无效的IPC（错误部）不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -62,7 +62,7 @@ class IPCValidationChainTest {
 
     @Test
     void testInvalidIPCWrongFormat() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC("A01B/00");
         assertFalse(chain.passed(), "格式错误的IPC不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -72,12 +72,12 @@ class IPCValidationChainTest {
     @Test
     void testNullAndEmptyIPC() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isIPC(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isIPC("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

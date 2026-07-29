@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.network;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,26 +26,26 @@ public class DomainValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isDomain(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isDomain((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidDomain() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isDomain((Object)"example.com");
         assertTrue(chain.passed(), "有效的域名应该通过验证");
     }
 
     @Test
     public void testInvalidDomain() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isDomain((Object)"example");
         assertFalse(chain.passed(), "无效的域名不应该通过验证");
         assertEquals(1, chain.getErrors().size());

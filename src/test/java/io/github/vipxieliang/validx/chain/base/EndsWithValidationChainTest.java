@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,30 +26,30 @@ public class EndsWithValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isEndsWith(null, new String[]{".txt"});
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isEndsWith((Object)"", new String[]{".txt"});
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidEndsWith() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isEndsWith((Object)"filename.txt", new String[]{".txt"});
         assertTrue(chain.passed(), "以指定后缀结尾的字符串应该通过验证");
     }
 
     @Test
     public void testInvalidEndsWith() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isEndsWith((Object)"filename.doc", new String[]{".txt"});
         assertFalse(chain.passed(), "不以指定后缀结尾的字符串不应该通过验证");
         
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isEndsWith((Object)"filename", new String[]{".txt"});
         assertFalse(chain.passed(), "不以指定后缀结尾的字符串不应该通过验证");
     }

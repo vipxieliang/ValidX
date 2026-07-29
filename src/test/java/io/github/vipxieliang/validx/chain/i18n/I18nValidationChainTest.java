@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.i18n;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 import org.junit.jupiter.api.Test;
 import java.util.Locale;
@@ -34,7 +34,7 @@ public class I18nValidationChainTest {
             // 设置当前线程的语言环境为英语
             MessageManager.setCurrentLocale(Locale.ENGLISH);
             
-            ValidationPlus chain = ValidationPlus.init();
+            ValidaX chain = ValidaX.init();
             chain = chain.isEmail((Object)"invalid-email");
             assertFalse(chain.passed());
             assertEquals(1, chain.getErrors().size());
@@ -56,7 +56,7 @@ public class I18nValidationChainTest {
             // 设置当前线程的语言环境为中文
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
             
-            ValidationPlus chain = ValidationPlus.init();
+            ValidaX chain = ValidaX.init();
             chain = chain.isEmail((Object)"invalid-email");
             assertFalse(chain.passed());
             assertEquals(1, chain.getErrors().size());
@@ -79,7 +79,7 @@ public class I18nValidationChainTest {
             Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
             MessageManager.clearCurrentLocale(); // 确保使用系统默认语言环境
             
-            ValidationPlus chain = ValidationPlus.init();
+            ValidaX chain = ValidaX.init();
             chain = chain.isEmail((Object)"invalid-email");
             assertFalse(chain.passed());
             assertEquals(1, chain.getErrors().size());
@@ -98,12 +98,12 @@ public class I18nValidationChainTest {
         try {
             // 设置当前线程语言环境为英语
             MessageManager.setCurrentLocale(Locale.ENGLISH);
-            ValidationPlus chainEn = ValidationPlus.init();
+            ValidaX chainEn = ValidaX.init();
             chainEn = chainEn.isEmail((Object)"invalid-email");
             
             // 设置当前线程语言环境为中文
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
-            ValidationPlus chainZh = ValidationPlus.init();
+            ValidaX chainZh = ValidaX.init();
             chainZh = chainZh.isEmail((Object)"invalid-email");
             
             assertFalse(chainEn.passed());

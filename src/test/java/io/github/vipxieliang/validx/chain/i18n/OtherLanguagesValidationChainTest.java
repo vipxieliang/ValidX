@@ -16,14 +16,6 @@
 
 package io.github.vipxieliang.validx.chain.i18n;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
-import io.github.vipxieliang.validx.i18n.MessageManager;
-import org.junit.jupiter.api.Test;
-
-import java.util.Locale;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 public class OtherLanguagesValidationChainTest {
 
 }

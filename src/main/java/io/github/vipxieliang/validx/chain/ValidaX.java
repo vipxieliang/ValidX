@@ -49,13 +49,13 @@ import java.util.Locale;
  *     // 处理错误信息
  * }
  */
-public class ValidationPlus {
+public class ValidaX {
 
     private final List<String> errors = new ArrayList<>();
     private Locale locale = null; // 修改为可以为null，表示使用当前线程或系统默认语言环境
 
     // 新增：配置和局部状态
-    private ValidationConfig config = ValidationConfig.DEFAULT;
+    private ValidXConfig config = ValidXConfig.DEFAULT;
     private LocalRequirement localRequirement = LocalRequirement.UNSET;
     private String currentFieldLabel = null;  // 新增：当前字段标识（可选）
 
@@ -71,11 +71,11 @@ public class ValidationPlus {
     private final PhoneValidation phoneValidation = new PhoneValidation();
     private final CertificationValidation certificationValidation = new CertificationValidation();
 
-    private ValidationPlus() {
+    private ValidaX() {
     }
 
-    public static ValidationPlus init() {
-        return new ValidationPlus();
+    public static ValidaX init() {
+        return new ValidaX();
     }
 
     /**
@@ -83,7 +83,7 @@ public class ValidationPlus {
      * @param config 验证配置
      * @return ValidationPlus实例
      */
-    public ValidationPlus config(ValidationConfig config) {
+    public ValidaX config(ValidXConfig config) {
         this.config = config;
         return this;
     }
@@ -93,7 +93,7 @@ public class ValidationPlus {
      * @param fieldLabel 字段标识
      * @return ValidationPlus实例
      */
-    public ValidationPlus field(String fieldLabel) {
+    public ValidaX field(String fieldLabel) {
         this.currentFieldLabel = fieldLabel;
         return this;
     }
@@ -102,7 +102,7 @@ public class ValidationPlus {
      * 要求非null（局部状态）
      * @return ValidationPlus实例
      */
-    public ValidationPlus notNull() {
+    public ValidaX notNull() {
         this.localRequirement = LocalRequirement.NOT_NULL;
         return this;
     }
@@ -111,7 +111,7 @@ public class ValidationPlus {
      * 要求非null且非空字符串（局部状态）
      * @return ValidationPlus实例
      */
-    public ValidationPlus notEmpty() {
+    public ValidaX notEmpty() {
         this.localRequirement = LocalRequirement.NOT_EMPTY;
         return this;
     }
@@ -120,7 +120,7 @@ public class ValidationPlus {
      * 允许null和空字符串（局部覆盖）
      * @return ValidationPlus实例
      */
-    public ValidationPlus allowNull() {
+    public ValidaX allowNull() {
         this.localRequirement = LocalRequirement.ALLOW_NULL;
         return this;
     }
@@ -129,7 +129,7 @@ public class ValidationPlus {
      * 允许空字符串但不允许null（局部覆盖）
      * @return ValidationPlus实例
      */
-    public ValidationPlus allowEmpty() {
+    public ValidaX allowEmpty() {
         this.localRequirement = LocalRequirement.ALLOW_EMPTY;
         return this;
     }
@@ -139,7 +139,7 @@ public class ValidationPlus {
      * @param locale 语言环境
      * @return ValidationPlus实例
      */
-    public ValidationPlus withLocale(Locale locale) {
+    public ValidaX withLocale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -156,7 +156,7 @@ public class ValidationPlus {
     }
 
     // China Validation Methods
-    public ValidationPlus isChineseIdCard(Object value) {
+    public ValidaX isChineseIdCard(Object value) {
         if (checkRequirement(value, "Chinese ID Card", errors, getLocale())) {
             return this;
         }
@@ -164,7 +164,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseLicensePlate(Object value) {
+    public ValidaX isChineseLicensePlate(Object value) {
         if (checkRequirement(value, "License Plate", errors, getLocale())) {
             return this;
         }
@@ -172,7 +172,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isQQ(Object value) {
+    public ValidaX isQQ(Object value) {
         if (checkRequirement(value, "QQ", errors, getLocale())) {
             return this;
         }
@@ -180,7 +180,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseMilitaryOfficer(Object value) {
+    public ValidaX isChineseMilitaryOfficer(Object value) {
         if (checkRequirement(value, "Chinese Military Officer", errors, getLocale())) {
             return this;
         }
@@ -188,7 +188,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChinesePassport(Object value) {
+    public ValidaX isChinesePassport(Object value) {
         if (checkRequirement(value, "Chinese Passport", errors, getLocale())) {
             return this;
         }
@@ -196,7 +196,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseSoldier(Object value) {
+    public ValidaX isChineseSoldier(Object value) {
         if (checkRequirement(value, "Chinese Soldier", errors, getLocale())) {
             return this;
         }
@@ -204,7 +204,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isForeignerPermanentResidenceIdentity(Object value) {
+    public ValidaX isForeignerPermanentResidenceIdentity(Object value) {
         if (checkRequirement(value, "Foreigner Permanent Residence Identity", errors, getLocale())) {
             return this;
         }
@@ -212,7 +212,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isHKMacauPass(Object value) {
+    public ValidaX isHKMacauPass(Object value) {
         if (checkRequirement(value, "HK Macau Pass", errors, getLocale())) {
             return this;
         }
@@ -220,7 +220,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isHKMacauResidence(Object value) {
+    public ValidaX isHKMacauResidence(Object value) {
         if (checkRequirement(value, "HK Macau Residence", errors, getLocale())) {
             return this;
         }
@@ -228,7 +228,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isTaiwanPass(Object value) {
+    public ValidaX isTaiwanPass(Object value) {
         if (checkRequirement(value, "Taiwan Pass", errors, getLocale())) {
             return this;
         }
@@ -236,7 +236,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isTaiwanResidence(Object value) {
+    public ValidaX isTaiwanResidence(Object value) {
         if (checkRequirement(value, "Taiwan Residence", errors, getLocale())) {
             return this;
         }
@@ -244,7 +244,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isUnifiedSocialCreditCode(Object value) {
+    public ValidaX isUnifiedSocialCreditCode(Object value) {
         if (checkRequirement(value, "Unified Social Credit Code", errors, getLocale())) {
             return this;
         }
@@ -252,7 +252,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseZipCode(Object value) {
+    public ValidaX isChineseZipCode(Object value) {
         if (checkRequirement(value, "Chinese Zip Code", errors, getLocale())) {
             return this;
         }
@@ -260,7 +260,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChinesePatent(Object value) {
+    public ValidaX isChinesePatent(Object value) {
         if (checkRequirement(value, "Chinese Patent", errors, getLocale())) {
             return this;
         }
@@ -268,7 +268,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseTrademark(Object value) {
+    public ValidaX isChineseTrademark(Object value) {
         if (checkRequirement(value, "Chinese Trademark", errors, getLocale())) {
             return this;
         }
@@ -276,7 +276,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isSoftwareCopyright(Object value) {
+    public ValidaX isSoftwareCopyright(Object value) {
         if (checkRequirement(value, "Software Copyright", errors, getLocale())) {
             return this;
         }
@@ -284,7 +284,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isWorkCopyright(Object value) {
+    public ValidaX isWorkCopyright(Object value) {
         if (checkRequirement(value, "Work Copyright", errors, getLocale())) {
             return this;
         }
@@ -292,7 +292,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isLawyer(Object value) {
+    public ValidaX isLawyer(Object value) {
         if (checkRequirement(value, "Lawyer", errors, getLocale())) {
             return this;
         }
@@ -300,7 +300,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChinesePhone(Object value) {
+    public ValidaX isChinesePhone(Object value) {
         if (checkRequirement(value, "Chinese Phone", errors, getLocale())) {
             return this;
         }
@@ -308,7 +308,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChinesePhoneOrLandline(Object value) {
+    public ValidaX isChinesePhoneOrLandline(Object value) {
         if (checkRequirement(value, "Chinese Phone Or Landline", errors, getLocale())) {
             return this;
         }
@@ -316,7 +316,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseLandline(Object value) {
+    public ValidaX isChineseLandline(Object value) {
         if (checkRequirement(value, "Chinese Landline", errors, getLocale())) {
             return this;
         }
@@ -324,7 +324,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isDrugApproval(Object value) {
+    public ValidaX isDrugApproval(Object value) {
         if (checkRequirement(value, "Drug Approval", errors, getLocale())) {
             return this;
         }
@@ -332,7 +332,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isDrugCode(Object value) {
+    public ValidaX isDrugCode(Object value) {
         if (checkRequirement(value, "Drug Code", errors, getLocale())) {
             return this;
         }
@@ -340,7 +340,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isMedicalDeviceRegistration(Object value) {
+    public ValidaX isMedicalDeviceRegistration(Object value) {
         if (checkRequirement(value, "Medical Device Registration", errors, getLocale())) {
             return this;
         }
@@ -349,7 +349,7 @@ public class ValidationPlus {
     }
 
     // Network Validation Methods
-    public ValidationPlus isMacAddress(Object value) {
+    public ValidaX isMacAddress(Object value) {
         if (checkRequirement(value, "MAC Address", errors, getLocale())) {
             return this;
         }
@@ -357,7 +357,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isEmail(Object value) {
+    public ValidaX isEmail(Object value) {
         if (checkRequirement(value, "Email", errors, getLocale())) {
             return this;
         }
@@ -365,7 +365,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isIp(Object value) {
+    public ValidaX isIp(Object value) {
         if (checkRequirement(value, "Ip", errors, getLocale())) {
             return this;
         }
@@ -379,7 +379,7 @@ public class ValidationPlus {
      * @param version IP版本（Ip.IpVersion.V4/Ip.IpVersion.V6/Ip.IpVersion.ANY）
      * @return ValidationPlus实例
      */
-    public ValidationPlus isIp(Object value, Ip.IpVersion version) {
+    public ValidaX isIp(Object value, Ip.IpVersion version) {
         if (checkRequirement(value, "Ip", errors, getLocale())) {
             return this;
         }
@@ -387,7 +387,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isSubnetMask(Object value) {
+    public ValidaX isSubnetMask(Object value) {
         if (checkRequirement(value, "Subnet Mask", errors, getLocale())) {
             return this;
         }
@@ -395,7 +395,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isUrl(Object value) {
+    public ValidaX isUrl(Object value) {
         if (checkRequirement(value, "URL", errors, getLocale())) {
             return this;
         }
@@ -403,7 +403,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isDomain(Object value) {
+    public ValidaX isDomain(Object value) {
         if (checkRequirement(value, "Domain", errors, getLocale())) {
             return this;
         }
@@ -411,7 +411,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isWeChat(Object value) {
+    public ValidaX isWeChat(Object value) {
         if (checkRequirement(value, "WeChat", errors, getLocale())) {
             return this;
         }
@@ -419,7 +419,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isPort(Object value) {
+    public ValidaX isPort(Object value) {
         if (checkRequirement(value, "Port", errors, getLocale())) {
             return this;
         }
@@ -428,7 +428,7 @@ public class ValidationPlus {
     }
 
     // Base Validation Methods
-    public ValidationPlus isChineseAlpha(Object value) {
+    public ValidaX isChineseAlpha(Object value) {
         if (checkRequirement(value, "Chinese Alpha", errors, getLocale())) {
             return this;
         }
@@ -436,7 +436,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseAlphaNum(Object value) {
+    public ValidaX isChineseAlphaNum(Object value) {
         if (checkRequirement(value, "Chinese Alpha Num", errors, getLocale())) {
             return this;
         }
@@ -444,7 +444,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isChineseAlphaDash(Object value) {
+    public ValidaX isChineseAlphaDash(Object value) {
         if (checkRequirement(value, "Chinese Alpha Dash", errors, getLocale())) {
             return this;
         }
@@ -452,7 +452,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isLower(Object value) {
+    public ValidaX isLower(Object value) {
         if (checkRequirement(value, "Lower", errors, getLocale())) {
             return this;
         }
@@ -460,7 +460,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isUpper(Object value) {
+    public ValidaX isUpper(Object value) {
         if (checkRequirement(value, "Upper", errors, getLocale())) {
             return this;
         }
@@ -468,7 +468,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isXdigit(Object value) {
+    public ValidaX isXdigit(Object value) {
         if (checkRequirement(value, "Xdigit", errors, getLocale())) {
             return this;
         }
@@ -476,7 +476,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isIn(Object value, String[] values) {
+    public ValidaX isIn(Object value, String[] values) {
         if (checkRequirement(value, "In", errors, getLocale())) {
             return this;
         }
@@ -484,7 +484,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isNotIn(Object value, String[] values) {
+    public ValidaX isNotIn(Object value, String[] values) {
         if (checkRequirement(value, "Not In", errors, getLocale())) {
             return this;
         }
@@ -492,7 +492,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isPastDate(Object value, boolean includeToday) {
+    public ValidaX isPastDate(Object value, boolean includeToday) {
         if (checkRequirement(value, "Past Date", errors, getLocale())) {
             return this;
         }
@@ -500,7 +500,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isFutureDate(Object value, boolean includeToday) {
+    public ValidaX isFutureDate(Object value, boolean includeToday) {
         if (checkRequirement(value, "Future Date", errors, getLocale())) {
             return this;
         }
@@ -508,7 +508,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isFileExtension(Object value,String[] extensions) {
+    public ValidaX isFileExtension(Object value, String[] extensions) {
         if (checkRequirement(value, "File Extension", errors, getLocale())) {
             return this;
         }
@@ -516,7 +516,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isFileExtension(Object value, String[] extensions, boolean ignoreCase) {
+    public ValidaX isFileExtension(Object value, String[] extensions, boolean ignoreCase) {
         if (checkRequirement(value, "File Extension", errors, getLocale())) {
             return this;
         }
@@ -524,7 +524,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isHourMinute(Object value) {
+    public ValidaX isHourMinute(Object value) {
         if (checkRequirement(value, "Hour Minute", errors, getLocale())) {
             return this;
         }
@@ -532,7 +532,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isHourMinuteSecond(Object value) {
+    public ValidaX isHourMinuteSecond(Object value) {
         if (checkRequirement(value, "Hour Minute Second", errors, getLocale())) {
             return this;
         }
@@ -540,7 +540,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isEnum(Object value, Class<? extends java.lang.Enum<?>> target, String field) {
+    public ValidaX isEnum(Object value, Class<? extends java.lang.Enum<?>> target, String field) {
         if (checkRequirement(value, "Enum", errors, getLocale())) {
             return this;
         }
@@ -548,14 +548,14 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isEnum(Object value, Class<? extends java.lang.Enum<?>> target) {
+    public ValidaX isEnum(Object value, Class<? extends java.lang.Enum<?>> target) {
         if (checkRequirement(value, "Enum", errors, getLocale())) {
             return this;
         }
         return isEnum(value, target, null);
     }
     
-    public ValidationPlus isAlpha(Object value) {
+    public ValidaX isAlpha(Object value) {
         if (checkRequirement(value, "Alpha", errors, getLocale())) {
             return this;
         }
@@ -563,7 +563,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isAlphaNum(Object value) {
+    public ValidaX isAlphaNum(Object value) {
         if (checkRequirement(value, "Alpha Num", errors, getLocale())) {
             return this;
         }
@@ -571,7 +571,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isAlphaDash(Object value) {
+    public ValidaX isAlphaDash(Object value) {
         if (checkRequirement(value, "Alpha Dash", errors, getLocale())) {
             return this;
         }
@@ -579,7 +579,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isChinese(Object value) {
+    public ValidaX isChinese(Object value) {
         if (checkRequirement(value, "Chinese", errors, getLocale())) {
             return this;
         }
@@ -587,7 +587,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isLongitude(Object value) {
+    public ValidaX isLongitude(Object value) {
         if (checkRequirement(value, "Longitude", errors, getLocale())) {
             return this;
         }
@@ -595,7 +595,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isLatitude(Object value) {
+    public ValidaX isLatitude(Object value) {
         if (checkRequirement(value, "Latitude", errors, getLocale())) {
             return this;
         }
@@ -603,7 +603,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isGeoPoint(Object value) {
+    public ValidaX isGeoPoint(Object value) {
         if (checkRequirement(value, "GeoPoint", errors, getLocale())) {
             return this;
         }
@@ -611,7 +611,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isGeoPoint(Object value, boolean latitudeFirst) {
+    public ValidaX isGeoPoint(Object value, boolean latitudeFirst) {
         if (checkRequirement(value, "GeoPoint", errors, getLocale())) {
             return this;
         }
@@ -619,7 +619,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isGeoPoint(Object value, boolean latitudeFirst, io.github.vipxieliang.validx.annotations.GeoPoint.SeparatorType separatorType) {
+    public ValidaX isGeoPoint(Object value, boolean latitudeFirst, io.github.vipxieliang.validx.annotations.GeoPoint.SeparatorType separatorType) {
         if (checkRequirement(value, "GeoPoint", errors, getLocale())) {
             return this;
         }
@@ -627,7 +627,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isColor(Object value) {
+    public ValidaX isColor(Object value) {
         if (checkRequirement(value, "Color", errors, getLocale())) {
             return this;
         }
@@ -635,7 +635,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isEndsWith(Object value, String[] suffixes) {
+    public ValidaX isEndsWith(Object value, String[] suffixes) {
         if (checkRequirement(value, "Ends With", errors, getLocale())) {
             return this;
         }
@@ -643,7 +643,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isStartsWith(Object value, String[] prefixes) {
+    public ValidaX isStartsWith(Object value, String[] prefixes) {
         if (checkRequirement(value, "Starts With", errors, getLocale())) {
             return this;
         }
@@ -652,7 +652,7 @@ public class ValidationPlus {
     }
 
     // Base Validation Methods - Password
-    public ValidationPlus isPassword(Object value) {
+    public ValidaX isPassword(Object value) {
         if (checkRequirement(value, "Password", errors, getLocale())) {
             return this;
         }
@@ -660,7 +660,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isPassword(Object value, int minLength) {
+    public ValidaX isPassword(Object value, int minLength) {
         if (checkRequirement(value, "Password", errors, getLocale())) {
             return this;
         }
@@ -668,8 +668,8 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isPassword(Object value, int minLength, boolean requireUppercase,
-                                    boolean requireLowercase, boolean requireDigit, boolean requireSpecialChar) {
+    public ValidaX isPassword(Object value, int minLength, boolean requireUppercase,
+                              boolean requireLowercase, boolean requireDigit, boolean requireSpecialChar) {
         if (checkRequirement(value, "Password", errors, getLocale())) {
             return this;
         }
@@ -684,7 +684,7 @@ public class ValidationPlus {
      * @param max 最大大小（如 "10MB"、"5GB"）
      * @return ValidationPlus实例
      */
-    public ValidationPlus isFileSize(Object value, String max) {
+    public ValidaX isFileSize(Object value, String max) {
         if (checkRequirement(value, "File Size", errors, getLocale())) {
             return this;
         }
@@ -699,7 +699,7 @@ public class ValidationPlus {
      * @param max 最大大小（如 "10MB"、"5GB"）
      * @return ValidationPlus实例
      */
-    public ValidationPlus isFileSize(Object value, String min, String max) {
+    public ValidaX isFileSize(Object value, String min, String max) {
         if (checkRequirement(value, "File Size", errors, getLocale())) {
             return this;
         }
@@ -712,7 +712,7 @@ public class ValidationPlus {
      * @param value UUID 字符串
      * @return ValidationPlus实例
      */
-    public ValidationPlus isUUID(Object value) {
+    public ValidaX isUUID(Object value) {
         if (checkRequirement(value, "UUID", errors, getLocale())) {
             return this;
         }
@@ -726,7 +726,7 @@ public class ValidationPlus {
      * @param allowWithoutHyphens 是否允许不带连字符的格式
      * @return ValidationPlus实例
      */
-    public ValidationPlus isUUID(Object value, boolean allowWithoutHyphens) {
+    public ValidaX isUUID(Object value, boolean allowWithoutHyphens) {
         if (checkRequirement(value, "U U I D", errors, getLocale())) {
             return this;
         }
@@ -739,7 +739,7 @@ public class ValidationPlus {
      * @param value Base64 字符串
      * @return ValidationPlus实例
      */
-    public ValidationPlus isBase64(Object value) {
+    public ValidaX isBase64(Object value) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
             return this;
         }
@@ -753,7 +753,7 @@ public class ValidationPlus {
      * @param urlSafe 是否为 URL-safe 格式
      * @return ValidationPlus实例
      */
-    public ValidationPlus isBase64(Object value, boolean urlSafe) {
+    public ValidaX isBase64(Object value, boolean urlSafe) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
             return this;
         }
@@ -768,7 +768,7 @@ public class ValidationPlus {
      * @param allowNoPadding 是否允许不带填充符
      * @return ValidationPlus实例
      */
-    public ValidationPlus isBase64(Object value, boolean urlSafe, boolean allowNoPadding) {
+    public ValidaX isBase64(Object value, boolean urlSafe, boolean allowNoPadding) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
             return this;
         }
@@ -782,7 +782,7 @@ public class ValidationPlus {
      * @param minAge 最小年龄
      * @return ValidationPlus实例
      */
-    public ValidationPlus isAge(Object value, int minAge) {
+    public ValidaX isAge(Object value, int minAge) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -797,7 +797,7 @@ public class ValidationPlus {
      * @param maxAge 最大年龄
      * @return ValidationPlus实例
      */
-    public ValidationPlus isAge(Object value, int minAge, int maxAge) {
+    public ValidaX isAge(Object value, int minAge, int maxAge) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -813,7 +813,7 @@ public class ValidationPlus {
      * @param fromIdCard 是否从身份证提取
      * @return ValidationPlus实例
      */
-    public ValidationPlus isAge(Object value, int minAge, int maxAge, boolean fromIdCard) {
+    public ValidaX isAge(Object value, int minAge, int maxAge, boolean fromIdCard) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -830,7 +830,7 @@ public class ValidationPlus {
      * @param dateFormat 日期格式
      * @return ValidationPlus实例
      */
-    public ValidationPlus isAge(Object value, int minAge, int maxAge, boolean fromIdCard, String dateFormat) {
+    public ValidaX isAge(Object value, int minAge, int maxAge, boolean fromIdCard, String dateFormat) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -843,7 +843,7 @@ public class ValidationPlus {
      * @param value JSON 字符串
      * @return ValidationPlus实例
      */
-    public ValidationPlus isJSON(Object value) {
+    public ValidaX isJSON(Object value) {
         if (checkRequirement(value, "JSON", errors, getLocale())) {
             return this;
         }
@@ -857,7 +857,7 @@ public class ValidationPlus {
      * @param type JSON类型（ANY/OBJECT/ARRAY）
      * @return ValidationPlus实例
      */
-    public ValidationPlus isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type) {
+    public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
             return this;
         }
@@ -872,8 +872,8 @@ public class ValidationPlus {
      * @param strict 是否严格模式
      * @return ValidationPlus实例
      */
-    public ValidationPlus isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
-                                boolean strict) {
+    public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
+                          boolean strict) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
             return this;
         }
@@ -890,8 +890,8 @@ public class ValidationPlus {
      * @param maxLength 最大长度
      * @return ValidationPlus实例
      */
-    public ValidationPlus isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
-                                boolean strict, int maxDepth, int maxLength) {
+    public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
+                          boolean strict, int maxDepth, int maxLength) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
             return this;
         }
@@ -905,7 +905,7 @@ public class ValidationPlus {
      * @param value 要验证的电话号码
      * @return 当前验证链实例
      */
-    public ValidationPlus isPhoneNumber(Object value) {
+    public ValidaX isPhoneNumber(Object value) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -920,7 +920,7 @@ public class ValidationPlus {
      * @param countryCode 国家代码（如 "+86", "+1"）
      * @return 当前验证链实例
      */
-    public ValidationPlus isPhoneNumber(Object value, String countryCode) {
+    public ValidaX isPhoneNumber(Object value, String countryCode) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -936,7 +936,7 @@ public class ValidationPlus {
      * @param allowExtension 是否允许分机号
      * @return 当前验证链实例
      */
-    public ValidationPlus isPhoneNumber(Object value, String countryCode, boolean allowExtension) {
+    public ValidaX isPhoneNumber(Object value, String countryCode, boolean allowExtension) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -953,7 +953,7 @@ public class ValidationPlus {
      * @param strict         是否严格模式（必须包含国家代码）
      * @return 当前验证链实例
      */
-    public ValidationPlus isPhoneNumber(Object value, String countryCode, boolean allowExtension, boolean strict) {
+    public ValidaX isPhoneNumber(Object value, String countryCode, boolean allowExtension, boolean strict) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -966,7 +966,7 @@ public class ValidationPlus {
      * @param value 待验证的JWT Token
      * @return ValidationPlus实例
      */
-    public ValidationPlus isJWT(Object value) {
+    public ValidaX isJWT(Object value) {
         if (checkRequirement(value, "JWT", errors, getLocale())) {
             return this;
         }
@@ -974,7 +974,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isSemVer(Object value) {
+    public ValidaX isSemVer(Object value) {
         if (checkRequirement(value, "Sem Ver", errors, getLocale())) {
             return this;
         }
@@ -982,7 +982,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isSemVer(Object value, boolean allowVPrefix) {
+    public ValidaX isSemVer(Object value, boolean allowVPrefix) {
         if (checkRequirement(value, "Sem Ver", errors, getLocale())) {
             return this;
         }
@@ -995,7 +995,7 @@ public class ValidationPlus {
      * @param value 待验证的值
      * @return ValidationPlus实例
      */
-    public ValidationPlus isTimestamp(Object value) {
+    public ValidaX isTimestamp(Object value) {
         if (checkRequirement(value, "Timestamp", errors, getLocale())) {
             return this;
         }
@@ -1009,7 +1009,7 @@ public class ValidationPlus {
      * @param unit 时间戳单位（SECONDS/MILLISECONDS/ANY）
      * @return ValidationPlus实例
      */
-    public ValidationPlus isTimestamp(Object value, Timestamp.TimestampUnit unit) {
+    public ValidaX isTimestamp(Object value, Timestamp.TimestampUnit unit) {
         if (checkRequirement(value, "Timestamp", errors, getLocale())) {
             return this;
         }
@@ -1023,7 +1023,7 @@ public class ValidationPlus {
      * @param value 待验证的值（String）
      * @return 当前验证链实例
      */
-    public ValidationPlus isCronExpression(Object value) {
+    public ValidaX isCronExpression(Object value) {
         if (checkRequirement(value, "CronExpression", errors, getLocale())) {
             return this;
         }
@@ -1037,7 +1037,7 @@ public class ValidationPlus {
      * @param value 待验证的值（String）
      * @return 当前验证链实例
      */
-    public ValidationPlus isDuration(Object value) {
+    public ValidaX isDuration(Object value) {
         if (checkRequirement(value, "Duration", errors, getLocale())) {
             return this;
         }
@@ -1052,7 +1052,7 @@ public class ValidationPlus {
      * @param format 时间段格式类型
      * @return 当前验证链实例
      */
-    public ValidationPlus isDuration(Object value, io.github.vipxieliang.validx.annotations.Duration.DurationFormat format) {
+    public ValidaX isDuration(Object value, io.github.vipxieliang.validx.annotations.Duration.DurationFormat format) {
         if (checkRequirement(value, "Duration", errors, getLocale())) {
             return this;
         }
@@ -1066,7 +1066,7 @@ public class ValidationPlus {
      * @param value 待验证的值（String）
      * @return 当前验证链实例
      */
-    public ValidationPlus isExpressNumber(Object value) {
+    public ValidaX isExpressNumber(Object value) {
         if (checkRequirement(value, "ExpressNumber", errors, getLocale())) {
             return this;
         }
@@ -1081,7 +1081,7 @@ public class ValidationPlus {
      * @param companies 快递公司类型
      * @return 当前验证链实例
      */
-    public ValidationPlus isExpressNumber(Object value, io.github.vipxieliang.validx.annotations.ExpressNumber.ExpressCompany... companies) {
+    public ValidaX isExpressNumber(Object value, io.github.vipxieliang.validx.annotations.ExpressNumber.ExpressCompany... companies) {
         if (checkRequirement(value, "ExpressNumber", errors, getLocale())) {
             return this;
         }
@@ -1090,7 +1090,7 @@ public class ValidationPlus {
     }
 
     // Financial Validation Methods
-    public ValidationPlus isBankCard(Object value) {
+    public ValidaX isBankCard(Object value) {
         if (checkRequirement(value, "Bank Card", errors, getLocale())) {
             return this;
         }
@@ -1098,7 +1098,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isCVV(Object value) {
+    public ValidaX isCVV(Object value) {
         if (checkRequirement(value, "CVV", errors, getLocale())) {
             return this;
         }
@@ -1106,7 +1106,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isIBAN(Object value) {
+    public ValidaX isIBAN(Object value) {
         if (checkRequirement(value, "IBAN", errors, getLocale())) {
             return this;
         }
@@ -1114,7 +1114,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isSWIFT(Object value) {
+    public ValidaX isSWIFT(Object value) {
         if (checkRequirement(value, "SWIFT", errors, getLocale())) {
             return this;
         }
@@ -1122,7 +1122,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isStockCode(Object value) {
+    public ValidaX isStockCode(Object value) {
         if (checkRequirement(value, "Stock Code", errors, getLocale())) {
             return this;
         }
@@ -1131,7 +1131,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isStockCode(Object value, StockCode.Exchange... exchanges) {
+    public ValidaX isStockCode(Object value, StockCode.Exchange... exchanges) {
         if (checkRequirement(value, "Stock Code", errors, getLocale())) {
             return this;
         }
@@ -1139,7 +1139,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isFinancialProductCode(Object value) {
+    public ValidaX isFinancialProductCode(Object value) {
         if (checkRequirement(value, "Financial Product Code", errors, getLocale())) {
             return this;
         }
@@ -1148,7 +1148,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isFinancialProductCode(Object value, FinancialProductCode.ProductType... productTypes) {
+    public ValidaX isFinancialProductCode(Object value, FinancialProductCode.ProductType... productTypes) {
         if (checkRequirement(value, "Financial Product Code", errors, getLocale())) {
             return this;
         }
@@ -1156,7 +1156,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isTradeOrderNumber(Object value) {
+    public ValidaX isTradeOrderNumber(Object value) {
         if (checkRequirement(value, "Trade Order Number", errors, getLocale())) {
             return this;
         }
@@ -1165,7 +1165,7 @@ public class ValidationPlus {
     }
 
     // Vehicle Validation Methods
-    public ValidationPlus isVIN(Object value) {
+    public ValidaX isVIN(Object value) {
         if (checkRequirement(value, "VIN", errors, getLocale())) {
             return this;
         }
@@ -1173,7 +1173,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isVehicleEngine(Object value) {
+    public ValidaX isVehicleEngine(Object value) {
         if (checkRequirement(value, "Vehicle Engine", errors, getLocale())) {
             return this;
         }
@@ -1182,7 +1182,7 @@ public class ValidationPlus {
     }
 
     // Book Validation Methods
-    public ValidationPlus isISBN(Object value) {
+    public ValidaX isISBN(Object value) {
         if (checkRequirement(value, "ISBN", errors, getLocale())) {
             return this;
         }
@@ -1190,7 +1190,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isISSN(Object value) {
+    public ValidaX isISSN(Object value) {
         if (checkRequirement(value, "ISSN", errors, getLocale())) {
             return this;
         }
@@ -1198,7 +1198,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isDOI(Object value) {
+    public ValidaX isDOI(Object value) {
         if (checkRequirement(value, "DOI", errors, getLocale())) {
             return this;
         }
@@ -1206,7 +1206,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isCLC(Object value) {
+    public ValidaX isCLC(Object value) {
         if (checkRequirement(value, "CLC", errors, getLocale())) {
             return this;
         }
@@ -1214,7 +1214,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isDDC(Object value) {
+    public ValidaX isDDC(Object value) {
         if (checkRequirement(value, "DDC", errors, getLocale())) {
             return this;
         }
@@ -1222,7 +1222,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isORCID(Object value) {
+    public ValidaX isORCID(Object value) {
         if (checkRequirement(value, "ORCID", errors, getLocale())) {
             return this;
         }
@@ -1230,7 +1230,7 @@ public class ValidationPlus {
         return this;
     }
 
-    public ValidationPlus isIPC(Object value) {
+    public ValidaX isIPC(Object value) {
         if (checkRequirement(value, "IPC", errors, getLocale())) {
             return this;
         }
@@ -1239,7 +1239,7 @@ public class ValidationPlus {
     }
 
     // Education Validation Methods
-    public ValidationPlus isDegreeCertificate(Object value) {
+    public ValidaX isDegreeCertificate(Object value) {
         if (checkRequirement(value, "Degree Certificate", errors, getLocale())) {
             return this;
         }
@@ -1247,7 +1247,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isTeacher(Object value) {
+    public ValidaX isTeacher(Object value) {
         if (checkRequirement(value, "Teacher", errors, getLocale())) {
             return this;
         }
@@ -1255,7 +1255,7 @@ public class ValidationPlus {
         return this;
     }
     
-    public ValidationPlus isDoctor(Object value) {
+    public ValidaX isDoctor(Object value) {
         if (checkRequirement(value, "Doctor", errors, getLocale())) {
             return this;
         }
@@ -1264,7 +1264,7 @@ public class ValidationPlus {
     }
 
     // Foreign Validation Methods
-    public ValidationPlus isForeignerWorkPermit(Object value) {
+    public ValidaX isForeignerWorkPermit(Object value) {
         if (checkRequirement(value, "Foreigner Work Permit", errors, getLocale())) {
             return this;
         }
@@ -1273,7 +1273,7 @@ public class ValidationPlus {
     }
 
     // Phone Validation Methods
-    public ValidationPlus isIMEI(Object value) {
+    public ValidaX isIMEI(Object value) {
         if (checkRequirement(value, "IMEI", errors, getLocale())) {
             return this;
         }
@@ -1287,7 +1287,7 @@ public class ValidationPlus {
      * @param value PMP证书编号
      * @return ValidationPlus实例，支持链式调用
      */
-    public ValidationPlus isPMP(Object value) {
+    public ValidaX isPMP(Object value) {
         if (checkRequirement(value, "PMP", errors, getLocale())) {
             return this;
         }
@@ -1301,7 +1301,7 @@ public class ValidationPlus {
      * @param value 建造师证书编号
      * @return ValidationPlus实例，支持链式调用
      */
-    public ValidationPlus isConstructor(Object value) {
+    public ValidaX isConstructor(Object value) {
         if (checkRequirement(value, "Constructor", errors, getLocale())) {
             return this;
         }
@@ -1315,7 +1315,7 @@ public class ValidationPlus {
      * @param value 会计资格证书编号
      * @return ValidationPlus实例，支持链式调用
      */
-    public ValidationPlus isAccountant(Object value) {
+    public ValidaX isAccountant(Object value) {
         if (checkRequirement(value, "Accountant", errors, getLocale())) {
             return this;
         }
@@ -1419,7 +1419,7 @@ public class ValidationPlus {
         return isEmpty(value);// 继续执行格式校验
     }
 
-    private LocalRequirement convertGlobalToLocal(ValidationConfig.RequirementMode global) {
+    private LocalRequirement convertGlobalToLocal(ValidXConfig.RequirementMode global) {
         switch (global) {
             case NOT_NULL: return LocalRequirement.NOT_NULL;
             case NOT_EMPTY: return LocalRequirement.NOT_EMPTY;

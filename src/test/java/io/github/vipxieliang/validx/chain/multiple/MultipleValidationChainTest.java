@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.multiple;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,7 @@ public class MultipleValidationChainTest {
     @Test
     public void testMultipleValidationsTogether() {
         // 测试同时验证身份证、URL和IP地址
-        ValidationPlus chain = ValidationPlus.init()
+        ValidaX chain = ValidaX.init()
                 .isChineseIdCard((Object)"440608197310039910")
                 .isUrl((Object)"http://example.com")
                 .isIp((Object)"192.168.1.1");
@@ -38,7 +38,7 @@ public class MultipleValidationChainTest {
     @Test
     public void testMultipleValidationsTogetherFailure() {
         // 测试同时验证身份证、URL和IP地址，所有都校验不通过的情况
-        ValidationPlus chain = ValidationPlus.init()
+        ValidaX chain = ValidaX.init()
                 .isChineseIdCard((Object)"invalid-id-card")
                 .isUrl((Object)"invalid-url")
                 .isIp((Object)"999.999.999.999");
@@ -50,7 +50,7 @@ public class MultipleValidationChainTest {
     @Test
     public void testInstanceMethodWithDirectValue() {
         // 测试使用实例方法直接传入值进行验证
-        ValidationPlus chain = ValidationPlus.init(); // 创建一个空的链
+        ValidaX chain = ValidaX.init(); // 创建一个空的链
         chain = chain.isChineseIdCard((Object)"440608197310039910")
                     .isUrl((Object)"http://example.com")
                     .isIp((Object)"192.168.1.1");

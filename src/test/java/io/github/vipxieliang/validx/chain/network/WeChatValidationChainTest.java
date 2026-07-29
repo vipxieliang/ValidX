@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.network;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,19 +29,19 @@ public class WeChatValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isWeChat(null);
         assertTrue(validator.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        validator = ValidationPlus.init();
+        validator = ValidaX.init();
         validator.isWeChat("");
         assertTrue(validator.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidWeChat() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isWeChat("wechat123");
         
         assertTrue(validator.passed(), "有效的微信号应该通过验证");
@@ -49,7 +49,7 @@ public class WeChatValidationChainTest {
 
     @Test
     public void testInvalidWeChat() {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
         validator.isWeChat("123456"); // 数字开头，无效
 
         assertFalse(validator.passed(), "无效的微信号不应该通过验证");

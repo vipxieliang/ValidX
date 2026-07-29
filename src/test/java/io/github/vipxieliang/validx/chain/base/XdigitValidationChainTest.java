@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class XdigitValidationChainTest {
 
     @Test
     public void testValidXdigit() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isXdigit((Object)"0a1B2c3D");
         assertTrue(chain.passed(), "有效的十六进制字符串应该通过验证");
     }
 
     @Test
     public void testInvalidXdigit() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isXdigit((Object)"0a1G");
         assertFalse(chain.passed(), "包含非法十六进制字符的字符串不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class XdigitValidationChainTest {
     @Test
     public void testNullAndEmptyXdigit() {
         // 测试null值应该通过验证（交给@NotNull处理）
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isXdigit(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isXdigit((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

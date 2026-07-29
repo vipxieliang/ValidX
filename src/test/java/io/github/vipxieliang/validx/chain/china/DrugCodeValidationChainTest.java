@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,22 +24,22 @@ public class DrugCodeValidationChainTest {
 
     @Test
     public void testValidDrugCode() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isDrugCode("69012345678901234563");
         assertTrue(chain.passed(), "有效的药品本位码应该通过验证");
 
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isDrugCode("69123456789012345678");
         assertTrue(chain.passed(), "有效的药品本位码应该通过验证");
     }
 
     @Test
     public void testInvalidDrugCode() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isDrugCode("68012345678901234565"); // 不是69开头
         assertFalse(chain.passed(), "无效的药品本位码应该验证失败");
 
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isDrugCode("6901234567890123456"); // 位数不足
         assertFalse(chain.passed(), "无效的药品本位码应该验证失败");
     }
@@ -47,12 +47,12 @@ public class DrugCodeValidationChainTest {
     @Test
     public void testNullAndEmptyDrugCode() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isDrugCode(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isDrugCode("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

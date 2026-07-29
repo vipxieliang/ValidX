@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.china;
 
 
-import io.github.vipxieliang.validx.chain.ValidationPlus;
+import io.github.vipxieliang.validx.chain.ValidaX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,22 +25,22 @@ public class ChineseTrademarkValidationChainTest {
 
     @Test
     public void testValidChineseTrademark() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChineseTrademark("1234567");
         assertTrue(chain.passed(), "有效的中国商标注册号应该通过验证");
         
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isChineseTrademark("第12345678号");
         assertTrue(chain.passed(), "有效的中国商标注册号应该通过验证");
     }
 
     @Test
     public void testInvalidChineseTrademark() {
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChineseTrademark("123456"); // 太短
         assertFalse(chain.passed(), "无效的中国商标注册号应该验证失败");
 
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isChineseTrademark("第123456号"); // 太短
         assertFalse(chain.passed(), "无效的中国商标注册号应该验证失败");
     }
@@ -48,12 +48,12 @@ public class ChineseTrademarkValidationChainTest {
     @Test
     public void testNullAndEmptyChineseTrademark() {
         // 测试 null 值
-        ValidationPlus chain = ValidationPlus.init();
+        ValidaX chain = ValidaX.init();
         chain = chain.isChineseTrademark(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidationPlus.init();
+        chain = ValidaX.init();
         chain = chain.isChineseTrademark("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
