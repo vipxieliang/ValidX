@@ -1,0 +1,74 @@
+/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home/jre/../bin/javadoc
+@options
+@packages
+-classpath
+'/Users/mac/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar:/Users/mac/.m2/repository/org/hibernate/validator/hibernate-validator/6.1.5.Final/hibernate-validator-6.1.5.Final.jar:/Users/mac/.m2/repository/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar:/Users/mac/.m2/repository/org/jboss/logging/jboss-logging/3.3.2.Final/jboss-logging-3.3.2.Final.jar:/Users/mac/.m2/repository/com/fasterxml/classmate/1.3.4/classmate-1.3.4.jar:/Users/mac/.m2/repository/org/glassfish/javax.el/3.0.0/javax.el-3.0.0.jar'
+-encoding
+'UTF-8'
+-protected
+-source
+'8'
+-sourcepath
+'/Users/mac/IdeaProjects/ValidX/src/main/java:/Users/mac/IdeaProjects/ValidX/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'/Users/mac/IdeaProjects/ValidX/target/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'ValidX 1.0.0 API'
+-linkoffline
+'https://docs.oracle.com/javase/8/docs/api' '/Users/mac/IdeaProjects/ValidX/target/javadoc-bundle-options'
+-use
+-version
+-windowtitle
+'ValidX 1.0.0 API'
+io.github.vipxieliang.validx.validator.vehicle
+io.github.vipxieliang.validx.validator.financial
+io.github.vipxieliang.validx.validator.network
+io.github.vipxieliang.validx.validator.education
+io.github.vipxieliang.validx.validator.china
+io.github.vipxieliang.validx.validator.book
+io.github.vipxieliang.validx.validator.phone
+io.github.vipxieliang.validx.validator.foreign
+io.github.vipxieliang.validx.validator.base
+io.github.vipxieliang.validx.validator.certification
+io.github.vipxieliang.validx.util
+io.github.vipxieliang.validx.chain.vehicle
+io.github.vipxieliang.validx.chain.financial
+io.github.vipxieliang.validx.chain
+io.github.vipxieliang.validx.chain.network
+io.github.vipxieliang.validx.chain.education
+io.github.vipxieliang.validx.chain.china
+io.github.vipxieliang.validx.chain.book
+io.github.vipxieliang.validx.chain.phone
+io.github.vipxieliang.validx.chain.foreign
+io.github.vipxieliang.validx.chain.base
+io.github.vipxieliang.validx.chain.certification
+io.github.vipxieliang.validx.annotations
+io.github.vipxieliang.validx.i18n
+/Users/mac/.m2/repository/javax/validation/validation-api/2.0.1.Final/validation-api-2.0.1.Final.jar = 1513700620000
+/Users/mac/.m2/repository/org/hibernate/validator/hibernate-validator/6.1.5.Final/hibernate-validator-6.1.5.Final.jar = 1588775090000
+/Users/mac/.m2/repository/jakarta/validation/jakarta.validation-api/2.0.2/jakarta.validation-api-2.0.2.jar = 1565473573000
+/Users/mac/.m2/repository/org/jboss/logging/jboss-logging/3.3.2.Final/jboss-logging-3.3.2.Final.jar = 1518643417000
+/Users/mac/.m2/repository/com/fasterxml/classmate/1.3.4/classmate-1.3.4.jar = 1504993681000
+/Users/mac/.m2/repository/org/glassfish/javax.el/3.0.0/javax.el-3.0.0.jar = 1366931016000
+/Users/mac/IdeaProjects/ValidX/src/main/java = 1785294942000
+/Users/mac/IdeaProjects/ValidX/target/generated-sources/annotations = 1785301761000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/constant-values.html = 1785301788000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/overview-tree.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/index.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/overview-frame.html = 1785301788000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/allclasses-noframe.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/index-all.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/deprecated-list.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/script.js = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/stylesheet.css = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/overview-summary.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/help-doc.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/allclasses-frame.html = 1785301789000
+/Users/mac/IdeaProjects/ValidX/target/apidocs/package-list = 1785301788000
