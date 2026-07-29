@@ -4,11 +4,121 @@
 
 [English](README.md)
 
+<div align="center">
+
 # ValidX
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.vipxieliang/validx?color=blue)](https://central.sonatype.com/artifact/io.github.vipxieliang/validx)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
+
+**A comprehensive Java validation library designed for Chinese business scenarios**
+
+[Quick Start](#-5-minute-quick-start) | [Why ValidX?](#-why-choose-validx) | [Documentation](#supported-validation-annotations) | [Contributing](#contribution)
+
+</div>
+
+---
 
 ## Introduction
 
-An open-source project focused on providing comprehensive validation solutions, covering data validation, business logic checks, and more, helping developers build more robust applications.
+ValidX is an open-source Java validation library focused on providing comprehensive validation solutions for Chinese business scenarios. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
+
+## ✨ Why Choose ValidX?
+
+### 🇨🇳 **Built for China**
+- **90+ Chinese-specific validators**: ID cards, phone numbers, bank cards, social credit codes, license plates, and more
+- **8 languages supported**: Simplified Chinese, English, Japanese, Korean, French, German, Spanish, Russian
+- **Local business validation**: Express tracking, QQ, WeChat, Alipay order numbers
+
+### 🚀 **Developer Friendly**
+- **Two usage styles**: Annotation-based (for DTOs) or fluent chain API (for dynamic validation)
+- **Zero configuration**: Works out of the box with Spring Boot and standard Bean Validation
+- **Smart null handling**: Configurable global/local null and empty string policies
+
+### 🎯 **Enterprise Ready**
+- **Type-safe validation**: Compile-time checks with annotation-based approach
+- **Rich error messages**: Automatic i18n support with custom field labels
+- **Production tested**: Comprehensive test coverage with 1300+ unit tests
+
+### 📦 **Lightweight & Fast**
+- **Single dependency**: No external dependencies beyond Bean Validation API
+- **Small footprint**: ~300KB JAR size
+- **High performance**: Optimized validators with minimal overhead
+
+## 🚀 5-Minute Quick Start
+
+### Step 1: Add Dependency
+
+```xml
+<dependency>
+    <groupId>io.github.vipxieliang</groupId>
+    <artifactId>validx</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+### Step 2: Choose Your Style
+
+#### Option A: Annotation Style (Recommended for DTOs)
+
+Perfect for controller request validation with Spring Boot:
+
+```java
+public class UserRegistrationDTO {
+    @NotBlank(message = "Email is required")
+    @Email
+    private String email;
+
+    @NotBlank(message = "Phone is required")
+    @ChinesePhone
+    private String phone;
+
+    @ChineseIdCard
+    private String idCard;
+
+    @Password(minLength = 8)
+    private String password;
+
+    // getters and setters...
+}
+
+@RestController
+public class UserController {
+    @PostMapping("/register")
+    public Result register(@Valid @RequestBody UserRegistrationDTO dto) {
+        // Spring automatically validates, returns 400 on failure
+        return userService.register(dto);
+    }
+}
+```
+
+#### Option B: Fluent Chain Style (Recommended for Business Logic)
+
+Perfect for dynamic validation in service layers:
+
+```java
+@Service
+public class UserService {
+    public void validateUserData(Map<String, Object> userData) {
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY)  // Reject null/empty globally
+            .field("Email").isEmail(userData.get("email"))
+            .field("Phone").isChinesePhone(userData.get("phone"))
+            .field("ID Card").isChineseIdCard(userData.get("idCard"))
+            .field("Optional QQ").allowNull().isQQ(userData.get("qq"));  // Override for optional field
+
+        if (!validator.passed()) {
+            throw new ValidationException(validator.getErrors());
+        }
+    }
+}
+```
+
+### Step 3: Run Your Application
+
+That's it! ValidX works seamlessly with your existing Spring Boot setup. Error messages automatically adapt to the user's language via `Accept-Language` header.
 
 ## Installation and Usage
 

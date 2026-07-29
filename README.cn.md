@@ -4,12 +4,121 @@
 
 [English](README.md)
 
+<div align="center">
 
 # ValidX
 
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.vipxieliang/validx?color=blue)](https://central.sonatype.com/artifact/io.github.vipxieliang/validx)
+[![License](https://img.shields.io/badge/license-Apache%202.0-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+[![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
+
+**面向中国业务场景的企业级 Java 验证库**
+
+[快速开始](#-5-分钟快速开始) | [为什么选择 ValidX？](#-为什么选择-validx) | [文档](#支持的验证注解) | [贡献](#贡献)
+
+</div>
+
+---
+
 ## 介绍
 
-一个专注于提供全面验证解决方案的开源项目，涵盖数据校验、业务逻辑检查等，助力开发者构建更稳健的应用。
+ValidX 是一个专注于中国业务场景的开源 Java 验证库，提供全面的验证解决方案。基于 JSR-380 标准构建，提供 90+ 个专门针对中国场景的验证注解，包括身份证、手机号、银行卡等。
+
+## ✨ 为什么选择 ValidX？
+
+### 🇨🇳 **为中国而生**
+- **90+ 中国特色验证器**：身份证、手机号、银行卡、统一社会信用代码、车牌号等
+- **支持 8 种语言**：简体中文、英语、日语、韩语、法语、德语、西班牙语、俄语
+- **本土业务验证**：快递单号、QQ、微信、支付宝订单号
+
+### 🚀 **开发者友好**
+- **两种使用方式**：注解式（适用于 DTO）或链式 API（适用于动态验证）
+- **零配置**：开箱即用，完美集成 Spring Boot 和标准 Bean Validation
+- **智能空值处理**：可配置全局/局部的 null 和空字符串策略
+
+### 🎯 **企业级**
+- **类型安全验证**：注解方式提供编译时检查
+- **丰富的错误消息**：自动国际化支持，可自定义字段标签
+- **生产验证**：1300+ 单元测试全面覆盖
+
+### 📦 **轻量高效**
+- **单一依赖**：除 Bean Validation API 外无外部依赖
+- **体积小巧**：~300KB JAR 包大小
+- **高性能**：优化的验证器，最小化性能开销
+
+## 🚀 5 分钟快速开始
+
+### 第一步：添加依赖
+
+```xml
+<dependency>
+    <groupId>io.github.vipxieliang</groupId>
+    <artifactId>validx</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
+
+### 第二步：选择使用方式
+
+#### 方式 A：注解方式（推荐用于 DTO）
+
+适合 Spring Boot 控制器请求验证：
+
+```java
+public class UserRegistrationDTO {
+    @NotBlank(message = "邮箱不能为空")
+    @Email
+    private String email;
+
+    @NotBlank(message = "手机号不能为空")
+    @ChinesePhone
+    private String phone;
+
+    @ChineseIdCard
+    private String idCard;
+
+    @Password(minLength = 8)
+    private String password;
+
+    // getters and setters...
+}
+
+@RestController
+public class UserController {
+    @PostMapping("/register")
+    public Result register(@Valid @RequestBody UserRegistrationDTO dto) {
+        // Spring 自动验证，失败返回 400
+        return userService.register(dto);
+    }
+}
+```
+
+#### 方式 B：链式调用方式（推荐用于业务逻辑）
+
+适合服务层动态验证：
+
+```java
+@Service
+public class UserService {
+    public void validateUserData(Map<String, Object> userData) {
+        ValidaX validator = ValidaX.init()
+            .config(ValidXConfig.GLOBAL_NOT_EMPTY)  // 全局拒绝 null/空值
+            .field("邮箱").isEmail(userData.get("email"))
+            .field("手机号").isChinesePhone(userData.get("phone"))
+            .field("身份证").isChineseIdCard(userData.get("idCard"))
+            .field("QQ（可选）").allowNull().isQQ(userData.get("qq"));  // 可选字段允许空值
+
+        if (!validator.passed()) {
+            throw new ValidationException(validator.getErrors());
+        }
+    }
+}
+```
+
+### 第三步：运行应用
+
+就这么简单！ValidX 与现有 Spring Boot 设置无缝协作。错误消息会根据 `Accept-Language` 请求头自动适配用户语言。
 
 ## 安装和使用
 
