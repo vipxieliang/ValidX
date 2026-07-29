@@ -12,7 +12,7 @@
 
     <name>ValidX</name>
     <description>A comprehensive validation library for various scenarios</description>
-    <url>https://gitee.com/vipxieliang/ValidX</url>
+    <url>https://github.com/vipxieliang/ValidX</url>
 
     <licenses>
         <license>
@@ -29,9 +29,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://gitee.com/vipxieliang/ValidX.git</connection>
-        <developerConnection>scm:git:ssh://gitee.com/vipxieliang/ValidX.git</developerConnection>
-        <url>https://gitee.com/vipxieliang/ValidX</url>
+        <connection>scm:git:git://github.com/vipxieliang/ValidX.git</connection>
+        <developerConnection>scm:git:ssh://github.com/vipxieliang/ValidX.git</developerConnection>
+        <url>https://github.com/vipxieliang/ValidX</url>
     </scm>
 
     <properties>
