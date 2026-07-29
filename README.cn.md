@@ -66,7 +66,7 @@ public class UserDTO {
 @Test
 public void testInstanceMethodWithDirectValue() {
     // 测试使用实例方法直接传入值进行验证
-    ValidationPlus chain = ValidationPlus.init(); // 创建一个空的链
+    ValidaX chain = ValidaX.init(); // 创建一个空的链
     chain = chain.isChineseIdCard((Object)"440608197310039910")
             .isUrl((Object)"http://example.com")
             .isIp((Object)"192.168.1.1");
@@ -79,7 +79,7 @@ public void testInstanceMethodWithDirectValue() {
 @Test
 public void testFutureDateWithIncludeToday() {
     // 测试使用isFutureDate方法包含今天的日期
-    ValidationPlus chain = ValidationPlus.init(); // 创建一个空的链
+    ValidaX chain = ValidaX.init(); // 创建一个空的链
     chain = chain.isFutureDate((Object)LocalDate.now().toString(), true)
             .isFutureDate((Object)LocalDate.now().plusDays(1).toString());
 
@@ -93,16 +93,16 @@ ValidX 支持多语言错误消息，可以通过以下方式使用：
 
 ```java
 // 使用系统默认语言
-ValidationPlus chain1 = ValidationPlus.init()
+ValidaX chain1 = ValidaX.init()
         .isEmail("invalid-email");
 
 // 使用中文
-ValidationPlus chain2 = ValidationPlus.init()
+ValidaX chain2 = ValidaX.init()
         .withLocale(Locale.SIMPLIFIED_CHINESE)
         .isEmail("invalid-email");
 
 // 使用英文
-ValidationPlus chain3 = ValidationPlus.init()
+ValidaX chain3 = ValidaX.init()
         .withLocale(Locale.ENGLISH)
         .isEmail("invalid-email");
 ```
@@ -145,7 +145,7 @@ ValidX 还支持自动语言环境切换，无需显式指定语言环境：
 MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
 
 // 验证操作会自动使用设置的语言环境
-ValidationPlus chain = ValidationPlus.init()
+ValidaX chain = ValidaX.init()
         .isEmail("invalid-email");
 
 // 清除全局语言环境设置
@@ -231,7 +231,7 @@ public class UserController {
 
 ### 2. 链式调用的 Null/空字符串处理
 
-链式校验（`ValidationPlus.init()`）的默认行为与注解方式一致：**null 和空字符串会通过验证**。
+链式校验（`ValidaX.init()`）的默认行为与注解方式一致：**null 和空字符串会通过验证**。
 
 #### 为什么这样设计？
 
@@ -252,7 +252,7 @@ public class UserController {
 @Service
 public class UserService {
     public void process(Map<String, Object> data) {
-        ValidationPlus validator = ValidationPlus.init();
+        ValidaX validator = ValidaX.init();
 
         // Map 中的字段可能不存在（null），这是正常情况
         // 链式校验会自动跳过 null 值
@@ -268,24 +268,24 @@ public class UserService {
 
 #### 链式验证配置 API
 
-ValidationPlus 现在支持通过全局配置和局部状态控制来灵活处理 null/空值。
+ValidaX 现在支持通过全局配置和局部状态控制来灵活处理 null/空值。
 
 ##### 全局配置
 
-你可以使用 `ValidationConfig` 设置全局验证要求：
+你可以使用 `ValidXConfig` 设置全局验证要求：
 
 ```java
 // 创建带有全局 NOT_NULL 要求的验证器
-ValidationPlus validator = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_NULL);
+ValidaX validator = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL);
 
 // 所有验证方法现在都会拒绝 null 值
 validator.isEmail(email)  // 如果 email 为 null 则失败
          .isPhone(phone); // 如果 phone 为 null 则失败
 
 // 创建带有全局 NOT_EMPTY 要求的验证器
-ValidationPlus validator2 = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_EMPTY);
+ValidaX validator2 = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
 // 所有验证方法现在都会拒绝 null 和空字符串
 validator2.isEmail(email)  // 如果 email 为 null 或 "" 则失败
@@ -293,35 +293,35 @@ validator2.isEmail(email)  // 如果 email 为 null 或 "" 则失败
 ```
 
 **可用的全局配置：**
-- `ValidationConfig.DEFAULT` - 允许 null 和空字符串（默认行为）
-- `ValidationConfig.GLOBAL_NOT_NULL` - 所有字段不能为 null
-- `ValidationConfig.GLOBAL_NOT_EMPTY` - 所有字段不能为 null 或空字符串
+- `ValidXConfig.DEFAULT` - 允许 null 和空字符串（默认行为）
+- `ValidXConfig.GLOBAL_NOT_NULL` - 所有字段不能为 null
+- `ValidXConfig.GLOBAL_NOT_EMPTY` - 所有字段不能为 null 或空字符串
 
 **最佳实践：** 建议只在验证链的开头调用一次 `config()` 方法，以保持清晰和可维护性。
 
 ```java
 // ✅ 推荐：在开头设置一次配置
-ValidationPlus validator = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_NULL)
+ValidaX validator = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .isPhone(phone)
     .allowNull().isQQ(qq);  // 例外情况使用局部方法
 
 // ⚠️ 不推荐：在中间多次调用 config()
-ValidationPlus validator = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_NULL)
+ValidaX validator = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
-    .config(ValidationConfig.DEFAULT)  // 令人困惑：难以跟踪配置变化
+    .config(ValidXConfig.DEFAULT)  // 令人困惑：难以跟踪配置变化
     .isPhone(phone);
 
 // ✅ 如果需要不同配置，创建多个验证器实例
-ValidationPlus strictValidator = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_NULL)
+ValidaX strictValidator = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email1)
     .isPhone(phone1);
 
-ValidationPlus lenientValidator = ValidationPlus.init()
-    .config(ValidationConfig.DEFAULT)
+ValidaX lenientValidator = ValidaX.init()
+    .config(ValidXConfig.DEFAULT)
     .isEmail(email2)
     .isPhone(phone2);
 ```
@@ -331,8 +331,8 @@ ValidationPlus lenientValidator = ValidationPlus.init()
 你可以使用局部状态方法来覆盖特定字段的全局配置：
 
 ```java
-ValidationPlus validator = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_NULL);  // 全局：拒绝 null
+ValidaX validator = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL);  // 全局：拒绝 null
 
 // 覆盖特定字段
 validator.field("可选邮箱").allowNull().isEmail(optionalEmail)  // 此字段允许 null
@@ -352,8 +352,8 @@ validator.field("可选邮箱").allowNull().isEmail(optionalEmail)  // 此字段
 局部状态始终优先于全局配置：
 
 ```java
-ValidationPlus validator = ValidationPlus.init()
-    .config(ValidationConfig.GLOBAL_NOT_EMPTY);  // 全局：拒绝 null 和空字符串
+ValidaX validator = ValidaX.init()
+    .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // 全局：拒绝 null 和空字符串
 
 validator.allowNull().isEmail(email);  // 局部 allowNull() 覆盖全局配置
 ```
@@ -366,8 +366,8 @@ validator.allowNull().isEmail(email);  // 局部 allowNull() 覆盖全局配置
 
 ```java
 public void validateUserRegistration(Map<String, Object> request) {
-    ValidationPlus validator = ValidationPlus.init()
-        .config(ValidationConfig.GLOBAL_NOT_EMPTY);  // 大部分字段必填
+    ValidaX validator = ValidaX.init()
+        .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // 大部分字段必填
 
     validator.field("邮箱").isEmail(request.get("email"))
              .field("手机").isChinesePhone(request.get("phone"))
@@ -385,7 +385,7 @@ public void validateUserRegistration(Map<String, Object> request) {
 ```java
 public void updateUserProfile(String userId, Map<String, Object> updates) {
     // 只验证正在更新的字段
-    ValidationPlus validator = ValidationPlus.init();  // 默认：允许 null/空
+    ValidaX validator = ValidaX.init();  // 默认：允许 null/空
 
     // 只验证更新 Map 中存在的字段
     if (updates.containsKey("email")) {
@@ -406,8 +406,8 @@ public void updateUserProfile(String userId, Map<String, Object> updates) {
 
 ```java
 public void validateComplexForm(FormData data) {
-    ValidationPlus validator = ValidationPlus.init()
-        .config(ValidationConfig.GLOBAL_NOT_NULL);  // 大部分字段必填
+    ValidaX validator = ValidaX.init()
+        .config(ValidXConfig.GLOBAL_NOT_NULL);  // 大部分字段必填
 
     validator.field("邮箱").notEmpty().isEmail(data.getEmail())        // 必填且非空
              .field("手机").isChinesePhone(data.getPhone())            // 必填（使用全局）
@@ -427,7 +427,7 @@ public void validateComplexForm(FormData data) {
 **重要：** 局部状态（notNull/notEmpty/allowNull/allowEmpty）在每次验证方法调用后自动重置。这确保每个字段的验证是独立的。
 
 ```java
-ValidationPlus validator = ValidationPlus.init();
+ValidaX validator = ValidaX.init();
 
 validator.notNull().isEmail(email1)   // notNull 应用于 email1
          .isEmail(email2)              // email2 使用默认行为（状态已重置）
@@ -439,7 +439,7 @@ validator.notNull().isEmail(email1)   // notNull 应用于 email1
 使用 `.field("标签")` 时，错误消息将包含自定义标签：
 
 ```java
-ValidationPlus validator = ValidationPlus.init();
+ValidaX validator = ValidaX.init();
 
 validator.field("用户邮箱").notEmpty().isEmail("")
          .field("联系电话").notNull().isChinesePhone(null);
@@ -455,11 +455,11 @@ if (!validator.passed()) {
 
 ## 线程安全
 
-**ValidationPlus 实例不是线程安全的。** 每次校验都应该创建新实例：
+**ValidaX 实例不是线程安全的。** 每次校验都应该创建新实例：
 
 ```java
 // ❌ 错误：跨线程共享实例
-private static final ValidationPlus VALIDATOR = ValidationPlus.init();
+private static final ValidaX VALIDATOR = ValidaX.init();
 
 public void validate(User user) {
     VALIDATOR.isEmail(user.getEmail());  // 线程不安全！
@@ -467,7 +467,7 @@ public void validate(User user) {
 
 // ✅ 正确：每次校验创建新实例
 public void validate(User user) {
-    ValidationPlus validator = ValidationPlus.init()
+    ValidaX validator = ValidaX.init()
         .isEmail(user.getEmail())
         .isPhone(user.getPhone());
 
@@ -477,10 +477,10 @@ public void validate(User user) {
 }
 ```
 
-**为什么？** ValidationPlus 内部使用可变状态（局部要求标志、字段标识、错误列表），这些状态在校验链执行过程中会被修改。跨线程共享实例会导致竞态条件和不正确的校验结果。
+**为什么？** ValidaX 内部使用可变状态（局部要求标志、字段标识、错误列表），这些状态在校验链执行过程中会被修改。跨线程共享实例会导致竞态条件和不正确的校验结果。
 
 **线程安全的组件：**
-- `ValidationConfig` 对象是不可变的，可以安全共享
+- `ValidXConfig` 对象是不可变的，可以安全共享
 - 各个验证器类（如 `ChineseIdCardValidator`）是无状态的，可以复用
 
 这种设计遵循与其他流式 API 相同的模式，如 `StringBuilder`、Java 8 `Stream` 和 Lombok `Builder` - 它们都采用"创建-使用-丢弃"的使用模式。
@@ -603,7 +603,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isAlpha("abcDEF");
   ```
 
@@ -617,7 +617,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isAlphaDash("abc-123_def");
   ```
 
@@ -631,7 +631,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isAlphaNumber("abc123");
   ```
 
@@ -645,7 +645,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String name;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChinese("汉字");
   ```
 
@@ -659,7 +659,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String name;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseAlpha("汉字abc");
   ```
 
@@ -673,7 +673,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseAlphaNum("汉字abc123");
   ```
 
@@ -687,7 +687,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseAlphaDash("汉字abc-123_def");
   ```
 
@@ -701,7 +701,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String longitude;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isLongitude("116.4074");
   ```
 
@@ -715,7 +715,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String latitude;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isLatitude("39.9042");
   ```
 
@@ -747,7 +747,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String gps;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isGeoPoint("116.4074,39.9042");  // 默认：经度在前
   validator.isGeoPoint("39.9042,116.4074", true);  // 纬度在前
   validator.isGeoPoint("116.4074,39.9042", false, GeoPoint.SeparatorType.COMMA);  // 指定分隔符
@@ -766,7 +766,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String deadline;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isFutureDate("2025-12-31");
   // 或包含今天
   validator.isFutureDate("2025-12-31", true);
@@ -785,7 +785,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String birthDate;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isPastDate("2020-01-01");
   // 或包含今天
   validator.isPastDate("2020-01-01", true);
@@ -801,7 +801,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String time;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isHourMinute("23:20");
   ```
 
@@ -815,7 +815,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String time;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isHourMinuteSecond("23:50:29");
   ```
 
@@ -833,7 +833,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private List<String> roles;
   
   // 链式调用方式使用 - 单个值验证
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isIn("value1", new String[]{"value1", "value2"});
   
   // 链式调用方式使用 - 集合验证
@@ -855,7 +855,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private List<String> forbiddenRoles;
   
   // 链式调用方式使用 - 单个值验证
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isNotIn("value3", new String[]{"value1", "value2"});
   
   // 链式调用方式使用 - 集合验证
@@ -878,7 +878,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用链式调用时也可以指定是否忽略大小写：
   ```java
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   
   // 默认忽略大小写
   validator.isFileExtension("document.xls", new String[]{"XLS"});
@@ -921,7 +921,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private MultipartFile avatar;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 只指定最大值
   validator.isFileSize(file, "10MB");
@@ -946,7 +946,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String text;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isLower("abcdef");
   ```
 
@@ -960,7 +960,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String text;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isUpper("ABCDEF");
   ```
 
@@ -974,7 +974,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String hex;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isXdigit("0a1B2c3D");
   ```
 
@@ -1004,7 +1004,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用链式调用时也可以指定密码强度要求：
   ```java
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   
   // 使用默认规则（最小长度8位，必须包含大小写字母、数字和特殊字符）
   validator.isPassword("MyPassword123!");
@@ -1034,7 +1034,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String transactionId;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证标准格式
   validator.isUUID("550e8400-e29b-41d4-a716-446655440000");
@@ -1075,7 +1075,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String jwtPayload;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证标准格式
   validator.isBase64("SGVsbG8gV29ybGQ=");
@@ -1122,7 +1122,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String birthDate;  // "1990/01/01"
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 只验证最小年龄
   validator.isAge(LocalDate.now().minusYears(25), 18);
@@ -1182,7 +1182,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String apiRequest;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证任意JSON类型
   validator.isJSON("{\"name\":\"John\",\"age\":30}");
@@ -1246,7 +1246,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String companyPhone;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证任意电话号码
   validator.isPhoneNumber("+8613812345678");
@@ -1286,7 +1286,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String token;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U");
   ```
 * 注意事项：
@@ -1322,12 +1322,12 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String versionWithPrefix;
 
   // 链式调用方式使用 - 标准格式
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isSemVer("1.0.0");
   validator.isSemVer("2.1.3-beta.1");
 
   // 链式调用方式使用 - 允许v前缀
-  ValidationPlus validator2 = ValidationPlus.init();
+  ValidaX validator2 = ValidaX.init();
   validator2.isSemVer("v1.0.0", true);
   validator2.isSemVer("v2.1.3-rc.1", true);
   ```
@@ -1366,12 +1366,12 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private Long createTimeMs;
 
   // 链式调用方式使用 - 默认ANY模式
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isTimestamp("1700000000");
   validator.isTimestamp("1700000000000");
 
   // 链式调用方式使用 - 指定单位
-  ValidationPlus validator2 = ValidationPlus.init();
+  ValidaX validator2 = ValidaX.init();
   validator2.isTimestamp("1700000000", Timestamp.TimestampUnit.SECONDS);
   validator2.isTimestamp(1700000000000L, Timestamp.TimestampUnit.MILLISECONDS);
   ```
@@ -1406,7 +1406,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String schedule;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isCronExpression("0 0 12 * * ?");
   validator.isCronExpression("0 0/15 * * * ?");
   validator.isCronExpression("0 0 9 ? * MON-FRI");
@@ -1450,7 +1450,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String simpleDuration;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证任意格式
   validator.isDuration("PT2H30M");
@@ -1506,7 +1506,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String mixedNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证任意支持的快递公司
   validator.isExpressNumber("123456789012");
@@ -1537,7 +1537,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
 
@@ -1551,7 +1551,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isEndsWith("string_suffix", new String[]{"suffix"});
   ```
 
@@ -1579,7 +1579,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用链式调用时也可以指定枚举字段：
   ```java
   // 链式调用方式使用 - 单个值验证
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   
   // 验证枚举的name()值（默认）
   validator.isEnum("VALUE1", MyEnum.class);
@@ -1623,7 +1623,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String color;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isColor("#FF0000");
   ```
 
@@ -1639,7 +1639,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String idCard;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseIdCard("11010119900307211X");
   ```
 
@@ -1653,7 +1653,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String passportNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChinesePassport("G12345678");
   ```
 
@@ -1667,7 +1667,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseMilitaryOfficer("军字第1234567号");
   ```
 
@@ -1681,7 +1681,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseSoldier("沈字第0100000号");
   ```
 
@@ -1695,7 +1695,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String identityNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isForeignerPermanentResidenceIdentity("911124198108030028");
   ```
 
@@ -1709,7 +1709,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String residenceNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isHKMacauResidence("810000000000000001");
   ```
 
@@ -1723,7 +1723,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String passNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isHKMacauPass("H1234567800");
   ```
 
@@ -1737,7 +1737,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String residenceNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isTaiwanResidence("830000000000000001");
   ```
 
@@ -1751,7 +1751,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String passNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isTaiwanPass("1234567800");
   ```
 
@@ -1765,7 +1765,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String permitNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
 
@@ -1779,7 +1779,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String creditCode;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isUnifiedSocialCreditCode("91350100M000100Y43");
   ```
 
@@ -1793,7 +1793,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String phoneNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChinesePhoneOrLandline("010-12345678");
   ```
 
@@ -1807,7 +1807,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String phoneNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChinesePhone("13812345678");
   ```
 
@@ -1821,7 +1821,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String phoneNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseLandline("010-12345678");
   ```
 
@@ -1841,7 +1841,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String cardNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isBankCard("4012888888881881");
   ```
 
@@ -1855,7 +1855,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String cvv;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isCVV("123");
   ```
 
@@ -1869,7 +1869,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String iban;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isIBAN("DE44500800000123456789");
   ```
 
@@ -1883,7 +1883,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String swiftCode;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isSWIFT("COBADEFF");
   ```
 
@@ -1917,7 +1917,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   
   ```java
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   
   // 默认支持所有交易所
   validator.isStockCode("600000");
@@ -1949,7 +1949,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   
   ```java
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   
   // 验证T开头+18位数字格式
   validator.isTradeOrderNumber("T123456789012345678");
@@ -1998,7 +1998,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   
   ```java
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   
   // 默认支持所有产品类型
   validator.isFinancialProductCode("500001");
@@ -2027,7 +2027,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDegreeCertificate("1075522008000001");
   ```
 
@@ -2042,7 +2042,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDoctor("20251111014406081973100014");
   ```
 
@@ -2057,7 +2057,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isTeacher("20253412345678901");
   ```
 
@@ -2076,7 +2076,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isLawyer("11101201810123456");
   ```
 
@@ -2091,7 +2091,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isPMP("1234567");
   ```
 
@@ -2106,7 +2106,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isConstructor("京111050700001");
   ```
 
@@ -2121,7 +2121,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isAccountant("21010203451");
   ```
 
@@ -2137,7 +2137,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String domain;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDomain("example.com");
   ```
 
@@ -2165,7 +2165,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String ipv6Address;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
 
   // 验证任意IP地址（默认）
   validator.isIp("192.168.1.1");
@@ -2190,7 +2190,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String macAddress;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isMac("00:1A:2B:3C:4D:5E");
   ```
 
@@ -2204,7 +2204,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String url;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isUrl("http://example.com");
   ```
 
@@ -2218,7 +2218,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String email;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isEmail("test@example.com");
   ```
 
@@ -2232,7 +2232,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String subnetMask;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isSubnetMask("255.255.255.0");
   ```
 
@@ -2246,7 +2246,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String port;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isPort("8080");
   ```
 
@@ -2262,7 +2262,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String licensePlate;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseLicensePlate("京A12345");
   ```
 
@@ -2276,7 +2276,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String patentNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChinesePatent("ZL2013106997442");
   ```
 
@@ -2290,7 +2290,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String trademarkNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseTrademark("1234567");
   ```
 
@@ -2304,7 +2304,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String copyrightNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isSoftwareCopyright("软著登字第2023001234号");
   ```
 
@@ -2318,7 +2318,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String copyrightNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isWorkCopyright("作登字22-2023-A-0018号");
   ```
 
@@ -2332,7 +2332,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String zipCode;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isChineseZipCode("100000");
   ```
 
@@ -2346,7 +2346,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String approvalNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDrugApproval("国药准字H20210039");
   ```
 
@@ -2360,7 +2360,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String drugCode;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDrugCode("69012345678901234563");
   ```
 
@@ -2374,7 +2374,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String registrationNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isMedicalDeviceRegistration("国械注准20243010001");
   ```
 
@@ -2388,7 +2388,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String qqNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isQQ("123456789");
   ```
 
@@ -2406,7 +2406,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String wechatId;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isWeChat("wechat123");
   ```
 
@@ -2422,7 +2422,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String vin;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isVIN("WP0AJ2972LL122844");
   ```
 
@@ -2436,7 +2436,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String engineCode;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isVehicleEngine("123456");
   ```
 
@@ -2452,7 +2452,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String isbn;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isISBN("9780306406157");
   ```
 
@@ -2466,7 +2466,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String issn;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isISSN("0317-8471");
   ```
 
@@ -2480,7 +2480,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String doi;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDOI("10.1000/182");
   ```
 
@@ -2494,7 +2494,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String clcNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isCLC("TP311.138");
   ```
 
@@ -2508,7 +2508,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String ddcNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isDDC("516.3");
   ```
 
@@ -2522,7 +2522,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String orcidId;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isORCID("0000-0002-1825-0097");
   ```
 
@@ -2536,7 +2536,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String ipcNumber;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isIPC("A01B1/00");
   ```
 
@@ -2552,7 +2552,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String imei;
 
   // 链式调用方式使用
-  ValidationPlus validator = ValidationPlus.init();
+  ValidaX validator = ValidaX.init();
   validator.isIMEI("123412341234564");
   ```
 

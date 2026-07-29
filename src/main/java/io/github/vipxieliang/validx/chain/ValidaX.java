@@ -40,7 +40,7 @@ import java.util.Locale;
  * 链式验证器
  * 提供流畅的API用于连续验证多个条件
  * 使用示例:
- * ValidationPlus validator = ValidationPlus.init();
+ * ValidaX validator = ValidaX.init();
  * validator.isEmail("test@example.com")
  *          .isChineseIdCard("11010119900307211X")
  *          .isISBN("9780306406157");
@@ -81,7 +81,7 @@ public class ValidaX {
     /**
      * 设置全局配置
      * @param config 验证配置
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX config(ValidXConfig config) {
         this.config = config;
@@ -91,7 +91,7 @@ public class ValidaX {
     /**
      * 设置字段标识（可选）
      * @param fieldLabel 字段标识
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX field(String fieldLabel) {
         this.currentFieldLabel = fieldLabel;
@@ -100,7 +100,7 @@ public class ValidaX {
 
     /**
      * 要求非null（局部状态）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX notNull() {
         this.localRequirement = LocalRequirement.NOT_NULL;
@@ -109,7 +109,7 @@ public class ValidaX {
 
     /**
      * 要求非null且非空字符串（局部状态）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX notEmpty() {
         this.localRequirement = LocalRequirement.NOT_EMPTY;
@@ -118,7 +118,7 @@ public class ValidaX {
 
     /**
      * 允许null和空字符串（局部覆盖）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX allowNull() {
         this.localRequirement = LocalRequirement.ALLOW_NULL;
@@ -127,7 +127,7 @@ public class ValidaX {
 
     /**
      * 允许空字符串但不允许null（局部覆盖）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX allowEmpty() {
         this.localRequirement = LocalRequirement.ALLOW_EMPTY;
@@ -137,7 +137,7 @@ public class ValidaX {
     /**
      * 设置语言环境
      * @param locale 语言环境
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX withLocale(Locale locale) {
         this.locale = locale;
@@ -377,7 +377,7 @@ public class ValidaX {
      * 验证IP地址（指定版本）
      * @param value 待验证的IP地址
      * @param version IP版本（Ip.IpVersion.V4/Ip.IpVersion.V6/Ip.IpVersion.ANY）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isIp(Object value, Ip.IpVersion version) {
         if (checkRequirement(value, "Ip", errors, getLocale())) {
@@ -682,7 +682,7 @@ public class ValidaX {
      * 验证文件大小（只指定最大值）
      * @param value 文件对象（File、Path、byte[]、MultipartFile）
      * @param max 最大大小（如 "10MB"、"5GB"）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isFileSize(Object value, String max) {
         if (checkRequirement(value, "File Size", errors, getLocale())) {
@@ -697,7 +697,7 @@ public class ValidaX {
      * @param value 文件对象（File、Path、byte[]、MultipartFile）
      * @param min 最小大小（如 "1KB"、"100KB"）
      * @param max 最大大小（如 "10MB"、"5GB"）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isFileSize(Object value, String min, String max) {
         if (checkRequirement(value, "File Size", errors, getLocale())) {
@@ -710,7 +710,7 @@ public class ValidaX {
     /**
      * 验证 UUID 格式（只允许标准格式）
      * @param value UUID 字符串
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isUUID(Object value) {
         if (checkRequirement(value, "UUID", errors, getLocale())) {
@@ -724,7 +724,7 @@ public class ValidaX {
      * 验证 UUID 格式
      * @param value UUID 字符串
      * @param allowWithoutHyphens 是否允许不带连字符的格式
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isUUID(Object value, boolean allowWithoutHyphens) {
         if (checkRequirement(value, "U U I D", errors, getLocale())) {
@@ -737,7 +737,7 @@ public class ValidaX {
     /**
      * 验证 Base64 格式（标准格式）
      * @param value Base64 字符串
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isBase64(Object value) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
@@ -751,7 +751,7 @@ public class ValidaX {
      * 验证 Base64 格式
      * @param value Base64 字符串
      * @param urlSafe 是否为 URL-safe 格式
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isBase64(Object value, boolean urlSafe) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
@@ -766,7 +766,7 @@ public class ValidaX {
      * @param value Base64 字符串
      * @param urlSafe 是否为 URL-safe 格式
      * @param allowNoPadding 是否允许不带填充符
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isBase64(Object value, boolean urlSafe, boolean allowNoPadding) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
@@ -780,7 +780,7 @@ public class ValidaX {
      * 验证年龄（只验证最小年龄）
      * @param value 待验证的值（LocalDate、Date或String）
      * @param minAge 最小年龄
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isAge(Object value, int minAge) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
@@ -795,7 +795,7 @@ public class ValidaX {
      * @param value 待验证的值（LocalDate、Date或String）
      * @param minAge 最小年龄
      * @param maxAge 最大年龄
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isAge(Object value, int minAge, int maxAge) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
@@ -811,7 +811,7 @@ public class ValidaX {
      * @param minAge 最小年龄
      * @param maxAge 最大年龄
      * @param fromIdCard 是否从身份证提取
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isAge(Object value, int minAge, int maxAge, boolean fromIdCard) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
@@ -828,7 +828,7 @@ public class ValidaX {
      * @param maxAge 最大年龄
      * @param fromIdCard 是否从身份证提取
      * @param dateFormat 日期格式
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isAge(Object value, int minAge, int maxAge, boolean fromIdCard, String dateFormat) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
@@ -841,7 +841,7 @@ public class ValidaX {
     /**
      * 验证 JSON 格式（任意类型）
      * @param value JSON 字符串
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isJSON(Object value) {
         if (checkRequirement(value, "JSON", errors, getLocale())) {
@@ -855,7 +855,7 @@ public class ValidaX {
      * 验证 JSON 格式（指定类型）
      * @param value JSON 字符串
      * @param type JSON类型（ANY/OBJECT/ARRAY）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
@@ -870,7 +870,7 @@ public class ValidaX {
      * @param value JSON 字符串
      * @param type JSON类型
      * @param strict 是否严格模式
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
                           boolean strict) {
@@ -888,7 +888,7 @@ public class ValidaX {
      * @param strict 是否严格模式
      * @param maxDepth 最大深度
      * @param maxLength 最大长度
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
                           boolean strict, int maxDepth, int maxLength) {
@@ -964,7 +964,7 @@ public class ValidaX {
     /**
      * 验证JWT Token格式
      * @param value 待验证的JWT Token
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isJWT(Object value) {
         if (checkRequirement(value, "JWT", errors, getLocale())) {
@@ -993,7 +993,7 @@ public class ValidaX {
     /**
      * 验证Unix时间戳格式（秒或毫秒均可）
      * @param value 待验证的值
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isTimestamp(Object value) {
         if (checkRequirement(value, "Timestamp", errors, getLocale())) {
@@ -1007,7 +1007,7 @@ public class ValidaX {
      * 验证Unix时间戳格式（指定单位）
      * @param value 待验证的值
      * @param unit 时间戳单位（SECONDS/MILLISECONDS/ANY）
-     * @return ValidationPlus实例
+     * @return ValidaX实例
      */
     public ValidaX isTimestamp(Object value, Timestamp.TimestampUnit unit) {
         if (checkRequirement(value, "Timestamp", errors, getLocale())) {
@@ -1285,7 +1285,7 @@ public class ValidaX {
      * 验证PMP证书编号
      * 
      * @param value PMP证书编号
-     * @return ValidationPlus实例，支持链式调用
+     * @return ValidaX实例，支持链式调用
      */
     public ValidaX isPMP(Object value) {
         if (checkRequirement(value, "PMP", errors, getLocale())) {
@@ -1299,7 +1299,7 @@ public class ValidaX {
      * 验证建造师证书编号
      * 
      * @param value 建造师证书编号
-     * @return ValidationPlus实例，支持链式调用
+     * @return ValidaX实例，支持链式调用
      */
     public ValidaX isConstructor(Object value) {
         if (checkRequirement(value, "Constructor", errors, getLocale())) {
@@ -1313,7 +1313,7 @@ public class ValidaX {
      * 验证会计资格证书编号
      * 
      * @param value 会计资格证书编号
-     * @return ValidationPlus实例，支持链式调用
+     * @return ValidaX实例，支持链式调用
      */
     public ValidaX isAccountant(Object value) {
         if (checkRequirement(value, "Accountant", errors, getLocale())) {

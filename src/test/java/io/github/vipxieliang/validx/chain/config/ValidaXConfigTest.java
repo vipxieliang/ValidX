@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ValidationConfigTest {
+public class ValidaXConfigTest {
 
     // 测试默认行为（无配置）
     @Test
