@@ -15,9 +15,31 @@
 
 **面向中国业务场景的企业级 Java 验证库**
 
-[快速开始](#-5-分钟快速开始) | [为什么选择 ValidX？](#-为什么选择-validx) | [文档](#支持的验证注解) | [贡献](#贡献)
-
 </div>
+
+---
+
+## 📑 目录
+
+- [介绍](#介绍)
+- [为什么选择 ValidX？](#-为什么选择-validx)
+- [5 分钟快速开始](#-5-分钟快速开始)
+- [多语言支持](#多语言支持)
+- [重要说明：Null/空字符串处理](#重要说明null空字符串处理)
+- [线程安全](#线程安全)
+- [支持的验证注解](#支持的验证注解)
+  - [快速查询表](#快速查询表)
+  - [基础验证](#基础验证)
+  - [身份验证相关](#身份验证相关)
+  - [金融验证相关](#金融验证相关)
+  - [教育/职业资格验证](#教育职业资格验证认证相关的验证)
+  - [网络相关](#网络相关)
+  - [中国特定验证](#中国特定验证)
+  - [汽车相关验证](#汽车相关的验证)
+  - [图书相关验证](#图书相关的验证)
+  - [手机相关验证](#手机相关的验证)
+- [更多验证注解](#更多的的验证注解)
+- [贡献](#贡献)
 
 ---
 
@@ -119,82 +141,6 @@ public class UserService {
 ### 第三步：运行应用
 
 就这么简单！ValidX 与现有 Spring Boot 设置无缝协作。错误消息会根据 `Accept-Language` 请求头自动适配用户语言。
-
-## 安装和使用
-
-### Maven依赖
-
-只需添加单一依赖即可使用所有功能：
-
-```xml
-<dependency>
-    <groupId>io.github.vipxieliang</groupId>
-    <artifactId>validx</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
-### 注解方式使用
-
-```java
-public class UserDTO {
-    @ChineseIdCard
-    private String idCard;
-
-    @Email
-    private String email;
-
-    @Url
-    private String website;
-
-    @Password
-    private String password;
-
-    @Password(minLength = 6)
-    private String password2;
-
-    @Password(minLength = 6, requireSpecialChar = false)
-    private String password3;
-
-    @StartsWith(startsWith = "USER_")
-    private String userCode;
-
-    @In({"admin", "user", "guest"})
-    private String role;
-
-    @In({"admin", "user", "guest"})
-    private List<String> roles;
-
-    // getters and setters
-}
-```
-
-### 链式调用方式使用
-
-```java
-@Test
-public void testInstanceMethodWithDirectValue() {
-    // 测试使用实例方法直接传入值进行验证
-    ValidaX chain = ValidaX.init(); // 创建一个空的链
-    chain = chain.isChineseIdCard((Object)"440608197310039910")
-            .isUrl((Object)"http://example.com")
-            .isIp((Object)"192.168.1.1");
-
-    assertTrue(chain.passed(), "所有验证都应该通过");
-}
-```
-
-```java
-@Test
-public void testFutureDateWithIncludeToday() {
-    // 测试使用isFutureDate方法包含今天的日期
-    ValidaX chain = ValidaX.init(); // 创建一个空的链
-    chain = chain.isFutureDate((Object)LocalDate.now().toString(), true)
-            .isFutureDate((Object)LocalDate.now().plusDays(1).toString());
-
-    assertTrue(chain.passed(), "所有验证都应该通过");
-}
-```
 
 ## 多语言支持
 

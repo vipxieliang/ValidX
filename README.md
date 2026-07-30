@@ -15,9 +15,31 @@
 
 **A comprehensive Java validation library designed for Chinese business scenarios**
 
-[Quick Start](#-5-minute-quick-start) | [Why ValidX?](#-why-choose-validx) | [Documentation](#supported-validation-annotations) | [Contributing](#contribution)
-
 </div>
+
+---
+
+## 📑 Table of Contents
+
+- [Introduction](#introduction)
+- [Why Choose ValidX?](#-why-choose-validx)
+- [5-Minute Quick Start](#-5-minute-quick-start)
+- [Multilingual Support](#multilingual-support)
+- [Important: Null/Empty String Handling](#important-nullempty-string-handling)
+- [Thread Safety](#thread-safety)
+- [Supported Validation Annotations](#supported-validation-annotations)
+  - [Quick Reference Table](#quick-reference-table)
+  - [Basic Validation](#basic-validation)
+  - [Identity Validation](#identity-verification-related)
+  - [Financial Validation](#financial-validation-related)
+  - [Education/Professional Qualification](#educationprofessional-qualificationcertification-related-validation)
+  - [Network Validation](#network-related)
+  - [China-Specific Validation](#china-specific-validation)
+  - [Automotive Validation](#automotive-related-validation)
+  - [Book-Related Validation](#book-related-validation)
+  - [Mobile Device Validation](#mobile-phone-related-validation)
+- [More Validation Annotations](#more-validation-annotations)
+- [Contribution](#contribution)
 
 ---
 
@@ -119,82 +141,6 @@ public class UserService {
 ### Step 3: Run Your Application
 
 That's it! ValidX works seamlessly with your existing Spring Boot setup. Error messages automatically adapt to the user's language via `Accept-Language` header.
-
-## Installation and Usage
-
-### Maven Dependency
-
-Just add a single dependency to use all features:
-
-```xml
-<dependency>
-    <groupId>io.github.vipxieliang</groupId>
-    <artifactId>validx</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
-### Annotation-based Usage
-
-```java
-public class UserDTO {
-    @ChineseIdCard
-    private String idCard;
-
-    @Email
-    private String email;
-
-    @Url
-    private String website;
-
-    @Password
-    private String password;
-
-    @Password(minLength = 6)
-    private String password2;
-
-    @Password(minLength = 6, requireSpecialChar = false)
-    private String password3;
-
-    @StartsWith(startsWith = "USER_")
-    private String userCode;
-
-    @In({"admin", "user", "guest"})
-    private String role;
-
-    @In({"admin", "user", "guest"})
-    private List<String> roles;
-
-    // getters and setters
-}
-```
-
-### Chain Call Usage
-
-```java
-@Test
-public void testInstanceMethodWithDirectValue() {
-    // Test using instance method to directly pass values for validation
-    ValidaX chain = ValidaX.init(); // Create an empty chain
-    chain = chain.isChineseIdCard((Object)"440608197310039910")
-            .isUrl((Object)"http://example.com")
-            .isIp((Object)"192.168.1.1");
-
-    assertTrue(chain.passed(), "All validations should pass");
-}
-```
-
-```java
-@Test
-public void testFutureDateWithIncludeToday() {
-    // Test using isFutureDate method including today's date
-    ValidaX chain = ValidaX.init(); // Create an empty chain
-    chain = chain.isFutureDate((Object)LocalDate.now().toString(), true)
-            .isFutureDate((Object)LocalDate.now().plusDays(1).toString());
-
-    assertTrue(chain.passed(), "All validations should pass");
-}
-```
 
 ## Multilingual Support
 
