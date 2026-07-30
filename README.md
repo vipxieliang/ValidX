@@ -716,6 +716,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isAlpha("abcDEF");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @AlphaDash
 * Validation Rule: Alphanumeric underscore hyphen validation, allowing English letters, numbers, underscores, and hyphens.
 * Example Format: `abc-123_def`
@@ -729,6 +731,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isAlphaDash("abc-123_def");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @AlphaNumber
 * Validation Rule: Alphanumeric combination validation, only allowing English letters and numbers.
@@ -744,6 +748,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isAlphaNumber("abc123");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Chinese
 * Validation Rule: Pure Chinese character validation, only allowing Chinese characters (Unicode Chinese characters).
 * Example Format: `汉字`
@@ -757,6 +763,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChinese("汉字");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseAlpha
 * Validation Rule: Chinese character letter validation, allowing Chinese characters and English letters.
@@ -772,6 +780,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChineseAlpha("汉字abc");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChineseAlphaNum
 * Validation Rule: Chinese character letter number validation, allowing Chinese characters, English letters, and numbers.
 * Example Format: `汉字abc123`
@@ -785,6 +795,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChineseAlphaNum("汉字abc123");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseAlphaDash
 * Validation Rule: Chinese character letter number underscore hyphen validation, allowing Chinese characters, English letters, numbers, underscores, and hyphens.
@@ -800,6 +812,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChineseAlphaDash("汉字abc-123_def");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Longitude
 * Validation Rule: Longitude validation, validating whether the longitude value is between -180 and 180.
 * Example Format: `0`, `116.4074`, `-116.4074`, `180`, `-180`
@@ -814,6 +828,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isLongitude("116.4074");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Latitude
 * Validation Rule: Latitude validation, validating whether the latitude value is between -90 and 90.
 * Example Format: `0`, `39.9042`, `-39.9042`, `90`, `-90`
@@ -827,6 +843,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isLatitude("39.9042");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @GeoPoint
 * Validation Rule: Geographic coordinate pair validation (longitude and latitude), validating whether the coordinate format is correct and values are within valid ranges.
@@ -862,6 +880,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isGeoPoint("116.4074,39.9042", false, GeoPoint.SeparatorType.COMMA);  // Specify separator
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @FutureDate
 * Validation Rule: Future date validation, validating whether the date is a future date.
 * Example Format: `2025-12-31`, `2025-12-31 12:00:00`
@@ -880,6 +900,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Or include today
   validator.isFutureDate("2025-12-31", true);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @PastDate
 * Validation Rule: Past date validation, validating whether the date is a past date.
@@ -900,6 +922,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isPastDate("2020-01-01", true);
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @HourMinute
 * Validation Rule: Hour minute time format validation, validating whether the time format is HH:mm.
 * Example Format: `23:20`, `09:30`
@@ -914,6 +938,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isHourMinute("23:20");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @HourMinuteSecond
 * Validation Rule: Hour minute second time format validation, validating whether the time format is HH:mm:ss.
 * Example Format: `23:50:29`, `09:30:05`
@@ -927,6 +953,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isHourMinuteSecond("23:50:29");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @In
 * Validation Rule: Single element or multiple element matching validation, validating whether the value is in the specified value list.
@@ -950,6 +978,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isIn(roles, new String[]{"admin", "user", "guest"});
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @NotIn
 * Validation Rule: Single element or multiple element non-matching validation, validating whether the value is not in the specified value list.
 * Example Format: Values outside any specified value
@@ -971,6 +1001,8 @@ Click on the annotation name to jump to its detailed documentation.
   List<String> roles = Arrays.asList("user", "guest");
   validator.isNotIn(roles, new String[]{"admin", "root", "superuser"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FileExtension
 * Validation Rule: File extension validation, validating whether the file name's extension is in the specified extension list.
@@ -998,6 +1030,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Case sensitive
   validator.isFileExtension("document.xls", new String[]{"XLS"}, false);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FileSize
 * Validation Rule: File size validation, validating whether the file size is within the specified range.
@@ -1045,6 +1079,9 @@ Click on the annotation name to jump to its detailed documentation.
   - MIME type validation is only available for MultipartFile
   - MultipartFile support uses reflection, no strong Spring dependency required
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Lower
 * Validation Rule: Lowercase character validation, only allowing lowercase English letters.
 * Example Format: `abcdef`
@@ -1058,6 +1095,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isLower("abcdef");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Upper
 * Validation Rule: Uppercase character validation, only allowing uppercase English letters.
@@ -1073,6 +1112,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isUpper("ABCDEF");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Xdigit
 * Validation Rule: Hexadecimal string validation, only allowing hexadecimal characters (0-9, a-f, A-F).
 * Example Format: `0a1B2c3D`
@@ -1086,6 +1127,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isXdigit("0a1B2c3D");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Password
 * Validation Rule: Password strength validation, validating whether the password meets the specified strength requirements.
@@ -1125,6 +1168,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isPassword("mypassword123", 8, false, true, true, false);
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @UUID
 * Validation Rule: UUID (Universally Unique Identifier) format validation, supporting standard format (with hyphens) and compact format (without hyphens).
 * Supported Formats:
@@ -1156,6 +1201,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Standard format must contain exactly 4 hyphens at specific positions
   - Compact format must be exactly 32 hexadecimal characters
   - Common UUID versions (v1, v4, etc.) are all supported
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Base64
 * Validation Rule: Base64 encoding format validation, supporting standard Base64 and URL-safe Base64 formats.
@@ -1200,6 +1248,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Padding character = can only appear at the end, maximum 2 characters
   - String length must be a multiple of 4 (unless allowNoPadding is enabled)
   - Common use cases: file upload, JWT tokens, image data transmission
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Age
 * Validation Rule: Age validation based on birth date or ID card number, supporting minimum age and maximum age constraints.
@@ -1251,6 +1302,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Null or empty values pass validation (handled by @NotNull/@NotEmpty)
   - Future birth dates are treated as age 0
   - Common date formats are automatically tried: yyyy-MM-dd, yyyy/MM/dd, yyyyMMdd
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @JSON
 * Validation Rule: JSON format validation, supporting standard JSON syntax with configurable type restrictions, depth limits, and length limits.
@@ -1313,6 +1367,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Depth limits help prevent stack overflow from deeply nested structures
   - Length limits help prevent memory issues from large JSON strings
   - Common use cases: API request/response validation, config file validation, data serialization
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @PhoneNumber
 * Validation Rule: International phone number validation, supporting multiple international phone number formats including E.164 standard format.
@@ -1378,6 +1435,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Strict mode enforces international format (must start with +)
   - Common use cases: User registration, contact management, international communication
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @JWT
 * Validation Rule: JWT (JSON Web Token) format validation, validating whether the JWT Token has the correct basic format.
 * JWT Format Description:
@@ -1403,6 +1463,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Does not verify signature validity (requires secret key)
   - Does not verify expiration time and other claims
   - Common use cases: API authentication, Single Sign-On (SSO), information exchange
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @SemVer
 * Validation Rule: Semantic Versioning format validation, validating whether the version number conforms to the SemVer 2.0.0 specification.
@@ -1449,6 +1512,9 @@ Click on the annotation name to jump to its detailed documentation.
   - By default, v prefix is not allowed, enable it with `allowVPrefix=true` when needed
   - Common use cases: Software version management, npm package versions, API version control, Git tags
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Timestamp
 * Validation Rule: Unix timestamp format validation, validating whether the value is a valid Unix timestamp (supports seconds and milliseconds).
 * Timestamp Format Description:
@@ -1493,6 +1559,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Invalid digit lengths (e.g., 9-digit, 11-digit, 12-digit) are rejected regardless of unit mode
   - Common use cases: API timestamp parameters, database time fields, message queue timestamps
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @CronExpression
 * Validation Rule: Cron expression format validation, validating whether the value is a valid Cron expression.
 * Supported Formats:
@@ -1526,6 +1595,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Second, minute: 0-59; Hour: 0-23; Day: 1-31; Month: 1-12; Week: 0-7 (0 and 7 both represent Sunday)
   - Year range: 1970-2099 (optional field)
   - Common use cases: Scheduled tasks, job scheduling, timer triggers
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Duration
 * Validation Rule: Duration format validation, validating whether the value is a valid time duration format.
@@ -1578,6 +1650,9 @@ Click on the annotation name to jump to its detailed documentation.
   - At least one time unit must be specified
   - Year is the largest unit supported in ISO 8601 standard
   - Common use cases: Task duration, time period configuration, timeout settings
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ExpressNumber
 * Validation Rule: Express tracking number format validation, validating whether the value is a valid express tracking number.
@@ -1636,6 +1711,9 @@ Click on the annotation name to jump to its detailed documentation.
   - EMS format is case-insensitive
   - Common use cases: E-commerce order management, logistics tracking, shipping validation
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @StartsWith
 * Validation Rule: Prefix validation, validating whether the string starts with the specified prefix.
 * Example Format: Starting with specified string
@@ -1650,6 +1728,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @EndsWith
 * Validation Rule: Suffix validation, validating whether the string ends with the specified suffix.
 * Example Format: Ending with specified string
@@ -1663,6 +1743,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isEndsWith("string_suffix", new String[]{"suffix"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Enum
 * Validation Rule: Single element or multiple element enumeration value validation, validating whether it is a valid value in the specified enumeration.
@@ -1722,6 +1804,8 @@ Click on the annotation name to jump to its detailed documentation.
   }
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Color
 * Validation Rule: Color format validation, validating whether the string is a valid HEX color value, supporting #FFF or #FFFFFF format.
 * Example Format: `#FF0000`, `#F00`, `#ffffff`, `#000`
@@ -1735,6 +1819,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isColor("#FF0000");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Identity Verification Related
 
@@ -1752,6 +1838,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChineseIdCard("11010119900307211X");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChinesePassport
 * Validation Rule: Chinese passport number validation, supporting various types of Chinese passport numbers.
 * Example Format: `G12345678`, `E12345678`, `S12345678`, `D1234567`, `P1234567`
@@ -1765,6 +1853,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChinesePassport("G12345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseMilitaryOfficer
 * Validation Rule: Chinese military officer certificate validation, supporting various types of Chinese military officer certificates.
@@ -1780,6 +1870,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChineseMilitaryOfficer("军字第1234567号");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChineseSoldier
 * Validation Rule: Chinese soldier certificate validation, supporting various types of Chinese soldier certificates.
 * Example Format: `沈字第0100000号`
@@ -1793,6 +1885,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChineseSoldier("沈字第0100000号");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ForeignerPermanentResidenceIdentity
 * Validation Rule: Foreigner permanent residence identity card validation, validating foreigner permanent residence identity card numbers.
@@ -1808,6 +1902,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isForeignerPermanentResidenceIdentity("911124198108030028");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @HKMacauResidence
 * Validation Rule: Hong Kong and Macau residents' residence permit validation, validating Hong Kong and Macau residents' residence permit numbers.
 * Example Format: `810000000000000001`, `82000000000000000X`
@@ -1821,6 +1917,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isHKMacauResidence("810000000000000001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @HKMacauPass
 * Validation Rule: Hong Kong and Macau residents' travel permit to Mainland China (Home Return Permit) validation, validating Hong Kong and Macau residents' travel permit numbers.
@@ -1836,6 +1934,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isHKMacauPass("H1234567800");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @TaiwanResidence
 * Validation Rule: Taiwan residents' residence permit validation, validating Taiwan residents' residence permit numbers.
 * Example Format: `830000000000000001`
@@ -1849,6 +1949,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isTaiwanResidence("830000000000000001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @TaiwanPass
 * Validation Rule: Taiwan residents' travel permit to Mainland China (Taiwan Compatriot Pass) validation, validating Taiwan residents' travel permit numbers.
@@ -1864,6 +1966,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isTaiwanPass("1234567800");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ForeignerWorkPermit
 * Validation Rule: Foreigner work permit validation, validating foreigner work permit numbers.
 * Example Format: Combination of letters and numbers
@@ -1877,6 +1981,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @UnifiedSocialCreditCode
 * Validation Rule: Unified Social Credit Code validation, validating Unified Social Credit Codes.
@@ -1892,6 +1998,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isUnifiedSocialCreditCode("91350100M000100Y43");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChinesePhoneOrLandline
 * Validation Rule: Chinese phone number validation, supporting mobile phones and landlines.
 * Example Format: Supporting mobile phones and landlines
@@ -1905,6 +2013,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChinesePhoneOrLandline("010-12345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChinesePhone
 * Validation Rule: Chinese mobile phone number validation, validating Chinese mobile phone numbers.
@@ -1920,6 +2030,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChinesePhone("13812345678");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChineseLandline
 * Validation Rule: Chinese landline validation, validating Chinese landline numbers.
 * Example Format: Supporting area codes and extensions
@@ -1933,6 +2045,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChineseLandline("010-12345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Financial Validation Related
 
@@ -1954,6 +2068,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isBankCard("4012888888881881");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @CVV
 * Validation Rule: CVV/CVC security code validation, validating the 3-digit or 4-digit security code on the back of credit cards.
 * Example Format: `123`, `1234`
@@ -1967,6 +2083,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isCVV("123");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @IBAN
 * Validation Rule: IBAN international bank account number validation, validating the format and check digits of international bank account numbers (IBAN).
@@ -1982,6 +2100,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isIBAN("DE44500800000123456789");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @SWIFT
 * Validation Rule: SWIFT/BIC code validation, validating the format of SWIFT/BIC bank codes, used to identify specific banks in international wire transfers.
 * Example Format: `COBADEFF`, `DEUTDEFFXXX`
@@ -1995,6 +2115,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isSWIFT("COBADEFF");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @StockCode
 * Validation Rule: Stock code validation, validating the format of stock codes from different exchanges.
@@ -2041,6 +2163,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isStockCode("00700", StockCode.Exchange.HONG_KONG, StockCode.Exchange.NEW_YORK);
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @TradeOrderNumber
 * Validation Rule: Trade order number validation, validating the format of financial trade order numbers.
 * Supported formats:
@@ -2072,6 +2196,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Validate UUID format (without hyphens)
   validator.isTradeOrderNumber("550e8400e29b41d4a716446655440000");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FinancialProductCode
 * Validation Rule: Financial product code validation, validating the format of fund codes, bond codes, and other financial product codes.
@@ -2122,6 +2248,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isFinancialProductCode("500001", FinancialProductCode.ProductType.FUND, FinancialProductCode.ProductType.BOND);
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 ### Education/Professional Qualification/Certification Related Validation
 
 #### @DegreeCertificate
@@ -2140,6 +2268,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isDegreeCertificate("1075522008000001");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Doctor
 * Validation Rule: Doctor qualification certificate number validation, validating doctor qualification certificate numbers.
 * Rule Description: Doctor qualification certificate numbers consist of 24 or 27 characters, including annual codes, provincial administrative region codes, practicing doctor level codes, practicing doctor category codes, and resident ID card numbers
@@ -2155,6 +2285,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isDoctor("20251111014406081973100014");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Teacher
 * Validation Rule: Teacher qualification certificate number validation, validating teacher qualification certificate numbers.
 * Rule Description: Total of 17 digits, representing annual codes, provincial administrative region codes, certification agency codes, qualification type codes, gender codes, and serial number codes respectively
@@ -2169,6 +2301,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isTeacher("20253412345678901");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Lawyer
 * Validation Rule: Legal professional qualification certificate/lawyer practice certificate validation, validating legal professional qualification certificates or lawyer practice certificates.
@@ -2189,6 +2323,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isLawyer("11101201810123456");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @PMP
 * Validation Rule: PMP certificate number validation, validating the format of PMP (Project Management Professional) certificate numbers
 * Rule Description: PMP certificate numbers are typically 7 digits or combinations with specific prefixes
@@ -2203,6 +2339,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isPMP("1234567");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Constructor
 * Validation Rule: Constructor certificate number validation, validating the format of first-class/second-class constructor certificate numbers
@@ -2219,6 +2357,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isConstructor("京111050700001");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Accountant
 * Validation Rule: Accounting qualification certificate number validation, validating the format of accounting qualification certificate numbers
 * Rule Description: Accounting qualification certificate numbers consist of 11 digits, containing year codes, region codes, and other information
@@ -2233,6 +2373,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isAccountant("21010203451");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Network Related
 
@@ -2249,6 +2391,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isDomain("example.com");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Ip
 * Validation Rule: IP address validation, supporting IPv4 and IPv6 address validation with configurable version parameter.
@@ -2289,6 +2433,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isIp("192.168.1.1", Ip.IpVersion.ANY);
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Mac
 * Validation Rule: MAC address validation, validating MAC addresses.
 * Example Format: `00:1A:2B:3C:4D:5E`, `00-1A-2B-3C-4D-5E`
@@ -2302,6 +2448,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isMac("00:1A:2B:3C:4D:5E");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Url
 * Validation Rule: URL address validation, validating URL address format.
@@ -2317,6 +2465,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isUrl("http://example.com");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Email
 * Validation Rule: Email address validation, validating email address format.
 * Example Format: `test@example.com`, `user.name@domain.co.uk`
@@ -2330,6 +2480,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isEmail("test@example.com");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @SubnetMask
 * Validation Rule: Subnet mask validation, validating subnet mask format.
@@ -2345,6 +2497,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isSubnetMask("255.255.255.0");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Port
 * Validation Rule: Port number validation, validating whether the port number is within the range of 0-65535.
 * Example Format: Integer between 0-65535
@@ -2358,6 +2512,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isPort("8080");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### China-specific Validation
 
@@ -2375,6 +2531,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChineseLicensePlate("京A12345");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChinesePatent
 * Validation Rule: Chinese patent number validation, validating Chinese patent numbers.
 * Example Format: `ZL2013106997442`
@@ -2388,6 +2546,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChinesePatent("ZL2013106997442");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseTrademark
 * Validation Rule: Chinese trademark registration number validation, validating Chinese trademark registration numbers.
@@ -2403,6 +2563,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isChineseTrademark("1234567");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @SoftwareCopyright
 * Validation Rule: Computer software copyright registration number validation, validating computer software copyright registration numbers.
 * Example Format: `软著登字第2023001234号`
@@ -2416,6 +2578,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isSoftwareCopyright("软著登字第2023001234号");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @WorkCopyright
 * Validation Rule: General work copyright registration number validation, validating general work copyright registration numbers.
@@ -2431,6 +2595,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isWorkCopyright("作登字22-2023-A-0018号");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ChineseZipCode
 * Validation Rule: Chinese postal code validation, validating Chinese postal codes.
 * Example Format: `100000`, `200000`
@@ -2444,6 +2610,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isChineseZipCode("100000");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DrugApproval
 * Validation Rule: Validate whether the string is a valid Chinese drug approval number. Drug approval numbers are the numbers approved by the national drug regulatory authorities for pharmaceutical manufacturers to produce drugs
@@ -2459,6 +2627,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isDrugApproval("国药准字H20210039");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @DrugCode
 * Validation Rule: Validate whether the string is a valid Chinese drug code. Drug codes start with 69, are 20 digits, and the last digit is the GS1 check digit
 * Example Format: 69012345678901234563, 69123456789012345678
@@ -2472,6 +2642,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isDrugCode("69012345678901234563");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @MedicalDeviceRegistration
 * Validation Rule: Medical device registration certificate number validation, used to validate the format of Chinese medical device registration certificate numbers.
@@ -2487,6 +2659,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isMedicalDeviceRegistration("国械注准20243010001");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @QQ
 * Validation Rule: QQ number validation, validating QQ numbers.
 * Example Format: `123456789`
@@ -2500,6 +2674,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isQQ("123456789");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @WeChat
 * Validation Rule: WeChat account validation, validating WeChat account format.
@@ -2519,6 +2695,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isWeChat("wechat123");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 ### Automotive Related Validation
 
 #### @VIN
@@ -2535,6 +2713,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isVIN("WP0AJ2972LL122844");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @VehicleEngine
 * Validation Rule: Validate vehicle engine code format.
 * Example Format: `123456`, `ABC123`, `123ABC456`
@@ -2548,6 +2728,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isVehicleEngine("123456");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Book Related Validation
 
@@ -2565,6 +2747,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isISBN("9780306406157");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ISSN
 * Validation Rule: International Standard Serial Number validation, supporting 8-digit ISSN format.
 * Example Format: `0317-8471` or `03178471`
@@ -2578,6 +2762,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isISSN("0317-8471");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DOI
 * Validation Rule: Digital Object Identifier validation, used for unique identification of digital resources, widely used in academic publications.
@@ -2593,6 +2779,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isDOI("10.1000/182");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @CLC
 * Validation Rule: Validate whether the string is a valid Chinese Library Classification (CLC) number. The Chinese Library Classification is a book classification system widely used in Chinese libraries
 * Example Format: A, B, TP, TP3, TP311, TP311.1, TP311.138, TP311.138.S6, O175.2, R329.2, F272.3
@@ -2606,6 +2794,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isCLC("TP311.138");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DDC
 * Validation Rule: Validate whether the string is a valid Dewey Decimal Classification (DDC) number. The Dewey Decimal Classification is a classification system widely used in libraries
@@ -2621,6 +2811,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isDDC("516.3");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @ORCID
 * Validation Rule: Open Researcher and Contributor ID validation, used to uniquely identify academic authors and contributors.
 * Example Format: `0000-0002-1825-0097` or `0000000218250097`
@@ -2635,6 +2827,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isORCID("0000-0002-1825-0097");
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @IPC
 * Validation Rule: International Patent Classification number validation, used to identify patent technical fields.
 * Example Format: `A01B1/00`, `A01B1/01`, `H01B12/00`
@@ -2648,6 +2842,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isIPC("A01B1/00");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Mobile Phone Related Validation
 
@@ -2664,6 +2860,8 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isIMEI("123412341234564");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ## More Validation Annotations
 If you need more validations, you can contact us for expansion and support. Contact information:
