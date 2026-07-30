@@ -13,7 +13,7 @@
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
 
-**Stop writing regex - 90+ ready-to-use validators for Chinese business scenarios**
+**Simple, Elegant, Reliable - 90+ ready-to-use validators for Chinese business scenarios**
 
 </div>
 
@@ -46,7 +46,7 @@
 
 ## Introduction
 
-ValidX is an open-source Java validation library focused on providing comprehensive validation solutions for Chinese business scenarios. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
+ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
 
 ## 💡 Why We Created ValidX?
 
@@ -54,7 +54,7 @@ When developing applications for Chinese users, we frequently encountered these 
 
 ### Pain Point 1: Java Has Too Few Built-in Validation Rules, Far Less Than Other Language Frameworks
 
-If you've used PHP's ThinkPHP framework, you'll notice it comes with incredibly rich built-in validation rules: `mobile`, `idcard`, `zip`, `alphaNum`, etc.—ready to use out of the box, simple and convenient.
+If you've used web frameworks in other languages, such as PHP's ThinkPHP or JavaScript's Validator.js, you'll notice they come with incredibly rich built-in validation rules: `mobile`, `idcard`, `zip`, `alphaNum`, etc.—ready to use out of the box, simple and convenient.
 
 But in the Java world, standard Bean Validation only provides a handful of generic annotations like `@Email` and `@Pattern`. For common Chinese business scenarios—identity cards, phone numbers, bank cards, unified social credit codes—there's absolutely no support.
 
@@ -64,7 +64,7 @@ This forces every Java project to reinvent the wheel:
 - Handling identity card check digit calculations
 - Copy-pasting validation code found online
 
-**Why can't Java be as simple as ThinkPHP?** This is why ValidX was born.
+**Why can't Java validation be as ready-to-use as other frameworks?** This is why ValidX was born.
 
 ### Pain Point 2: Scattered Validation Logic Difficult to Maintain
 As projects grow, validation logic becomes scattered across:
@@ -83,13 +83,13 @@ When using standard annotations, error messages are typically in English, or req
 
 ### ValidX's Solution
 
-Based on these pain points, we created ValidX with the goal: **Make Java validation as simple and easy as ThinkPHP, while being more powerful**
+Based on these pain points, we created ValidX with the goal: **Make Java validation simple, elegant, and reliable**
 
-1. **90+ Chinese Scenario Validators** - From identity cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business—more comprehensive than ThinkPHP
-2. **Two Usage Styles** - Annotation-based (for DTO object validation) and fluent chain API (for dynamic validation), more flexible than ThinkPHP
-3. **Zero-Config Multi-language** - Supports 8 languages, automatically adapts to user language environment
-4. **Enterprise-Grade Reliability** - 1300+ unit tests ensure quality, production-validated
-5. **Simple to Use** - Just one dependency, works out of the box, no complex configuration needed
+1. **90+ Chinese scenario validators** - From ID cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business
+2. **Two usage styles** - Annotation-based (for DTO object validation) and fluent chain API (for dynamic validation), flexible for different scenarios
+3. **Zero-config multi-language** - Supports 8 languages, automatically adapts to user language environment
+4. **Enterprise-grade reliability** - 1300+ unit tests ensure quality, production-validated
+5. **Simple to use** - Just one dependency, works out of the box, no complex configuration needed
 
 We hope ValidX can become the standard tool for every Java application serving Chinese users, allowing developers to focus on business logic rather than repeatedly writing validation code.
 
