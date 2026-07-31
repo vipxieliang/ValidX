@@ -620,6 +620,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Duration](#duration) | Duration format validation |
 | **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation |
 | **Basic Validation** | [@StartsWith](#startswith) | String prefix validation |
+| **Basic Validation** | [@Contains](#contains) | String contains substring validation |
 | **Basic Validation** | [@EndsWith](#endswith) | String suffix validation |
 | **Basic Validation** | [@In](#in) | Value in specified list |
 | **Basic Validation** | [@NotIn](#notin) | Value not in specified list |
@@ -1721,6 +1722,57 @@ Click on the annotation name to jump to its detailed documentation.
   ValidaX validator = ValidaX.init();
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @Contains
+* Validation Rule: Contains validation, validating whether the string contains the specified substring(s). Supports multiple substrings matching modes (OR/AND) and case-insensitive matching.
+* Example Format: `"hello world"` contains `"hello"`, `"test@example.com"` contains both `"@"` and `"."`
+* Configuration Options:
+  - `value`: Array of substrings to match
+  - `ignoreCase`: Whether to ignore case, default is `false`
+  - `matchAll`: Matching mode, default is `false`
+    - `false` (default): OR logic - matches if ANY substring is found
+    - `true`: AND logic - matches only if ALL substrings are found
+* Usage Example:
+  ```java
+  // Annotation-based usage - single substring (OR logic)
+  @Contains({"@"})
+  private String email;
+
+  // Multiple substrings (OR logic - matches any)
+  @Contains({"product", "service"})
+  private String description;
+
+  // Multiple substrings (AND logic - must match all)
+  @Contains(value = {"@", "."}, matchAll = true)
+  private String emailStrict;
+
+  // Case-insensitive matching
+  @Contains(value = {"HELLO"}, ignoreCase = true)
+  private String greeting;
+
+  // Chain call usage
+  ValidaX validator = ValidaX.init();
+
+  // Basic usage (OR logic)
+  validator.isContains("hello world", new String[]{"hello"});
+
+  // Multiple substrings (OR logic)
+  validator.isContains("test@example.com", new String[]{"@", ".com"});
+
+  // Case-insensitive (OR logic)
+  validator.isContains("Hello World", new String[]{"hello"}, true);
+
+  // AND logic - must contain all substrings
+  validator.isContains("test@example.com", new String[]{"@", "."}, false, true);
+  ```
+* Notes:
+  - **OR logic** (default): Matches if the string contains ANY of the specified substrings
+  - **AND logic** (`matchAll = true`): Matches only if the string contains ALL of the specified substrings
+  - Substring can appear at any position (beginning, middle, or end)
+  - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
+  - Common use cases: email validation (`@`), strict email validation (`@` and `.`), URL checking (`http://`), password strength (must contain multiple character types), content filtering
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

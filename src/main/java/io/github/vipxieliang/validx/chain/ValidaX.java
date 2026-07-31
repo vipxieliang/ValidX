@@ -651,6 +651,31 @@ public class ValidaX {
         return this;
     }
 
+    // Base Validation Methods - Contains
+    public ValidaX isContains(Object value, String[] substrings) {
+        if (checkRequirement(value, "Contains", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateContains(value, substrings, errors, getLocale());
+        return this;
+    }
+
+    public ValidaX isContains(Object value, String[] substrings, boolean ignoreCase) {
+        if (checkRequirement(value, "Contains", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateContains(value, substrings, ignoreCase, errors, getLocale());
+        return this;
+    }
+
+    public ValidaX isContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll) {
+        if (checkRequirement(value, "Contains", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateContains(value, substrings, ignoreCase, matchAll, errors, getLocale());
+        return this;
+    }
+
     // Base Validation Methods - Password
     public ValidaX isPassword(Object value) {
         if (checkRequirement(value, "Password", errors, getLocale())) {

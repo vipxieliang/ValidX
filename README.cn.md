@@ -620,6 +620,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **基础验证** | [@Duration](#duration) | 时间段格式验证 |
 | **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 |
 | **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 |
+| **基础验证** | [@Contains](#contains) | 字符串包含子串验证 |
 | **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 |
 | **基础验证** | [@In](#in) | 值必须在指定列表中 |
 | **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 |
@@ -1721,6 +1722,57 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   ValidaX validator = ValidaX.init();
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @Contains
+* 校验规则：包含验证，验证字符串是否包含指定的子字符串。支持多种匹配模式（OR/AND）和忽略大小写。
+* 示例格式：`"hello world"` 包含 `"hello"`，`"test@example.com"` 同时包含 `"@"` 和 `"."`
+* 配置选项：
+  - `value`：要匹配的子字符串数组
+  - `ignoreCase`：是否忽略大小写，默认为 `false`
+  - `matchAll`：匹配模式，默认为 `false`
+    - `false`（默认）：OR 逻辑 - 包含任意一个子字符串即可
+    - `true`：AND 逻辑 - 必须包含所有子字符串
+* 使用示例：
+  ```java
+  // 注解方式使用 - 单个子字符串（OR 逻辑）
+  @Contains({"@"})
+  private String email;
+
+  // 多个子字符串（OR 逻辑 - 满足任意一个）
+  @Contains({"产品", "服务"})
+  private String description;
+
+  // 多个子字符串（AND 逻辑 - 必须全部满足）
+  @Contains(value = {"@", "."}, matchAll = true)
+  private String emailStrict;
+
+  // 忽略大小写匹配
+  @Contains(value = {"HELLO"}, ignoreCase = true)
+  private String greeting;
+
+  // 链式调用方式使用
+  ValidaX validator = ValidaX.init();
+
+  // 基本用法（OR 逻辑）
+  validator.isContains("hello world", new String[]{"hello"});
+
+  // 多个子字符串（OR 逻辑）
+  validator.isContains("test@example.com", new String[]{"@", ".com"});
+
+  // 忽略大小写（OR 逻辑）
+  validator.isContains("Hello World", new String[]{"hello"}, true);
+
+  // AND 逻辑 - 必须包含所有子字符串
+  validator.isContains("test@example.com", new String[]{"@", "."}, false, true);
+  ```
+* 注意事项：
+  - **OR 逻辑**（默认）：只要包含数组中的任意一个子字符串即可通过验证
+  - **AND 逻辑**（`matchAll = true`）：必须包含数组中的所有子字符串才能通过验证
+  - 子字符串可以出现在任何位置（开头、中间或结尾）
+  - 默认区分大小写；使用 `ignoreCase = true` 可忽略大小写
+  - 常见应用场景：邮箱验证（`@`）、严格邮箱验证（`@` 和 `.`）、URL检查（`http://`）、密码强度验证（必须包含多种字符类型）、内容过滤
 
 [↑ 返回快速查询表](#快速查询表)
 
