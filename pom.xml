@@ -7,11 +7,11 @@
 
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <name>ValidX</name>
-    <description>A comprehensive validation library for various scenarios</description>
+    <description>ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.</description>
     <url>https://github.com/vipxieliang/ValidX</url>
 
     <licenses>

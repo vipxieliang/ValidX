@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.financial;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,37 +28,37 @@ public class CVVValidationChainTest {
 
     @Test
     public void testValidCVV() {
-        ValidaX validation = ValidaX.init();
+        ValidX validation = ValidX.init();
         
         // 测试有效的CVV码
         validation.isCVV((Object)"123");
         assertTrue(validation.passed(), "有效的3位CVV码应该通过验证");
         
-        validation = ValidaX.init();
+        validation = ValidX.init();
         validation.isCVV((Object)"1234");
         assertTrue(validation.passed(), "有效的4位CVV码应该通过验证");
     }
 
     @Test
     public void testInvalidCVV() {
-        ValidaX validation = ValidaX.init();
+        ValidX validation = ValidX.init();
         
         // 测试无效的CVV码
         validation.isCVV((Object)"12");
         assertFalse(validation.passed(), "无效的2位CVV码不应该通过验证");
         assertEquals(1, validation.getErrors().size());
         
-        validation = ValidaX.init();
+        validation = ValidX.init();
         validation.isCVV((Object)"12345");
         assertFalse(validation.passed(), "无效的5位CVV码不应该通过验证");
         assertEquals(1, validation.getErrors().size());
         
-        validation = ValidaX.init();
+        validation = ValidX.init();
         validation.isCVV((Object)"12a");
         assertFalse(validation.passed(), "包含字母的CVV码不应该通过验证");
         assertEquals(1, validation.getErrors().size());
         
-        validation = ValidaX.init();
+        validation = ValidX.init();
         validation.isCVV((Object)"12#");
         assertFalse(validation.passed(), "包含特殊字符的CVV码不应该通过验证");
         assertEquals(1, validation.getErrors().size());
@@ -66,14 +66,14 @@ public class CVVValidationChainTest {
     
     @Test
     public void testNullValue() {
-        ValidaX validation = ValidaX.init();
+        ValidX validation = ValidX.init();
 
         // 测试null值
         validation.isCVV(null);
         assertTrue(validation.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        validation = ValidaX.init();
+        validation = ValidX.init();
         validation.isCVV((Object)"");
         assertTrue(validation.passed(), "空字符串应该通过验证");
     }

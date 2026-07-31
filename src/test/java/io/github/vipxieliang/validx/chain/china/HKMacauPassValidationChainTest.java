@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,22 +24,22 @@ public class HKMacauPassValidationChainTest {
 
     @Test
     public void testValidHKMacauPass() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isHKMacauPass("H1234567800");
         assertTrue(chain.passed(), "有效的回乡证号码应该通过验证");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isHKMacauPass("M1234567899");
         assertTrue(chain.passed(), "有效的回乡证号码应该通过验证");
     }
 
     @Test
     public void testInvalidHKMacauPass() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isHKMacauPass("H123456780"); // 太短
         assertFalse(chain.passed(), "无效的回乡证号码应该验证失败");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isHKMacauPass("A1234567800"); // 首字母错误
         assertFalse(chain.passed(), "无效的回乡证号码应该验证失败");
     }
@@ -47,12 +47,12 @@ public class HKMacauPassValidationChainTest {
     @Test
     public void testNullAndEmptyHKMacauPass() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isHKMacauPass(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isHKMacauPass("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.i18n;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 import org.junit.jupiter.api.Test;
 import java.util.Locale;
@@ -34,7 +34,7 @@ public class I18nValidationChainTest {
             // 设置当前线程的语言环境为英语
             MessageManager.setCurrentLocale(Locale.ENGLISH);
             
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isEmail((Object)"invalid-email");
             assertFalse(chain.passed());
             assertEquals(1, chain.getErrors().size());
@@ -56,7 +56,7 @@ public class I18nValidationChainTest {
             // 设置当前线程的语言环境为中文
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
             
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isEmail((Object)"invalid-email");
             assertFalse(chain.passed());
             assertEquals(1, chain.getErrors().size());
@@ -79,7 +79,7 @@ public class I18nValidationChainTest {
             Locale.setDefault(Locale.SIMPLIFIED_CHINESE);
             MessageManager.clearCurrentLocale(); // 确保使用系统默认语言环境
             
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isEmail((Object)"invalid-email");
             assertFalse(chain.passed());
             assertEquals(1, chain.getErrors().size());
@@ -98,12 +98,12 @@ public class I18nValidationChainTest {
         try {
             // 设置当前线程语言环境为英语
             MessageManager.setCurrentLocale(Locale.ENGLISH);
-            ValidaX chainEn = ValidaX.init();
+            ValidX chainEn = ValidX.init();
             chainEn = chainEn.isEmail((Object)"invalid-email");
             
             // 设置当前线程语言环境为中文
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
-            ValidaX chainZh = ValidaX.init();
+            ValidX chainZh = ValidX.init();
             chainZh = chainZh.isEmail((Object)"invalid-email");
             
             assertFalse(chainEn.passed());

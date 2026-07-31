@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.book;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,28 +25,28 @@ class ORCIDValidationChainTest {
 
     @Test
     void testValidORCID() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isORCID("0000-0002-1825-0097");
         assertTrue(chain.passed(), "有效的ORCID应该通过验证");
     }
 
     @Test
     void testValidORCIDWithoutHyphen() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isORCID("0000000218250097");
         assertTrue(chain.passed(), "有效的ORCID（无连字符）应该通过验证");
     }
 
     @Test
     void testValidORCIDWithX() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isORCID("0000-0001-5109-3700");
         assertTrue(chain.passed(), "有效的ORCID（带X校验位）应该通过验证");
     }
 
     @Test
     void testInvalidORCID() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isORCID("0000-0002-1825-0099");
         assertFalse(chain.passed(), "无效的ORCID不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -55,7 +55,7 @@ class ORCIDValidationChainTest {
 
     @Test
     void testInvalidORCIDWrongLength() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isORCID("0000-0002-1825-009");
         assertFalse(chain.passed(), "长度错误的ORCID不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -65,12 +65,12 @@ class ORCIDValidationChainTest {
     @Test
     void testNullAndEmptyORCID() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isORCID(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isORCID("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

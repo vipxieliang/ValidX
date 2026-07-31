@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,22 +24,22 @@ public class TaiwanPassValidationChainTest {
 
     @Test
     public void testValidTaiwanPass() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isTaiwanPass("1234567800");
         assertTrue(chain.passed(), "有效的台胞证号码应该通过验证");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isTaiwanPass("9876543299");
         assertTrue(chain.passed(), "有效的台胞证号码应该通过验证");
     }
 
     @Test
     public void testInvalidTaiwanPass() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isTaiwanPass("123456780"); // 太短
         assertFalse(chain.passed(), "无效的台胞证号码应该验证失败");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isTaiwanPass("12345678001"); // 太长
         assertFalse(chain.passed(), "无效的台胞证号码应该验证失败");
     }
@@ -47,12 +47,12 @@ public class TaiwanPassValidationChainTest {
     @Test
     public void testNullAndEmptyTaiwanPass() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isTaiwanPass(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isTaiwanPass("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

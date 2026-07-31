@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.base;
 
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,14 +25,14 @@ public class HourMinuteValidationChainTest {
 
     @Test
     public void testValidHourMinute() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isHourMinute("23:20");
         assertTrue(chain.passed(), "有效的时间格式应该通过验证");
     }
 
     @Test
     public void testInvalidHourMinute() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isHourMinute("25:00"); // 小时超出范围
         assertFalse(chain.passed(), "无效的时间格式应该验证失败");
     }
@@ -40,12 +40,12 @@ public class HourMinuteValidationChainTest {
     @Test
     public void testNullAndEmptyHourMinute() {
         // 测试null值应该通过验证（由@NotNull处理）
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isHourMinute(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（由@NotEmpty处理）
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isHourMinute("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

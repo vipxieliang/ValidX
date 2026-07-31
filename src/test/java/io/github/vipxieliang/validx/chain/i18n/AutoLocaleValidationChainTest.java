@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.i18n;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +43,7 @@ public class AutoLocaleValidationChainTest {
     @Test
     public void testAutoLocaleWithSystemDefault() {
         // 使用系统默认语言环境
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
                 .isEmail("invalid-email");
         
         assertFalse(chain.passed());
@@ -58,7 +58,7 @@ public class AutoLocaleValidationChainTest {
         // 设置线程级别的语言环境为中文
         MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
         
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
                 .isEmail("invalid-email");
         
         assertFalse(chain.passed());
@@ -77,7 +77,7 @@ public class AutoLocaleValidationChainTest {
         MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
         
         // 但显式指定使用英文
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
                 .withLocale(Locale.ENGLISH)
                 .isEmail("invalid-email");
         

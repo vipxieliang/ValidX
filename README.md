@@ -13,17 +13,87 @@
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
 
-**A comprehensive Java validation library designed for Chinese business scenarios**
-
-[Quick Start](#-5-minute-quick-start) | [Why ValidX?](#-why-choose-validx) | [Documentation](#supported-validation-annotations) | [Contributing](#contribution)
+**Simple, Elegant, Reliable - 90+ ready-to-use validators for Chinese business scenarios**
 
 </div>
 
 ---
 
+## 📑 Table of Contents
+
+- [Introduction](#introduction)
+- [Why We Created ValidX?](#-why-we-created-validx)
+- [Why Choose ValidX?](#-why-choose-validx)
+- [5-Minute Quick Start](#-5-minute-quick-start)
+- [Multilingual Support](#multilingual-support)
+- [Important: Null/Empty String Handling](#important-nullempty-string-handling)
+- [Thread Safety](#thread-safety)
+- [Supported Validation Annotations](#supported-validation-annotations)
+  - [Quick Reference Table](#quick-reference-table)
+  - [Basic Validation](#basic-validation)
+  - [Identity Validation](#identity-verification-related)
+  - [Financial Validation](#financial-validation-related)
+  - [Education/Professional Qualification](#educationprofessional-qualificationcertification-related-validation)
+  - [Network Validation](#network-related)
+  - [China-Specific Validation](#china-specific-validation)
+  - [Automotive Validation](#automotive-related-validation)
+  - [Book-Related Validation](#book-related-validation)
+  - [Mobile Device Validation](#mobile-phone-related-validation)
+- [More Validation Annotations](#more-validation-annotations)
+- [Contribution](#contribution)
+
+---
+
 ## Introduction
 
-ValidX is an open-source Java validation library focused on providing comprehensive validation solutions for Chinese business scenarios. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
+ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
+
+## 💡 Why We Created ValidX?
+
+When developing applications for Chinese users, we frequently encountered these challenges:
+
+### Pain Point 1: Java Has Too Few Built-in Validation Rules, Far Less Than Other Language Frameworks
+
+If you've used web frameworks in other languages, such as PHP's ThinkPHP or JavaScript's Validator.js, you'll notice they come with incredibly rich built-in validation rules: `mobile`, `idcard`, `zip`, `alphaNum`, etc.—ready to use out of the box, simple and convenient.
+
+But in the Java world, standard Bean Validation only provides a handful of generic annotations like `@Email` and `@Pattern`. For common Chinese business scenarios—identity cards, phone numbers, bank cards, unified social credit codes—there's absolutely no support.
+
+This forces every Java project to reinvent the wheel:
+- Writing complex regular expressions yourself
+- Implementing Luhn algorithm for bank card validation
+- Handling identity card check digit calculations
+- Copy-pasting validation code found online
+
+**Why can't Java validation be as ready-to-use as other frameworks?** This is why ValidX was born.
+
+### Pain Point 2: Scattered Validation Logic Difficult to Maintain
+As projects grow, validation logic becomes scattered across:
+- Manual validation in Controller layer
+- Business validation in Service layer
+- Static methods in utility classes
+- Duplicate validation implementations in different modules
+
+This leads to code duplication, maintenance difficulties, and error-prone implementations.
+
+### Pain Point 3: Lack of Chinese Error Messages and Multi-language Support
+When using standard annotations, error messages are typically in English, or require manual configuration of resource files. For Chinese users, we need:
+- Friendly Chinese error messages
+- Multi-language switching support
+- Customizable error message templates
+
+### ValidX's Solution
+
+Based on these pain points, we created ValidX with the goal: **Make Java validation simple, elegant, and reliable**
+
+1. **90+ Chinese scenario validators** - From ID cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business
+2. **Two usage styles** - Annotation-based (for DTO object validation) and fluent chain API (for dynamic validation), flexible for different scenarios
+3. **Zero-config multi-language** - Supports 8 languages, automatically adapts to user language environment
+4. **Enterprise-grade reliability** - 1300+ unit tests ensure quality, production-validated
+5. **Simple to use** - Just one dependency, works out of the box, no complex configuration needed
+
+We hope ValidX can become the standard tool for every Java application serving Chinese users, allowing developers to focus on business logic rather than repeatedly writing validation code.
+
+**Import once, benefit forever. Stop reinventing the wheel.**
 
 ## ✨ Why Choose ValidX?
 
@@ -55,7 +125,7 @@ ValidX is an open-source Java validation library focused on providing comprehens
 <dependency>
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -102,7 +172,7 @@ Perfect for dynamic validation in service layers:
 @Service
 public class UserService {
     public void validateUserData(Map<String, Object> userData) {
-        ValidaX validator = ValidaX.init()
+        ValidX validator = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_EMPTY)  // Reject null/empty globally
             .field("Email").isEmail(userData.get("email"))
             .field("Phone").isChinesePhone(userData.get("phone"))
@@ -120,98 +190,22 @@ public class UserService {
 
 That's it! ValidX works seamlessly with your existing Spring Boot setup. Error messages automatically adapt to the user's language via `Accept-Language` header.
 
-## Installation and Usage
-
-### Maven Dependency
-
-Just add a single dependency to use all features:
-
-```xml
-<dependency>
-    <groupId>io.github.vipxieliang</groupId>
-    <artifactId>validx</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
-### Annotation-based Usage
-
-```java
-public class UserDTO {
-    @ChineseIdCard
-    private String idCard;
-
-    @Email
-    private String email;
-
-    @Url
-    private String website;
-
-    @Password
-    private String password;
-
-    @Password(minLength = 6)
-    private String password2;
-
-    @Password(minLength = 6, requireSpecialChar = false)
-    private String password3;
-
-    @StartsWith(startsWith = "USER_")
-    private String userCode;
-
-    @In({"admin", "user", "guest"})
-    private String role;
-
-    @In({"admin", "user", "guest"})
-    private List<String> roles;
-
-    // getters and setters
-}
-```
-
-### Chain Call Usage
-
-```java
-@Test
-public void testInstanceMethodWithDirectValue() {
-    // Test using instance method to directly pass values for validation
-    ValidaX chain = ValidaX.init(); // Create an empty chain
-    chain = chain.isChineseIdCard((Object)"440608197310039910")
-            .isUrl((Object)"http://example.com")
-            .isIp((Object)"192.168.1.1");
-
-    assertTrue(chain.passed(), "All validations should pass");
-}
-```
-
-```java
-@Test
-public void testFutureDateWithIncludeToday() {
-    // Test using isFutureDate method including today's date
-    ValidaX chain = ValidaX.init(); // Create an empty chain
-    chain = chain.isFutureDate((Object)LocalDate.now().toString(), true)
-            .isFutureDate((Object)LocalDate.now().plusDays(1).toString());
-
-    assertTrue(chain.passed(), "All validations should pass");
-}
-```
-
 ## Multilingual Support
 
 ValidX supports multilingual error messages, which can be used in the following ways:
 
 ```java
 // Use system default language
-ValidaX chain1 = ValidaX.init()
+ValidX chain1 = ValidX.init()
         .isEmail("invalid-email");
 
 // Use Chinese
-ValidaX chain2 = ValidaX.init()
+ValidX chain2 = ValidX.init()
         .withLocale(Locale.SIMPLIFIED_CHINESE)
         .isEmail("invalid-email");
 
 // Use English
-ValidaX chain3 = ValidaX.init()
+ValidX chain3 = ValidX.init()
         .withLocale(Locale.ENGLISH)
         .isEmail("invalid-email");
 ```
@@ -254,7 +248,7 @@ ValidX also supports automatic language environment switching without explicitly
 MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
 
 // Validation operations will automatically use the set language environment
-ValidaX chain = ValidaX.init()
+ValidX chain = ValidX.init()
         .isEmail("invalid-email");
 
 // Clear global language environment settings
@@ -340,7 +334,7 @@ public class UserController {
 
 ### 2. Handling Null/Empty Strings in Chain Validation
 
-Chain validation (`ValidaX.init()`) has the same default behavior as annotation-based: **null and empty strings pass validation**.
+Chain validation (`ValidX.init()`) has the same default behavior as annotation-based: **null and empty strings pass validation**.
 
 #### Why this design?
 
@@ -361,7 +355,7 @@ Chain-based validation is suitable for **business logic layer dynamic validation
 @Service
 public class UserService {
     public void process(Map<String, Object> data) {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // Fields in Map may not exist (null), this is normal
         // Chain validation automatically skips null values
@@ -377,7 +371,7 @@ public class UserService {
 
 #### Chain Validation Configuration API
 
-ValidaX now supports flexible configuration for handling null/empty values through both global configuration and local state control.
+ValidX now supports flexible configuration for handling null/empty values through both global configuration and local state control.
 
 ##### Global Configuration
 
@@ -385,7 +379,7 @@ You can set global validation requirements using `ValidXConfig`:
 
 ```java
 // Create validator with global NOT_NULL requirement
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL);
 
 // All validation methods will now reject null values
@@ -393,7 +387,7 @@ validator.isEmail(email)  // Fails if email is null
          .isPhone(phone); // Fails if phone is null
 
 // Create validator with global NOT_EMPTY requirement
-ValidaX validator2 = ValidaX.init()
+ValidX validator2 = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
 // All validation methods will now reject null and empty strings
@@ -410,26 +404,26 @@ validator2.isEmail(email)  // Fails if email is null or ""
 
 ```java
 // ✅ Recommended: Set config once at the start
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .isPhone(phone)
     .allowNull().isQQ(qq);  // Use local method for exceptions
 
 // ⚠️ Not recommended: Multiple config() calls in the middle
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .config(ValidXConfig.DEFAULT)  // Confusing: hard to track config changes
     .isPhone(phone);
 
 // ✅ If you need different configs, create separate validators
-ValidaX strictValidator = ValidaX.init()
+ValidX strictValidator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email1)
     .isPhone(phone1);
 
-ValidaX lenientValidator = ValidaX.init()
+ValidX lenientValidator = ValidX.init()
     .config(ValidXConfig.DEFAULT)
     .isEmail(email2)
     .isPhone(phone2);
@@ -440,7 +434,7 @@ ValidaX lenientValidator = ValidaX.init()
 You can override global configuration for specific fields using local state methods:
 
 ```java
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL);  // Global: reject null
 
 // Override for specific fields
@@ -461,7 +455,7 @@ validator.field("Optional Email").allowNull().isEmail(optionalEmail)  // Allow n
 Local state always takes precedence over global configuration:
 
 ```java
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // Global: reject null and empty
 
 validator.allowNull().isEmail(email);  // Local allowNull() overrides global
@@ -475,7 +469,7 @@ validator.allowNull().isEmail(email);  // Local allowNull() overrides global
 
 ```java
 public void validateUserRegistration(Map<String, Object> request) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // Most fields are required
 
     validator.field("Email").isEmail(request.get("email"))
@@ -494,7 +488,7 @@ public void validateUserRegistration(Map<String, Object> request) {
 ```java
 public void updateUserProfile(String userId, Map<String, Object> updates) {
     // Only validate fields that are being updated
-    ValidaX validator = ValidaX.init();  // Default: allow null/empty
+    ValidX validator = ValidX.init();  // Default: allow null/empty
 
     // Only validate fields present in the update map
     if (updates.containsKey("email")) {
@@ -515,7 +509,7 @@ public void updateUserProfile(String userId, Map<String, Object> updates) {
 
 ```java
 public void validateComplexForm(FormData data) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .config(ValidXConfig.GLOBAL_NOT_NULL);  // Most fields required
 
     validator.field("Email").notEmpty().isEmail(data.getEmail())      // Required and non-empty
@@ -536,7 +530,7 @@ public void validateComplexForm(FormData data) {
 **Important:** Local state (notNull/notEmpty/allowNull/allowEmpty) is automatically reset after each validation method call. This ensures each field's validation is independent.
 
 ```java
-ValidaX validator = ValidaX.init();
+ValidX validator = ValidX.init();
 
 validator.notNull().isEmail(email1)   // notNull applies to email1
          .isEmail(email2)              // email2 uses default behavior (state reset)
@@ -548,7 +542,7 @@ validator.notNull().isEmail(email1)   // notNull applies to email1
 When using `.field("label")`, error messages will include the custom label:
 
 ```java
-ValidaX validator = ValidaX.init();
+ValidX validator = ValidX.init();
 
 validator.field("User Email").notEmpty().isEmail("")
          .field("Contact Phone").notNull().isChinesePhone(null);
@@ -564,11 +558,11 @@ if (!validator.passed()) {
 
 ## Thread Safety
 
-**ValidaX instances are not thread-safe.** Each validation should create a new instance:
+**ValidX instances are not thread-safe.** Each validation should create a new instance:
 
 ```java
 // ❌ Wrong: Sharing instance across threads
-private static final ValidaX VALIDATOR = ValidaX.init();
+private static final ValidX VALIDATOR = ValidX.init();
 
 public void validate(User user) {
     VALIDATOR.isEmail(user.getEmail());  // Not thread-safe!
@@ -576,7 +570,7 @@ public void validate(User user) {
 
 // ✅ Correct: Create new instance per validation
 public void validate(User user) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .isEmail(user.getEmail())
         .isPhone(user.getPhone());
 
@@ -586,7 +580,7 @@ public void validate(User user) {
 }
 ```
 
-**Why?** ValidaX uses internal mutable state (local requirement flags, field labels, error lists) that is modified during the validation chain. Sharing instances across threads can lead to race conditions and incorrect validation results.
+**Why?** ValidX uses internal mutable state (local requirement flags, field labels, error lists) that is modified during the validation chain. Sharing instances across threads can lead to race conditions and incorrect validation results.
 
 **Thread-safe components:**
 - `ValidXConfig` objects are immutable and can be safely shared
@@ -602,101 +596,102 @@ ValidX provides rich validation annotations covering various scenarios. The foll
 
 Click on the annotation name to jump to its detailed documentation.
 
-| Category | Annotation | Description |
-|----------|------------|-------------|
-| **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation |
-| **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen |
-| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination |
-| **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation |
-| **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters |
-| **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers |
-| **Basic Validation** | [@ChineseAlphaDash](#chinesealphadash) | Chinese, letters, numbers, underscore, hyphen |
-| **Basic Validation** | [@Lower](#lower) | Lowercase character validation |
-| **Basic Validation** | [@Upper](#upper) | Uppercase character validation |
-| **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation |
-| **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) |
-| **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) |
-| **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation |
-| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation |
-| **Basic Validation** | [@PastDate](#pastdate) | Past date validation |
-| **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) |
-| **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) |
-| **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation |
-| **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation |
-| **Basic Validation** | [@Duration](#duration) | Duration format validation |
-| **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation |
-| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation |
-| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation |
-| **Basic Validation** | [@In](#in) | Value in specified list |
-| **Basic Validation** | [@NotIn](#notin) | Value not in specified list |
-| **Basic Validation** | [@Enum](#enum) | Enumeration value validation |
-| **Basic Validation** | [@Color](#color) | Color format (HEX/RGB/RGBA) |
-| **Basic Validation** | [@Password](#password) | Password strength validation |
-| **Basic Validation** | [@UUID](#uuid) | UUID format validation |
-| **Basic Validation** | [@Base64](#base64) | Base64 encoding validation |
-| **Basic Validation** | [@JSON](#json) | JSON format validation |
-| **Basic Validation** | [@JWT](#jwt) | JWT token format validation |
-| **Basic Validation** | [@SemVer](#semver) | Semantic versioning validation |
-| **Basic Validation** | [@FileExtension](#fileextension) | File extension validation |
-| **Basic Validation** | [@FileSize](#filesize) | File size range validation |
-| **Basic Validation** | [@Age](#age) | Age validation from birth date or ID |
-| **Basic Validation** | [@Port](#port) | Port number validation (0-65535) |
-| **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation |
-| **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation |
-| **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate |
-| **Identity Validation** | [@ChineseSoldier](#chinesesoldier) | Soldier certificate validation |
-| **Identity Validation** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | Foreigner permanent residence ID |
-| **Identity Validation** | [@HKMacauResidence](#hkmacauresidence) | HK/Macau residence permit |
-| **Identity Validation** | [@HKMacauPass](#hkmacaupass) | HK/Macau travel permit |
-| **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit |
-| **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit |
-| **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit |
-| **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code |
-| **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone |
-| **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline |
-| **Identity Validation** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | Chinese phone or landline |
-| **Identity Validation** | [@PhoneNumber](#phonenumber) | International phone number |
-| **Identity Validation** | [@Email](#email) | Email address validation |
-| **Financial Validation** | [@BankCard](#bankcard) | Bank card number (Luhn) |
-| **Financial Validation** | [@CVV](#cvv) | CVV/CVC security code |
-| **Financial Validation** | [@IBAN](#iban) | IBAN account number |
-| **Financial Validation** | [@SWIFT](#swift) | SWIFT/BIC code |
-| **Financial Validation** | [@StockCode](#stockcode) | Stock code validation |
-| **Financial Validation** | [@TradeOrderNumber](#tradeordernumber) | Trade order number |
-| **Financial Validation** | [@FinancialProductCode](#financialproductcode) | Financial product code |
-| **Education/Professional Qualification** | [@DegreeCertificate](#degreecertificate) | Degree certificate number |
-| **Education/Professional Qualification** | [@Doctor](#doctor) | Doctor qualification |
-| **Education/Professional Qualification** | [@Teacher](#teacher) | Teacher qualification |
-| **Education/Professional Qualification** | [@Lawyer](#lawyer) | Legal professional qualification |
-| **Education/Professional Qualification** | [@PMP](#pmp) | PMP certificate |
-| **Education/Professional Qualification** | [@Constructor](#constructor) | Constructor certificate |
-| **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate |
-| **Network Validation** | [@Domain](#domain) | Domain name validation |
-| **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) |
-| **Network Validation** | [@Mac](#mac) | MAC address validation |
-| **Network Validation** | [@Url](#url) | URL address validation |
-| **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation |
-| **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate |
-| **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number |
-| **China-Specific Validation** | [@ChineseTrademark](#chinesetrademark) | Chinese trademark registration |
-| **China-Specific Validation** | [@SoftwareCopyright](#softwarecopyright) | Software copyright registration |
-| **China-Specific Validation** | [@WorkCopyright](#workcopyright) | Work copyright registration |
-| **China-Specific Validation** | [@ChineseZipCode](#chinesezipcode) | Chinese postal code |
-| **China-Specific Validation** | [@DrugApproval](#drugapproval) | Drug approval number |
-| **China-Specific Validation** | [@DrugCode](#drugcode) | Drug code validation |
-| **China-Specific Validation** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | Medical device registration |
-| **China-Specific Validation** | [@QQ](#qq) | QQ number validation |
-| **China-Specific Validation** | [@WeChat](#wechat) | WeChat ID validation |
-| **Automotive Validation** | [@VIN](#vin) | Vehicle Identification Number |
-| **Automotive Validation** | [@VehicleEngine](#vehicleengine) | Vehicle engine number |
-| **Book-Related Validation** | [@ISBN](#isbn) | ISBN book number |
-| **Book-Related Validation** | [@ISSN](#issn) | ISSN serial number |
-| **Book-Related Validation** | [@DOI](#doi) | DOI identifier |
-| **Book-Related Validation** | [@CLC](#clc) | Chinese Library Classification |
-| **Book-Related Validation** | [@DDC](#ddc) | Dewey Decimal Classification |
-| **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID |
-| **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification |
-| **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number |
+| Category | Annotation | Description | Version |
+|----------|------------|-------------|---------|
+| **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation | 1.0.0   |
+| **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen | 1.0.0   |
+| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination | 1.0.0   |
+| **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation | 1.0.0   |
+| **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters | 1.0.0   |
+| **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers | 1.0.0   |
+| **Basic Validation** | [@ChineseAlphaDash](#chinesealphadash) | Chinese, letters, numbers, underscore, hyphen | 1.0.0   |
+| **Basic Validation** | [@Lower](#lower) | Lowercase character validation | 1.0.0   |
+| **Basic Validation** | [@Upper](#upper) | Uppercase character validation | 1.0.0   |
+| **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   |
+| **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   |
+| **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   |
+| **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   |
+| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   |
+| **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   |
+| **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) | 1.0.0   |
+| **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) | 1.0.0   |
+| **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation | 1.0.0   |
+| **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation | 1.0.0   |
+| **Basic Validation** | [@Duration](#duration) | Duration format validation | 1.0.0   |
+| **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   |
+| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   |
+| **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   |
+| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   |
+| **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   |
+| **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   |
+| **Basic Validation** | [@Enum](#enum) | Enumeration value validation | 1.0.0   |
+| **Basic Validation** | [@Color](#color) | Color format (HEX/RGB/RGBA) | 1.0.0   |
+| **Basic Validation** | [@Password](#password) | Password strength validation | 1.0.0   |
+| **Basic Validation** | [@UUID](#uuid) | UUID format validation | 1.0.0   |
+| **Basic Validation** | [@Base64](#base64) | Base64 encoding validation | 1.0.0   |
+| **Basic Validation** | [@JSON](#json) | JSON format validation | 1.0.0   |
+| **Basic Validation** | [@JWT](#jwt) | JWT token format validation | 1.0.0   |
+| **Basic Validation** | [@SemVer](#semver) | Semantic versioning validation | 1.0.0   |
+| **Basic Validation** | [@FileExtension](#fileextension) | File extension validation | 1.0.0   |
+| **Basic Validation** | [@FileSize](#filesize) | File size range validation | 1.0.0   |
+| **Basic Validation** | [@Age](#age) | Age validation from birth date or ID | 1.0.0   |
+| **Basic Validation** | [@Port](#port) | Port number validation (0-65535) | 1.0.0   |
+| **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation | 1.0.0   |
+| **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation | 1.0.0   |
+| **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate | 1.0.0   |
+| **Identity Validation** | [@ChineseSoldier](#chinesesoldier) | Soldier certificate validation | 1.0.0   |
+| **Identity Validation** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | Foreigner permanent residence ID | 1.0.0   |
+| **Identity Validation** | [@HKMacauResidence](#hkmacauresidence) | HK/Macau residence permit | 1.0.0   |
+| **Identity Validation** | [@HKMacauPass](#hkmacaupass) | HK/Macau travel permit | 1.0.0   |
+| **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit | 1.0.0   |
+| **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit | 1.0.0   |
+| **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit | 1.0.0   |
+| **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code | 1.0.0   |
+| **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone | 1.0.0   |
+| **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline | 1.0.0   |
+| **Identity Validation** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | Chinese phone or landline | 1.0.0   |
+| **Identity Validation** | [@PhoneNumber](#phonenumber) | International phone number | 1.0.0   |
+| **Identity Validation** | [@Email](#email) | Email address validation | 1.0.0   |
+| **Financial Validation** | [@BankCard](#bankcard) | Bank card number (Luhn) | 1.0.0   |
+| **Financial Validation** | [@CVV](#cvv) | CVV/CVC security code | 1.0.0   |
+| **Financial Validation** | [@IBAN](#iban) | IBAN account number | 1.0.0   |
+| **Financial Validation** | [@SWIFT](#swift) | SWIFT/BIC code | 1.0.0   |
+| **Financial Validation** | [@StockCode](#stockcode) | Stock code validation | 1.0.0   |
+| **Financial Validation** | [@TradeOrderNumber](#tradeordernumber) | Trade order number | 1.0.0   |
+| **Financial Validation** | [@FinancialProductCode](#financialproductcode) | Financial product code | 1.0.0   |
+| **Education/Professional Qualification** | [@DegreeCertificate](#degreecertificate) | Degree certificate number | 1.0.0   |
+| **Education/Professional Qualification** | [@Doctor](#doctor) | Doctor qualification | 1.0.0   |
+| **Education/Professional Qualification** | [@Teacher](#teacher) | Teacher qualification | 1.0.0   |
+| **Education/Professional Qualification** | [@Lawyer](#lawyer) | Legal professional qualification | 1.0.0   |
+| **Education/Professional Qualification** | [@PMP](#pmp) | PMP certificate | 1.0.0   |
+| **Education/Professional Qualification** | [@Constructor](#constructor) | Constructor certificate | 1.0.0   |
+| **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate | 1.0.0   |
+| **Network Validation** | [@Domain](#domain) | Domain name validation | 1.0.0   |
+| **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) | 1.0.0   |
+| **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   |
+| **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   |
+| **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation | 1.0.0   |
+| **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate | 1.0.0   |
+| **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number | 1.0.0   |
+| **China-Specific Validation** | [@ChineseTrademark](#chinesetrademark) | Chinese trademark registration | 1.0.0   |
+| **China-Specific Validation** | [@SoftwareCopyright](#softwarecopyright) | Software copyright registration | 1.0.0   |
+| **China-Specific Validation** | [@WorkCopyright](#workcopyright) | Work copyright registration | 1.0.0   |
+| **China-Specific Validation** | [@ChineseZipCode](#chinesezipcode) | Chinese postal code | 1.0.0   |
+| **China-Specific Validation** | [@DrugApproval](#drugapproval) | Drug approval number | 1.0.0   |
+| **China-Specific Validation** | [@DrugCode](#drugcode) | Drug code validation | 1.0.0   |
+| **China-Specific Validation** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | Medical device registration | 1.0.0   |
+| **China-Specific Validation** | [@QQ](#qq) | QQ number validation | 1.0.0   |
+| **China-Specific Validation** | [@WeChat](#wechat) | WeChat ID validation | 1.0.0   |
+| **Automotive Validation** | [@VIN](#vin) | Vehicle Identification Number | 1.0.0   |
+| **Automotive Validation** | [@VehicleEngine](#vehicleengine) | Vehicle engine number | 1.0.0   |
+| **Book-Related Validation** | [@ISBN](#isbn) | ISBN book number | 1.0.0   |
+| **Book-Related Validation** | [@ISSN](#issn) | ISSN serial number | 1.0.0   |
+| **Book-Related Validation** | [@DOI](#doi) | DOI identifier | 1.0.0   |
+| **Book-Related Validation** | [@CLC](#clc) | Chinese Library Classification | 1.0.0   |
+| **Book-Related Validation** | [@DDC](#ddc) | Dewey Decimal Classification | 1.0.0   |
+| **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID | 1.0.0   |
+| **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification | 1.0.0   |
+| **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number | 1.0.0   |
 
 ---
 
@@ -712,9 +707,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlpha("abcDEF");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @AlphaDash
 * Validation Rule: Alphanumeric underscore hyphen validation, allowing English letters, numbers, underscores, and hyphens.
@@ -726,9 +723,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlphaDash("abc-123_def");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @AlphaNumber
 * Validation Rule: Alphanumeric combination validation, only allowing English letters and numbers.
@@ -740,9 +739,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlphaNumber("abc123");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Chinese
 * Validation Rule: Pure Chinese character validation, only allowing Chinese characters (Unicode Chinese characters).
@@ -754,9 +755,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String name;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinese("汉字");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseAlpha
 * Validation Rule: Chinese character letter validation, allowing Chinese characters and English letters.
@@ -768,9 +771,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String name;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlpha("汉字abc");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseAlphaNum
 * Validation Rule: Chinese character letter number validation, allowing Chinese characters, English letters, and numbers.
@@ -782,9 +787,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlphaNum("汉字abc123");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseAlphaDash
 * Validation Rule: Chinese character letter number underscore hyphen validation, allowing Chinese characters, English letters, numbers, underscores, and hyphens.
@@ -796,9 +803,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlphaDash("汉字abc-123_def");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Longitude
 * Validation Rule: Longitude validation, validating whether the longitude value is between -180 and 180.
@@ -810,9 +819,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String longitude;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLongitude("116.4074");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Latitude
 * Validation Rule: Latitude validation, validating whether the latitude value is between -90 and 90.
@@ -824,9 +835,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String latitude;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLatitude("39.9042");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @GeoPoint
 * Validation Rule: Geographic coordinate pair validation (longitude and latitude), validating whether the coordinate format is correct and values are within valid ranges.
@@ -856,11 +869,13 @@ Click on the annotation name to jump to its detailed documentation.
   private String gps;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isGeoPoint("116.4074,39.9042");  // Default: longitude first
   validator.isGeoPoint("39.9042,116.4074", true);  // Latitude first
   validator.isGeoPoint("116.4074,39.9042", false, GeoPoint.SeparatorType.COMMA);  // Specify separator
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FutureDate
 * Validation Rule: Future date validation, validating whether the date is a future date.
@@ -875,11 +890,13 @@ Click on the annotation name to jump to its detailed documentation.
   private String deadline;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isFutureDate("2025-12-31");
   // Or include today
   validator.isFutureDate("2025-12-31", true);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @PastDate
 * Validation Rule: Past date validation, validating whether the date is a past date.
@@ -894,11 +911,13 @@ Click on the annotation name to jump to its detailed documentation.
   private String birthDate;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPastDate("2020-01-01");
   // Or include today
   validator.isPastDate("2020-01-01", true);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @HourMinute
 * Validation Rule: Hour minute time format validation, validating whether the time format is HH:mm.
@@ -910,9 +929,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String time;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHourMinute("23:20");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @HourMinuteSecond
 * Validation Rule: Hour minute second time format validation, validating whether the time format is HH:mm:ss.
@@ -924,9 +945,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String time;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHourMinuteSecond("23:50:29");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @In
 * Validation Rule: Single element or multiple element matching validation, validating whether the value is in the specified value list.
@@ -942,13 +965,15 @@ Click on the annotation name to jump to its detailed documentation.
   private List<String> roles;
   
   // Chain call usage - single value validation
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIn("value1", new String[]{"value1", "value2"});
   
   // Chain call usage - collection validation
   List<String> roles = Arrays.asList("admin", "user");
   validator.isIn(roles, new String[]{"admin", "user", "guest"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @NotIn
 * Validation Rule: Single element or multiple element non-matching validation, validating whether the value is not in the specified value list.
@@ -964,13 +989,15 @@ Click on the annotation name to jump to its detailed documentation.
   private List<String> forbiddenRoles;
   
   // Chain call usage - single value validation
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isNotIn("value3", new String[]{"value1", "value2"});
   
   // Chain call usage - collection validation
   List<String> roles = Arrays.asList("user", "guest");
   validator.isNotIn(roles, new String[]{"admin", "root", "superuser"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FileExtension
 * Validation Rule: File extension validation, validating whether the file name's extension is in the specified extension list.
@@ -987,7 +1014,7 @@ Click on the annotation name to jump to its detailed documentation.
 * When using chain calls, you can also specify whether to ignore case:
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Default case insensitive
   validator.isFileExtension("document.xls", new String[]{"XLS"});
@@ -998,6 +1025,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Case sensitive
   validator.isFileExtension("document.xls", new String[]{"XLS"}, false);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FileSize
 * Validation Rule: File size validation, validating whether the file size is within the specified range.
@@ -1030,7 +1059,7 @@ Click on the annotation name to jump to its detailed documentation.
   private MultipartFile avatar;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Only specify maximum
   validator.isFileSize(file, "10MB");
@@ -1045,6 +1074,9 @@ Click on the annotation name to jump to its detailed documentation.
   - MIME type validation is only available for MultipartFile
   - MultipartFile support uses reflection, no strong Spring dependency required
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Lower
 * Validation Rule: Lowercase character validation, only allowing lowercase English letters.
 * Example Format: `abcdef`
@@ -1055,9 +1087,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String text;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLower("abcdef");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Upper
 * Validation Rule: Uppercase character validation, only allowing uppercase English letters.
@@ -1069,9 +1103,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String text;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUpper("ABCDEF");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Xdigit
 * Validation Rule: Hexadecimal string validation, only allowing hexadecimal characters (0-9, a-f, A-F).
@@ -1083,9 +1119,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String hex;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isXdigit("0a1B2c3D");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Password
 * Validation Rule: Password strength validation, validating whether the password meets the specified strength requirements.
@@ -1113,7 +1151,7 @@ Click on the annotation name to jump to its detailed documentation.
 * When using chain calls, you can also specify password strength requirements:
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Use default rules (minimum length 8 characters, must include uppercase and lowercase letters, digits, and special characters)
   validator.isPassword("MyPassword123!");
@@ -1124,6 +1162,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Fully customized rules (minimum length 8 characters, do not require uppercase letters, require lowercase letters and digits, do not require special characters)
   validator.isPassword("mypassword123", 8, false, true, true, false);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @UUID
 * Validation Rule: UUID (Universally Unique Identifier) format validation, supporting standard format (with hyphens) and compact format (without hyphens).
@@ -1143,7 +1183,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String transactionId;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate standard format
   validator.isUUID("550e8400-e29b-41d4-a716-446655440000");
@@ -1156,6 +1196,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Standard format must contain exactly 4 hyphens at specific positions
   - Compact format must be exactly 32 hexadecimal characters
   - Common UUID versions (v1, v4, etc.) are all supported
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Base64
 * Validation Rule: Base64 encoding format validation, supporting standard Base64 and URL-safe Base64 formats.
@@ -1184,7 +1227,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String jwtPayload;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate standard format
   validator.isBase64("SGVsbG8gV29ybGQ=");
@@ -1200,6 +1243,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Padding character = can only appear at the end, maximum 2 characters
   - String length must be a multiple of 4 (unless allowNoPadding is enabled)
   - Common use cases: file upload, JWT tokens, image data transmission
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Age
 * Validation Rule: Age validation based on birth date or ID card number, supporting minimum age and maximum age constraints.
@@ -1231,7 +1277,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String birthDate;  // "1990/01/01"
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate minimum age only
   validator.isAge(LocalDate.now().minusYears(25), 18);
@@ -1251,6 +1297,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Null or empty values pass validation (handled by @NotNull/@NotEmpty)
   - Future birth dates are treated as age 0
   - Common date formats are automatically tried: yyyy-MM-dd, yyyy/MM/dd, yyyyMMdd
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @JSON
 * Validation Rule: JSON format validation, supporting standard JSON syntax with configurable type restrictions, depth limits, and length limits.
@@ -1291,7 +1340,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String apiRequest;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any JSON type
   validator.isJSON("{\"name\":\"John\",\"age\":30}");
@@ -1313,6 +1362,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Depth limits help prevent stack overflow from deeply nested structures
   - Length limits help prevent memory issues from large JSON strings
   - Common use cases: API request/response validation, config file validation, data serialization
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @PhoneNumber
 * Validation Rule: International phone number validation, supporting multiple international phone number formats including E.164 standard format.
@@ -1355,7 +1407,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String companyPhone;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any phone number
   validator.isPhoneNumber("+8613812345678");
@@ -1378,6 +1430,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Strict mode enforces international format (must start with +)
   - Common use cases: User registration, contact management, international communication
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @JWT
 * Validation Rule: JWT (JSON Web Token) format validation, validating whether the JWT Token has the correct basic format.
 * JWT Format Description:
@@ -1395,7 +1450,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String token;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U");
   ```
 * Notes:
@@ -1403,6 +1458,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Does not verify signature validity (requires secret key)
   - Does not verify expiration time and other claims
   - Common use cases: API authentication, Single Sign-On (SSO), information exchange
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @SemVer
 * Validation Rule: Semantic Versioning format validation, validating whether the version number conforms to the SemVer 2.0.0 specification.
@@ -1431,12 +1489,12 @@ Click on the annotation name to jump to its detailed documentation.
   private String versionWithPrefix;
 
   // Chain call usage - Standard format
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSemVer("1.0.0");
   validator.isSemVer("2.1.3-beta.1");
 
   // Chain call usage - Allow v prefix
-  ValidaX validator2 = ValidaX.init();
+  ValidX validator2 = ValidX.init();
   validator2.isSemVer("v1.0.0", true);
   validator2.isSemVer("v2.1.3-rc.1", true);
   ```
@@ -1448,6 +1506,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Build metadata does not affect version precedence, used only for build information
   - By default, v prefix is not allowed, enable it with `allowVPrefix=true` when needed
   - Common use cases: Software version management, npm package versions, API version control, Git tags
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Timestamp
 * Validation Rule: Unix timestamp format validation, validating whether the value is a valid Unix timestamp (supports seconds and milliseconds).
@@ -1475,12 +1536,12 @@ Click on the annotation name to jump to its detailed documentation.
   private Long createTimeMs;
 
   // Chain call usage - Default ANY mode
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTimestamp("1700000000");
   validator.isTimestamp("1700000000000");
 
   // Chain call usage - Specify unit
-  ValidaX validator2 = ValidaX.init();
+  ValidX validator2 = ValidX.init();
   validator2.isTimestamp("1700000000", Timestamp.TimestampUnit.SECONDS);
   validator2.isTimestamp(1700000000000L, Timestamp.TimestampUnit.MILLISECONDS);
   ```
@@ -1492,6 +1553,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Null values are not validated by this annotation (use `@NotNull` for null checks)
   - Invalid digit lengths (e.g., 9-digit, 11-digit, 12-digit) are rejected regardless of unit mode
   - Common use cases: API timestamp parameters, database time fields, message queue timestamps
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @CronExpression
 * Validation Rule: Cron expression format validation, validating whether the value is a valid Cron expression.
@@ -1515,7 +1579,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String schedule;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCronExpression("0 0 12 * * ?");
   validator.isCronExpression("0 0/15 * * * ?");
   validator.isCronExpression("0 0 9 ? * MON-FRI");
@@ -1526,6 +1590,9 @@ Click on the annotation name to jump to its detailed documentation.
   - Second, minute: 0-59; Hour: 0-23; Day: 1-31; Month: 1-12; Week: 0-7 (0 and 7 both represent Sunday)
   - Year range: 1970-2099 (optional field)
   - Common use cases: Scheduled tasks, job scheduling, timer triggers
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Duration
 * Validation Rule: Duration format validation, validating whether the value is a valid time duration format.
@@ -1559,7 +1626,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String simpleDuration;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any format
   validator.isDuration("PT2H30M");
@@ -1578,6 +1645,9 @@ Click on the annotation name to jump to its detailed documentation.
   - At least one time unit must be specified
   - Year is the largest unit supported in ISO 8601 standard
   - Common use cases: Task duration, time period configuration, timeout settings
+
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ExpressNumber
 * Validation Rule: Express tracking number format validation, validating whether the value is a valid express tracking number.
@@ -1615,7 +1685,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String mixedNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any supported express company
   validator.isExpressNumber("123456789012");
@@ -1636,6 +1706,9 @@ Click on the annotation name to jump to its detailed documentation.
   - EMS format is case-insensitive
   - Common use cases: E-commerce order management, logistics tracking, shipping validation
 
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @StartsWith
 * Validation Rule: Prefix validation, validating whether the string starts with the specified prefix.
 * Example Format: Starting with specified string
@@ -1646,9 +1719,62 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @Contains
+* Validation Rule: Contains validation, validating whether the string contains the specified substring(s). Supports multiple substrings matching modes (OR/AND) and case-insensitive matching.
+* Example Format: `"hello world"` contains `"hello"`, `"test@example.com"` contains both `"@"` and `"."`
+* Configuration Options:
+  - `value`: Array of substrings to match
+  - `ignoreCase`: Whether to ignore case, default is `false`
+  - `matchAll`: Matching mode, default is `false`
+    - `false` (default): OR logic - matches if ANY substring is found
+    - `true`: AND logic - matches only if ALL substrings are found
+* Usage Example:
+  ```java
+  // Annotation-based usage - single substring (OR logic)
+  @Contains({"@"})
+  private String email;
+
+  // Multiple substrings (OR logic - matches any)
+  @Contains({"product", "service"})
+  private String description;
+
+  // Multiple substrings (AND logic - must match all)
+  @Contains(value = {"@", "."}, matchAll = true)
+  private String emailStrict;
+
+  // Case-insensitive matching
+  @Contains(value = {"HELLO"}, ignoreCase = true)
+  private String greeting;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+
+  // Basic usage (OR logic)
+  validator.isContains("hello world", new String[]{"hello"});
+
+  // Multiple substrings (OR logic)
+  validator.isContains("test@example.com", new String[]{"@", ".com"});
+
+  // Case-insensitive (OR logic)
+  validator.isContains("Hello World", new String[]{"hello"}, true);
+
+  // AND logic - must contain all substrings
+  validator.isContains("test@example.com", new String[]{"@", "."}, false, true);
+  ```
+* Notes:
+  - **OR logic** (default): Matches if the string contains ANY of the specified substrings
+  - **AND logic** (`matchAll = true`): Matches only if the string contains ALL of the specified substrings
+  - Substring can appear at any position (beginning, middle, or end)
+  - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
+  - Common use cases: email validation (`@`), strict email validation (`@` and `.`), URL checking (`http://`), password strength (must contain multiple character types), content filtering
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @EndsWith
 * Validation Rule: Suffix validation, validating whether the string ends with the specified suffix.
@@ -1660,9 +1786,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isEndsWith("string_suffix", new String[]{"suffix"});
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Enum
 * Validation Rule: Single element or multiple element enumeration value validation, validating whether it is a valid value in the specified enumeration.
@@ -1688,7 +1816,7 @@ Click on the annotation name to jump to its detailed documentation.
 * When using chain calls, you can also specify enumeration fields:
   ```java
   // Chain call usage - single value validation
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Validate enumeration's name() value (default)
   validator.isEnum("VALUE1", MyEnum.class);
@@ -1722,6 +1850,8 @@ Click on the annotation name to jump to its detailed documentation.
   }
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Color
 * Validation Rule: Color format validation, validating whether the string is a valid HEX color value, supporting #FFF or #FFFFFF format.
 * Example Format: `#FF0000`, `#F00`, `#ffffff`, `#000`
@@ -1732,9 +1862,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String color;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isColor("#FF0000");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Identity Verification Related
 
@@ -1748,9 +1880,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String idCard;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseIdCard("11010119900307211X");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChinesePassport
 * Validation Rule: Chinese passport number validation, supporting various types of Chinese passport numbers.
@@ -1762,9 +1896,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String passportNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePassport("G12345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseMilitaryOfficer
 * Validation Rule: Chinese military officer certificate validation, supporting various types of Chinese military officer certificates.
@@ -1776,9 +1912,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseMilitaryOfficer("军字第1234567号");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseSoldier
 * Validation Rule: Chinese soldier certificate validation, supporting various types of Chinese soldier certificates.
@@ -1790,9 +1928,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseSoldier("沈字第0100000号");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ForeignerPermanentResidenceIdentity
 * Validation Rule: Foreigner permanent residence identity card validation, validating foreigner permanent residence identity card numbers.
@@ -1804,9 +1944,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String identityNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isForeignerPermanentResidenceIdentity("911124198108030028");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @HKMacauResidence
 * Validation Rule: Hong Kong and Macau residents' residence permit validation, validating Hong Kong and Macau residents' residence permit numbers.
@@ -1818,9 +1960,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String residenceNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHKMacauResidence("810000000000000001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @HKMacauPass
 * Validation Rule: Hong Kong and Macau residents' travel permit to Mainland China (Home Return Permit) validation, validating Hong Kong and Macau residents' travel permit numbers.
@@ -1832,9 +1976,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String passNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHKMacauPass("H1234567800");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @TaiwanResidence
 * Validation Rule: Taiwan residents' residence permit validation, validating Taiwan residents' residence permit numbers.
@@ -1846,9 +1992,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String residenceNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTaiwanResidence("830000000000000001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @TaiwanPass
 * Validation Rule: Taiwan residents' travel permit to Mainland China (Taiwan Compatriot Pass) validation, validating Taiwan residents' travel permit numbers.
@@ -1860,9 +2008,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String passNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTaiwanPass("1234567800");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ForeignerWorkPermit
 * Validation Rule: Foreigner work permit validation, validating foreigner work permit numbers.
@@ -1874,9 +2024,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String permitNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @UnifiedSocialCreditCode
 * Validation Rule: Unified Social Credit Code validation, validating Unified Social Credit Codes.
@@ -1888,9 +2040,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String creditCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUnifiedSocialCreditCode("91350100M000100Y43");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChinesePhoneOrLandline
 * Validation Rule: Chinese phone number validation, supporting mobile phones and landlines.
@@ -1902,9 +2056,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String phoneNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePhoneOrLandline("010-12345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChinesePhone
 * Validation Rule: Chinese mobile phone number validation, validating Chinese mobile phone numbers.
@@ -1916,9 +2072,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String phoneNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePhone("13812345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseLandline
 * Validation Rule: Chinese landline validation, validating Chinese landline numbers.
@@ -1930,9 +2088,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String phoneNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseLandline("010-12345678");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Financial Validation Related
 
@@ -1950,9 +2110,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String cardNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isBankCard("4012888888881881");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @CVV
 * Validation Rule: CVV/CVC security code validation, validating the 3-digit or 4-digit security code on the back of credit cards.
@@ -1964,9 +2126,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String cvv;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCVV("123");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @IBAN
 * Validation Rule: IBAN international bank account number validation, validating the format and check digits of international bank account numbers (IBAN).
@@ -1978,9 +2142,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String iban;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIBAN("DE44500800000123456789");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @SWIFT
 * Validation Rule: SWIFT/BIC code validation, validating the format of SWIFT/BIC bank codes, used to identify specific banks in international wire transfers.
@@ -1992,9 +2158,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String swiftCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSWIFT("COBADEFF");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @StockCode
 * Validation Rule: Stock code validation, validating the format of stock codes from different exchanges.
@@ -2026,7 +2194,7 @@ Click on the annotation name to jump to its detailed documentation.
   
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Default supports all exchanges
   validator.isStockCode("600000");
@@ -2040,6 +2208,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Validate Hong Kong or New York exchanges
   validator.isStockCode("00700", StockCode.Exchange.HONG_KONG, StockCode.Exchange.NEW_YORK);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @TradeOrderNumber
 * Validation Rule: Trade order number validation, validating the format of financial trade order numbers.
@@ -2058,7 +2228,7 @@ Click on the annotation name to jump to its detailed documentation.
   
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Validate T prefix + 18-digit number format
   validator.isTradeOrderNumber("T123456789012345678");
@@ -2072,6 +2242,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Validate UUID format (without hyphens)
   validator.isTradeOrderNumber("550e8400e29b41d4a716446655440000");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @FinancialProductCode
 * Validation Rule: Financial product code validation, validating the format of fund codes, bond codes, and other financial product codes.
@@ -2107,7 +2279,7 @@ Click on the annotation name to jump to its detailed documentation.
   
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Default supports all product types
   validator.isFinancialProductCode("500001");
@@ -2121,6 +2293,8 @@ Click on the annotation name to jump to its detailed documentation.
   // Validate fund and bond products
   validator.isFinancialProductCode("500001", FinancialProductCode.ProductType.FUND, FinancialProductCode.ProductType.BOND);
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Education/Professional Qualification/Certification Related Validation
 
@@ -2136,9 +2310,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDegreeCertificate("1075522008000001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Doctor
 * Validation Rule: Doctor qualification certificate number validation, validating doctor qualification certificate numbers.
@@ -2151,9 +2327,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDoctor("20251111014406081973100014");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Teacher
 * Validation Rule: Teacher qualification certificate number validation, validating teacher qualification certificate numbers.
@@ -2166,9 +2344,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTeacher("20253412345678901");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Lawyer
 * Validation Rule: Legal professional qualification certificate/lawyer practice certificate validation, validating legal professional qualification certificates or lawyer practice certificates.
@@ -2185,9 +2365,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLawyer("11101201810123456");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @PMP
 * Validation Rule: PMP certificate number validation, validating the format of PMP (Project Management Professional) certificate numbers
@@ -2200,9 +2382,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPMP("1234567");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Constructor
 * Validation Rule: Constructor certificate number validation, validating the format of first-class/second-class constructor certificate numbers
@@ -2215,9 +2399,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isConstructor("京111050700001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Accountant
 * Validation Rule: Accounting qualification certificate number validation, validating the format of accounting qualification certificate numbers
@@ -2230,9 +2416,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAccountant("21010203451");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Network Related
 
@@ -2246,9 +2434,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String domain;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDomain("example.com");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Ip
 * Validation Rule: IP address validation, supporting IPv4 and IPv6 address validation with configurable version parameter.
@@ -2274,7 +2464,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String ipv6Address;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any IP address (default)
   validator.isIp("192.168.1.1");
@@ -2289,6 +2479,8 @@ Click on the annotation name to jump to its detailed documentation.
   validator.isIp("192.168.1.1", Ip.IpVersion.ANY);
   ```
 
+[↑ Back to Quick Reference](#quick-reference-table)
+
 #### @Mac
 * Validation Rule: MAC address validation, validating MAC addresses.
 * Example Format: `00:1A:2B:3C:4D:5E`, `00-1A-2B-3C-4D-5E`
@@ -2299,9 +2491,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String macAddress;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isMac("00:1A:2B:3C:4D:5E");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Url
 * Validation Rule: URL address validation, validating URL address format.
@@ -2313,9 +2507,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String url;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUrl("http://example.com");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Email
 * Validation Rule: Email address validation, validating email address format.
@@ -2327,9 +2523,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String email;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isEmail("test@example.com");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @SubnetMask
 * Validation Rule: Subnet mask validation, validating subnet mask format.
@@ -2341,9 +2539,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String subnetMask;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSubnetMask("255.255.255.0");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Port
 * Validation Rule: Port number validation, validating whether the port number is within the range of 0-65535.
@@ -2355,9 +2555,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String port;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPort("8080");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### China-specific Validation
 
@@ -2371,9 +2573,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String licensePlate;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseLicensePlate("京A12345");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChinesePatent
 * Validation Rule: Chinese patent number validation, validating Chinese patent numbers.
@@ -2385,9 +2589,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String patentNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePatent("ZL2013106997442");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseTrademark
 * Validation Rule: Chinese trademark registration number validation, validating Chinese trademark registration numbers.
@@ -2399,9 +2605,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String trademarkNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseTrademark("1234567");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @SoftwareCopyright
 * Validation Rule: Computer software copyright registration number validation, validating computer software copyright registration numbers.
@@ -2413,9 +2621,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String copyrightNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSoftwareCopyright("软著登字第2023001234号");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @WorkCopyright
 * Validation Rule: General work copyright registration number validation, validating general work copyright registration numbers.
@@ -2427,9 +2637,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String copyrightNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isWorkCopyright("作登字22-2023-A-0018号");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseZipCode
 * Validation Rule: Chinese postal code validation, validating Chinese postal codes.
@@ -2441,9 +2653,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String zipCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseZipCode("100000");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DrugApproval
 * Validation Rule: Validate whether the string is a valid Chinese drug approval number. Drug approval numbers are the numbers approved by the national drug regulatory authorities for pharmaceutical manufacturers to produce drugs
@@ -2455,9 +2669,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String approvalNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDrugApproval("国药准字H20210039");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DrugCode
 * Validation Rule: Validate whether the string is a valid Chinese drug code. Drug codes start with 69, are 20 digits, and the last digit is the GS1 check digit
@@ -2469,9 +2685,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String drugCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDrugCode("69012345678901234563");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @MedicalDeviceRegistration
 * Validation Rule: Medical device registration certificate number validation, used to validate the format of Chinese medical device registration certificate numbers.
@@ -2483,9 +2701,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String registrationNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isMedicalDeviceRegistration("国械注准20243010001");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @QQ
 * Validation Rule: QQ number validation, validating QQ numbers.
@@ -2497,9 +2717,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String qqNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isQQ("123456789");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @WeChat
 * Validation Rule: WeChat account validation, validating WeChat account format.
@@ -2515,9 +2737,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String wechatId;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isWeChat("wechat123");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Automotive Related Validation
 
@@ -2531,9 +2755,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String vin;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isVIN("WP0AJ2972LL122844");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @VehicleEngine
 * Validation Rule: Validate vehicle engine code format.
@@ -2545,9 +2771,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String engineCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isVehicleEngine("123456");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Book Related Validation
 
@@ -2561,9 +2789,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String isbn;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isISBN("9780306406157");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ISSN
 * Validation Rule: International Standard Serial Number validation, supporting 8-digit ISSN format.
@@ -2575,9 +2805,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String issn;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isISSN("0317-8471");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DOI
 * Validation Rule: Digital Object Identifier validation, used for unique identification of digital resources, widely used in academic publications.
@@ -2589,9 +2821,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String doi;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDOI("10.1000/182");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @CLC
 * Validation Rule: Validate whether the string is a valid Chinese Library Classification (CLC) number. The Chinese Library Classification is a book classification system widely used in Chinese libraries
@@ -2603,9 +2837,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String clcNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCLC("TP311.138");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @DDC
 * Validation Rule: Validate whether the string is a valid Dewey Decimal Classification (DDC) number. The Dewey Decimal Classification is a classification system widely used in libraries
@@ -2617,9 +2853,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String ddcNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDDC("516.3");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ORCID
 * Validation Rule: Open Researcher and Contributor ID validation, used to uniquely identify academic authors and contributors.
@@ -2631,9 +2869,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String orcidId;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isORCID("0000-0002-1825-0097");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @IPC
 * Validation Rule: International Patent Classification number validation, used to identify patent technical fields.
@@ -2645,9 +2885,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String ipcNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIPC("A01B1/00");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ### Mobile Phone Related Validation
 
@@ -2661,9 +2903,11 @@ Click on the annotation name to jump to its detailed documentation.
   private String imei;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIMEI("123412341234564");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 ## More Validation Annotations
 If you need more validations, you can contact us for expansion and support. Contact information:

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -27,7 +27,7 @@ public class FutureDateIncludeTodayValidationChainTest {
 
     @Test
     public void testValidFutureDateWithoutIncludeToday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用明天的日期进行测试
         String futureDate = LocalDate.now().plusDays(1).toString();
         chain = chain.isFutureDate((Object)futureDate, false);
@@ -36,7 +36,7 @@ public class FutureDateIncludeTodayValidationChainTest {
 
     @Test
     public void testInvalidTodayWithoutIncludeToday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用今天的日期进行测试
         String today = LocalDate.now().toString();
         chain = chain.isFutureDate((Object)today, false);
@@ -47,7 +47,7 @@ public class FutureDateIncludeTodayValidationChainTest {
     
     @Test
     public void testValidTodayWithIncludeToday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用今天的日期进行测试
         String today = LocalDate.now().toString();
         chain = chain.isFutureDate((Object)today, true);
@@ -56,7 +56,7 @@ public class FutureDateIncludeTodayValidationChainTest {
     
     @Test
     public void testValidFutureDateWithIncludeToday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用明天的日期进行测试
         String futureDate = LocalDate.now().plusDays(1).toString();
         chain = chain.isFutureDate((Object)futureDate, true);
@@ -65,7 +65,7 @@ public class FutureDateIncludeTodayValidationChainTest {
     
     @Test
     public void testInvalidYesterdayWithIncludeToday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用昨天的日期进行测试
         String yesterday = LocalDate.now().minusDays(1).toString();
         chain = chain.isFutureDate((Object)yesterday, true);

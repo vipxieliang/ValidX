@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -31,84 +31,84 @@ public class LongitudeValidationChainTest {
     @Test
     public void testNullAndEmptyLongitude() {
         // 测试 null 值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isLongitude(null);
         assertTrue(validator.passed());
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("");
         assertTrue(validator.passed());
     }
 
     @Test
     public void testValidLongitude() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试有效的经度值
         validator.isLongitude("0");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("116.4074"); // 北京经度
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("-116.4074");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("180");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("-180");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("179.999999");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("-179.999999");
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidLongitude() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的经度值
         validator.isLongitude("181");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("-181");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("200");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("-200");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("invalid");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("180.1");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isLongitude("-180.1");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
@@ -116,7 +116,7 @@ public class LongitudeValidationChainTest {
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         validator.isLongitude("181");
         assertFalse(validator.passed());
@@ -126,7 +126,7 @@ public class LongitudeValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         validator.isLongitude("181");
         assertFalse(validator.passed());

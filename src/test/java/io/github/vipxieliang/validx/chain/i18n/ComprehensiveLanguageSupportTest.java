@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.i18n;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 import org.junit.jupiter.api.Test;
 
@@ -34,11 +34,11 @@ public class ComprehensiveLanguageSupportTest {
         try {
             // 测试各种语言环境下的邮箱验证错误消息
             MessageManager.setCurrentLocale(Locale.ENGLISH);
-            ValidaX chainEn = ValidaX.init().isEmail((Object)"invalid-email");
+            ValidX chainEn = ValidX.init().isEmail((Object)"invalid-email");
             assertEquals("Invalid email address format", chainEn.getErrors().get(0));
             
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
-            ValidaX chainZh = ValidaX.init().isEmail((Object)"invalid-email");
+            ValidX chainZh = ValidX.init().isEmail((Object)"invalid-email");
             assertEquals("邮箱地址格式不正确", chainZh.getErrors().get(0));
         } finally {
             // 恢复原来的语言环境
@@ -55,11 +55,11 @@ public class ComprehensiveLanguageSupportTest {
         try {
             // 测试各种语言环境下的URL验证错误消息
             MessageManager.setCurrentLocale(Locale.ENGLISH);
-            ValidaX chainEn = ValidaX.init().isUrl((Object)"invalid-url");
+            ValidX chainEn = ValidX.init().isUrl((Object)"invalid-url");
             assertEquals("Invalid URL format", chainEn.getErrors().get(0));
             
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
-            ValidaX chainZh = ValidaX.init().isUrl((Object)"invalid-url");
+            ValidX chainZh = ValidX.init().isUrl((Object)"invalid-url");
             assertEquals("URL格式不正确", chainZh.getErrors().get(0));
         } finally {
             // 恢复原来的语言环境
@@ -76,11 +76,11 @@ public class ComprehensiveLanguageSupportTest {
         try {
             // 测试各种语言环境下的身份证验证错误消息
             MessageManager.setCurrentLocale(Locale.ENGLISH);
-            ValidaX chainEn = ValidaX.init().isChineseIdCard((Object)"123456789012345678");
+            ValidX chainEn = ValidX.init().isChineseIdCard((Object)"123456789012345678");
             assertEquals("Invalid Chinese ID card number", chainEn.getErrors().get(0));
             
             MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
-            ValidaX chainZh = ValidaX.init().isChineseIdCard((Object)"123456789012345678");
+            ValidX chainZh = ValidX.init().isChineseIdCard((Object)"123456789012345678");
             assertEquals("身份证号码不正确", chainZh.getErrors().get(0));
         } finally {
             // 恢复原来的语言环境

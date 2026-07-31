@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -30,49 +30,49 @@ public class PasswordValidationChainTest {
 
     @Test
     public void testValidPasswords() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的密码
         validator.isPassword("Password123!");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isPassword("MySecurePass123@", 8);
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isPassword("mypassword123", 8, false, true, true, false);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidPasswords() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的密码（太短）
         validator.isPassword("pass");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试无效的密码（缺少大写字母）
         validator.isPassword("password123!");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试无效的密码（缺少小写字母）
         validator.isPassword("PASSWORD123!");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试无效的密码（缺少数字）
         validator.isPassword("Password!");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试无效的密码（缺少特殊字符）
         validator.isPassword("Password123");
         assertFalse(validator.passed());
@@ -81,21 +81,21 @@ public class PasswordValidationChainTest {
 
     @Test
     public void testNullAndEmptyValues() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值应该通过验证（交给@NotNull处理）
         validator.isPassword(null);
         assertTrue(validator.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isPassword("");
         assertTrue(validator.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isPassword(null);
@@ -104,7 +104,7 @@ public class PasswordValidationChainTest {
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isPassword("invalid");
@@ -115,7 +115,7 @@ public class PasswordValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isPassword("invalid");

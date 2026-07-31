@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.book;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ public class DDCValidationChainTest {
 
     @Test
     public void testValidDDC() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDDC("516.3");
         
         assertTrue(validator.passed());
@@ -36,7 +36,7 @@ public class DDCValidationChainTest {
 
     @Test
     public void testInvalidDDC() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDDC("12.34");
         
         assertFalse(validator.passed());
@@ -44,7 +44,7 @@ public class DDCValidationChainTest {
     
     @Test
     public void testMultipleValidations() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDDC("516.3")
                  .isDDC("000")
                  .isDDC("330.94");
@@ -54,7 +54,7 @@ public class DDCValidationChainTest {
     
     @Test
     public void testMixedValidations() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDDC("516.3")
                  .isDDC("12.34")  // 无效的
                  .isDDC("330.94");
@@ -66,12 +66,12 @@ public class DDCValidationChainTest {
     @Test
     public void testNullAndEmptyDDC() {
         // 测试 null 值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDDC(null);
         assertTrue(validator.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isDDC("");
         assertTrue(validator.passed(), "空字符串应该通过验证");
     }

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class ChinesePassportValidationChainTest {
 
     @Test
     public void testValidChinesePassport() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePassport((Object)"G12345678");
         assertTrue(chain.passed(), "有效的护照应该通过验证");
     }
 
     @Test
     public void testInvalidChinesePassport() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePassport((Object)"G1234567");
         assertFalse(chain.passed(), "无效的护照不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class ChinesePassportValidationChainTest {
     @Test
     public void testNullAndEmptyValues() {
         // 测试null值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isChinesePassport((Object)null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isChinesePassport((Object)"");
         assertTrue(validator.passed(), "empty string should pass validation");
     }

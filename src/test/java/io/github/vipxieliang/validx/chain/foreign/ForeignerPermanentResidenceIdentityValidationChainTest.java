@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.foreign;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -27,14 +27,14 @@ public class ForeignerPermanentResidenceIdentityValidationChainTest {
 
     @Test
     public void testValidForeignerPermanentResidenceIdentity() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isForeignerPermanentResidenceIdentity((Object)"911124198108030024");
         assertTrue(chain.passed(), "有效的外国人永久居留身份证应该通过验证");
     }
 
     @Test
     public void testInvalidForeignerPermanentResidenceIdentity() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.withLocale(Locale.SIMPLIFIED_CHINESE);
         chain = chain.isForeignerPermanentResidenceIdentity((Object)"91112419810803002");
         assertFalse(chain.passed(), "无效的外国人永久居留身份证不应该通过验证");

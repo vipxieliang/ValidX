@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.education;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class DegreeCertificateValidationChainTest {
 
     @Test
     public void testValidDegreeCertificate() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isDegreeCertificate((Object)"1075522008000001");
         assertTrue(chain.passed(), "有效的学位证书应该通过验证");
     }
 
     @Test
     public void testInvalidDegreeCertificate() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isDegreeCertificate((Object)"107552200800000");
         assertFalse(chain.passed(), "无效的学位证书不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class DegreeCertificateValidationChainTest {
     @Test
     public void testNullAndEmptyDegreeCertificate() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isDegreeCertificate(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isDegreeCertificate((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

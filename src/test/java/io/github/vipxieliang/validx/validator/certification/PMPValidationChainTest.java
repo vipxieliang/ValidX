@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.validator.certification;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -30,20 +30,20 @@ public class PMPValidationChainTest {
 
     @Test
     public void testValidPMP() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的PMP证书编号
         validator.isPMP("1234567");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isPMP("PMP123456");
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidPMP() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的PMP证书编号
         validator.isPMP("123456"); // 少于7位数字
@@ -53,7 +53,7 @@ public class PMPValidationChainTest {
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isPMP(null);
@@ -62,7 +62,7 @@ public class PMPValidationChainTest {
 
     @Test
     public void testEmptyValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试空字符串
         validator.isPMP("");
@@ -71,7 +71,7 @@ public class PMPValidationChainTest {
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isPMP("123456"); // 少于7位数字
@@ -82,7 +82,7 @@ public class PMPValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isPMP("123456"); // 少于7位数字

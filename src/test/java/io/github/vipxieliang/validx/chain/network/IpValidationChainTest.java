@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.network;
 
 import io.github.vipxieliang.validx.annotations.Ip;
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -27,26 +27,26 @@ public class IpValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isIp((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidIp() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp((Object)"192.168.1.1");
         assertTrue(chain.passed(), "有效的IP地址应该通过验证");
     }
 
     @Test
     public void testInvalidIp() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp((Object)"192.168.1.256");
         assertFalse(chain.passed(), "无效的IP地址不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -55,21 +55,21 @@ public class IpValidationChainTest {
 
     @Test
     public void testValidIpv4WithVersion() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp((Object)"192.168.1.1", Ip.IpVersion.V4);
         assertTrue(chain.passed(), "有效的IPv4地址应该通过IPv4验证");
     }
 
     @Test
     public void testValidIpv6WithVersion() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp((Object)"2001:db8::1", Ip.IpVersion.V6);
         assertTrue(chain.passed(), "有效的IPv6地址应该通过IPv6验证");
     }
 
     @Test
     public void testIpv4FailsIpv6Validation() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp((Object)"192.168.1.1", Ip.IpVersion.V6);
         assertFalse(chain.passed(), "IPv4地址不应该通过IPv6验证");
         assertEquals(1, chain.getErrors().size());
@@ -78,7 +78,7 @@ public class IpValidationChainTest {
 
     @Test
     public void testIpv6FailsIpv4Validation() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIp((Object)"2001:db8::1", Ip.IpVersion.V4);
         assertFalse(chain.passed(), "IPv6地址不应该通过IPv4验证");
         assertEquals(1, chain.getErrors().size());
@@ -87,11 +87,11 @@ public class IpValidationChainTest {
 
     @Test
     public void testAnyVersionAcceptsBoth() {
-        ValidaX chain1 = ValidaX.init();
+        ValidX chain1 = ValidX.init();
         chain1 = chain1.isIp((Object)"192.168.1.1", Ip.IpVersion.ANY);
         assertTrue(chain1.passed(), "IPv4地址应该通过ANY验证");
 
-        ValidaX chain2 = ValidaX.init();
+        ValidX chain2 = ValidX.init();
         chain2 = chain2.isIp((Object)"2001:db8::1", Ip.IpVersion.ANY);
         assertTrue(chain2.passed(), "IPv6地址应该通过ANY验证");
     }

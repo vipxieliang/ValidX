@@ -13,17 +13,87 @@
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
 
-**面向中国业务场景的企业级 Java 验证库**
-
-[快速开始](#-5-分钟快速开始) | [为什么选择 ValidX？](#-为什么选择-validx) | [文档](#支持的验证注解) | [贡献](#贡献)
+**简单、优雅、可靠 - 90+ 开箱即用的中国业务验证器**
 
 </div>
 
 ---
 
+## 📑 目录
+
+- [介绍](#介绍)
+- [为什么创作 ValidX？](#-为什么创作-validx)
+- [为什么选择 ValidX？](#-为什么选择-validx)
+- [5 分钟快速开始](#-5-分钟快速开始)
+- [多语言支持](#多语言支持)
+- [重要说明：Null/空字符串处理](#重要说明null空字符串处理)
+- [线程安全](#线程安全)
+- [支持的验证注解](#支持的验证注解)
+  - [快速查询表](#快速查询表)
+  - [基础验证](#基础验证)
+  - [身份验证相关](#身份验证相关)
+  - [金融验证相关](#金融验证相关)
+  - [教育/职业资格验证](#教育职业资格验证认证相关的验证)
+  - [网络相关](#网络相关)
+  - [中国特定验证](#中国特定验证)
+  - [汽车相关验证](#汽车相关的验证)
+  - [图书相关验证](#图书相关的验证)
+  - [手机相关验证](#手机相关的验证)
+- [更多验证注解](#更多的的验证注解)
+- [贡献](#贡献)
+
+---
+
 ## 介绍
 
-ValidX 是一个专注于中国业务场景的开源 Java 验证库，提供全面的验证解决方案。基于 JSR-380 标准构建，提供 90+ 个专门针对中国场景的验证注解，包括身份证、手机号、银行卡等。
+ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证变得简单、优雅、可靠。基于 JSR-380 标准构建，提供 90+ 个专门针对中国场景的验证注解，包括身份证、手机号、银行卡等。
+
+## 💡 为什么创作 ValidX？
+
+在开发面向中国用户的应用时，我们经常遇到这样的场景：
+
+### 痛点一：Java 内置验证规则太少，远不如其他语言框架丰富
+
+如果你用过其他语言的 Web 框架，比如 PHP 的 ThinkPHP、JavaScript 的 Validator.js，你会发现它们内置了非常丰富的验证规则：`mobile`、`idcard`、`zip`、`alphaNum` 等等，开箱即用，简单方便。
+
+但在 Java 世界里，标准的 Bean Validation 只提供了 `@Email`、`@Pattern` 等少量通用验证注解。对于中国业务场景中常见的身份证、手机号、银行卡、统一社会信用代码等，却完全没有支持。
+
+这导致每个 Java 项目都在重复造轮子：
+- 自己编写复杂的正则表达式
+- 实现 Luhn 算法验证银行卡
+- 处理身份证的校验位计算
+- 复制粘贴网上找到的验证代码
+
+**为什么 Java 验证不能像其他框架那样开箱即用？** 这就是 ValidX 诞生的初衷。
+
+### 痛点二：验证逻辑分散难以维护
+随着项目发展，验证逻辑可能散落在：
+- Controller 层的手动校验
+- Service 层的业务校验
+- 工具类中的静态方法
+- 各个模块重复实现的验证代码
+
+这导致代码重复、维护困难、容易出错。
+
+### 痛点三：缺乏中文错误提示和多语言支持
+使用标准注解时，错误消息通常是英文的，或者需要手动配置资源文件。对于中国用户，我们需要：
+- 友好的中文错误提示
+- 支持多语言切换
+- 可自定义的错误消息模板
+
+### ValidX 的解决方案
+
+基于这些痛点，我们创建了 ValidX，目标是：**让 Java 验证简单、优雅、可靠**
+
+1. **90+ 中国场景验证器** - 从身份证到快递单号，从 QQ 号到车牌号，覆盖中国业务的方方面面
+2. **两种使用方式** - 注解式（适合 DTO 对象验证）和链式 API（适合动态验证），灵活应对不同场景
+3. **零配置多语言** - 支持 8 种语言，自动适配用户语言环境
+4. **企业级可靠性** - 1300+ 单元测试保证质量，生产环境验证
+5. **简单易用** - 只需一个依赖，开箱即用，无需复杂配置
+
+我们希望 ValidX 能成为每个面向中国用户的 Java 应用的标配工具，让开发者专注于业务逻辑，而不是重复编写验证代码。
+
+**一次引入，终身受益。不再造轮子。**
 
 ## ✨ 为什么选择 ValidX？
 
@@ -55,7 +125,7 @@ ValidX 是一个专注于中国业务场景的开源 Java 验证库，提供全�
 <dependency>
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```
 
@@ -102,7 +172,7 @@ public class UserController {
 @Service
 public class UserService {
     public void validateUserData(Map<String, Object> userData) {
-        ValidaX validator = ValidaX.init()
+        ValidX validator = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_EMPTY)  // 全局拒绝 null/空值
             .field("邮箱").isEmail(userData.get("email"))
             .field("手机号").isChinesePhone(userData.get("phone"))
@@ -120,98 +190,22 @@ public class UserService {
 
 就这么简单！ValidX 与现有 Spring Boot 设置无缝协作。错误消息会根据 `Accept-Language` 请求头自动适配用户语言。
 
-## 安装和使用
-
-### Maven依赖
-
-只需添加单一依赖即可使用所有功能：
-
-```xml
-<dependency>
-    <groupId>io.github.vipxieliang</groupId>
-    <artifactId>validx</artifactId>
-    <version>1.0.0</version>
-</dependency>
-```
-
-### 注解方式使用
-
-```java
-public class UserDTO {
-    @ChineseIdCard
-    private String idCard;
-
-    @Email
-    private String email;
-
-    @Url
-    private String website;
-
-    @Password
-    private String password;
-
-    @Password(minLength = 6)
-    private String password2;
-
-    @Password(minLength = 6, requireSpecialChar = false)
-    private String password3;
-
-    @StartsWith(startsWith = "USER_")
-    private String userCode;
-
-    @In({"admin", "user", "guest"})
-    private String role;
-
-    @In({"admin", "user", "guest"})
-    private List<String> roles;
-
-    // getters and setters
-}
-```
-
-### 链式调用方式使用
-
-```java
-@Test
-public void testInstanceMethodWithDirectValue() {
-    // 测试使用实例方法直接传入值进行验证
-    ValidaX chain = ValidaX.init(); // 创建一个空的链
-    chain = chain.isChineseIdCard((Object)"440608197310039910")
-            .isUrl((Object)"http://example.com")
-            .isIp((Object)"192.168.1.1");
-
-    assertTrue(chain.passed(), "所有验证都应该通过");
-}
-```
-
-```java
-@Test
-public void testFutureDateWithIncludeToday() {
-    // 测试使用isFutureDate方法包含今天的日期
-    ValidaX chain = ValidaX.init(); // 创建一个空的链
-    chain = chain.isFutureDate((Object)LocalDate.now().toString(), true)
-            .isFutureDate((Object)LocalDate.now().plusDays(1).toString());
-
-    assertTrue(chain.passed(), "所有验证都应该通过");
-}
-```
-
 ## 多语言支持
 
 ValidX 支持多语言错误消息，可以通过以下方式使用：
 
 ```java
 // 使用系统默认语言
-ValidaX chain1 = ValidaX.init()
+ValidX chain1 = ValidX.init()
         .isEmail("invalid-email");
 
 // 使用中文
-ValidaX chain2 = ValidaX.init()
+ValidX chain2 = ValidX.init()
         .withLocale(Locale.SIMPLIFIED_CHINESE)
         .isEmail("invalid-email");
 
 // 使用英文
-ValidaX chain3 = ValidaX.init()
+ValidX chain3 = ValidX.init()
         .withLocale(Locale.ENGLISH)
         .isEmail("invalid-email");
 ```
@@ -254,7 +248,7 @@ ValidX 还支持自动语言环境切换，无需显式指定语言环境：
 MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
 
 // 验证操作会自动使用设置的语言环境
-ValidaX chain = ValidaX.init()
+ValidX chain = ValidX.init()
         .isEmail("invalid-email");
 
 // 清除全局语言环境设置
@@ -340,7 +334,7 @@ public class UserController {
 
 ### 2. 链式调用的 Null/空字符串处理
 
-链式校验（`ValidaX.init()`）的默认行为与注解方式一致：**null 和空字符串会通过验证**。
+链式校验（`ValidX.init()`）的默认行为与注解方式一致：**null 和空字符串会通过验证**。
 
 #### 为什么这样设计？
 
@@ -361,7 +355,7 @@ public class UserController {
 @Service
 public class UserService {
     public void process(Map<String, Object> data) {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // Map 中的字段可能不存在（null），这是正常情况
         // 链式校验会自动跳过 null 值
@@ -377,7 +371,7 @@ public class UserService {
 
 #### 链式验证配置 API
 
-ValidaX 现在支持通过全局配置和局部状态控制来灵活处理 null/空值。
+ValidX 现在支持通过全局配置和局部状态控制来灵活处理 null/空值。
 
 ##### 全局配置
 
@@ -385,7 +379,7 @@ ValidaX 现在支持通过全局配置和局部状态控制来灵活处理 null/
 
 ```java
 // 创建带有全局 NOT_NULL 要求的验证器
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL);
 
 // 所有验证方法现在都会拒绝 null 值
@@ -393,7 +387,7 @@ validator.isEmail(email)  // 如果 email 为 null 则失败
          .isPhone(phone); // 如果 phone 为 null 则失败
 
 // 创建带有全局 NOT_EMPTY 要求的验证器
-ValidaX validator2 = ValidaX.init()
+ValidX validator2 = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
 // 所有验证方法现在都会拒绝 null 和空字符串
@@ -410,26 +404,26 @@ validator2.isEmail(email)  // 如果 email 为 null 或 "" 则失败
 
 ```java
 // ✅ 推荐：在开头设置一次配置
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .isPhone(phone)
     .allowNull().isQQ(qq);  // 例外情况使用局部方法
 
 // ⚠️ 不推荐：在中间多次调用 config()
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .config(ValidXConfig.DEFAULT)  // 令人困惑：难以跟踪配置变化
     .isPhone(phone);
 
 // ✅ 如果需要不同配置，创建多个验证器实例
-ValidaX strictValidator = ValidaX.init()
+ValidX strictValidator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email1)
     .isPhone(phone1);
 
-ValidaX lenientValidator = ValidaX.init()
+ValidX lenientValidator = ValidX.init()
     .config(ValidXConfig.DEFAULT)
     .isEmail(email2)
     .isPhone(phone2);
@@ -440,7 +434,7 @@ ValidaX lenientValidator = ValidaX.init()
 你可以使用局部状态方法来覆盖特定字段的全局配置：
 
 ```java
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL);  // 全局：拒绝 null
 
 // 覆盖特定字段
@@ -461,7 +455,7 @@ validator.field("可选邮箱").allowNull().isEmail(optionalEmail)  // 此字段
 局部状态始终优先于全局配置：
 
 ```java
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // 全局：拒绝 null 和空字符串
 
 validator.allowNull().isEmail(email);  // 局部 allowNull() 覆盖全局配置
@@ -475,7 +469,7 @@ validator.allowNull().isEmail(email);  // 局部 allowNull() 覆盖全局配置
 
 ```java
 public void validateUserRegistration(Map<String, Object> request) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // 大部分字段必填
 
     validator.field("邮箱").isEmail(request.get("email"))
@@ -494,7 +488,7 @@ public void validateUserRegistration(Map<String, Object> request) {
 ```java
 public void updateUserProfile(String userId, Map<String, Object> updates) {
     // 只验证正在更新的字段
-    ValidaX validator = ValidaX.init();  // 默认：允许 null/空
+    ValidX validator = ValidX.init();  // 默认：允许 null/空
 
     // 只验证更新 Map 中存在的字段
     if (updates.containsKey("email")) {
@@ -515,7 +509,7 @@ public void updateUserProfile(String userId, Map<String, Object> updates) {
 
 ```java
 public void validateComplexForm(FormData data) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .config(ValidXConfig.GLOBAL_NOT_NULL);  // 大部分字段必填
 
     validator.field("邮箱").notEmpty().isEmail(data.getEmail())        // 必填且非空
@@ -536,7 +530,7 @@ public void validateComplexForm(FormData data) {
 **重要：** 局部状态（notNull/notEmpty/allowNull/allowEmpty）在每次验证方法调用后自动重置。这确保每个字段的验证是独立的。
 
 ```java
-ValidaX validator = ValidaX.init();
+ValidX validator = ValidX.init();
 
 validator.notNull().isEmail(email1)   // notNull 应用于 email1
          .isEmail(email2)              // email2 使用默认行为（状态已重置）
@@ -548,7 +542,7 @@ validator.notNull().isEmail(email1)   // notNull 应用于 email1
 使用 `.field("标签")` 时，错误消息将包含自定义标签：
 
 ```java
-ValidaX validator = ValidaX.init();
+ValidX validator = ValidX.init();
 
 validator.field("用户邮箱").notEmpty().isEmail("")
          .field("联系电话").notNull().isChinesePhone(null);
@@ -564,11 +558,11 @@ if (!validator.passed()) {
 
 ## 线程安全
 
-**ValidaX 实例不是线程安全的。** 每次校验都应该创建新实例：
+**ValidX 实例不是线程安全的。** 每次校验都应该创建新实例：
 
 ```java
 // ❌ 错误：跨线程共享实例
-private static final ValidaX VALIDATOR = ValidaX.init();
+private static final ValidX VALIDATOR = ValidX.init();
 
 public void validate(User user) {
     VALIDATOR.isEmail(user.getEmail());  // 线程不安全！
@@ -576,7 +570,7 @@ public void validate(User user) {
 
 // ✅ 正确：每次校验创建新实例
 public void validate(User user) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .isEmail(user.getEmail())
         .isPhone(user.getPhone());
 
@@ -586,7 +580,7 @@ public void validate(User user) {
 }
 ```
 
-**为什么？** ValidaX 内部使用可变状态（局部要求标志、字段标识、错误列表），这些状态在校验链执行过程中会被修改。跨线程共享实例会导致竞态条件和不正确的校验结果。
+**为什么？** ValidX 内部使用可变状态（局部要求标志、字段标识、错误列表），这些状态在校验链执行过程中会被修改。跨线程共享实例会导致竞态条件和不正确的校验结果。
 
 **线程安全的组件：**
 - `ValidXConfig` 对象是不可变的，可以安全共享
@@ -602,101 +596,102 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 
 点击注解名称可快速跳转到详细文档。
 
-| 分类 | 注解 | 说明 |
-|------|------|------|
-| **基础验证** | [@Alpha](#alpha) | 纯英文字母验证 |
-| **基础验证** | [@AlphaDash](#alphadash) | 字母数字下划线横线组合 |
-| **基础验证** | [@AlphaNumber](#alphanumber) | 字母数字组合验证 |
-| **基础验证** | [@Chinese](#chinese) | 纯中文字符验证 |
-| **基础验证** | [@ChineseAlpha](#chinesealpha) | 中文字符和字母组合 |
-| **基础验证** | [@ChineseAlphaNum](#chinesealphanum) | 中文字符、字母和数字组合 |
-| **基础验证** | [@ChineseAlphaDash](#chinesealphadash) | 中文、字母、数字、下划线、横线组合 |
-| **基础验证** | [@Lower](#lower) | 小写字符验证 |
-| **基础验证** | [@Upper](#upper) | 大写字符验证 |
-| **基础验证** | [@Xdigit](#xdigit) | 十六进制字符串验证 |
-| **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） |
-| **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） |
-| **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 |
-| **基础验证** | [@FutureDate](#futuredate) | 未来日期验证 |
-| **基础验证** | [@PastDate](#pastdate) | 过去日期验证 |
-| **基础验证** | [@HourMinute](#hourminute) | 时分格式（HH:mm） |
-| **基础验证** | [@HourMinuteSecond](#hourminutesecond) | 时分秒格式（HH:mm:ss） |
-| **基础验证** | [@Timestamp](#timestamp) | Unix时间戳验证 |
-| **基础验证** | [@CronExpression](#cronexpression) | Cron表达式验证 |
-| **基础验证** | [@Duration](#duration) | 时间段格式验证 |
-| **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 |
-| **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 |
-| **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 |
-| **基础验证** | [@In](#in) | 值必须在指定列表中 |
-| **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 |
-| **基础验证** | [@Enum](#enum) | 枚举值验证 |
-| **基础验证** | [@Color](#color) | 颜色格式（HEX/RGB/RGBA） |
-| **基础验证** | [@Password](#password) | 密码强度验证 |
-| **基础验证** | [@UUID](#uuid) | UUID格式验证 |
-| **基础验证** | [@Base64](#base64) | Base64编码验证 |
-| **基础验证** | [@JSON](#json) | JSON格式验证 |
-| **基础验证** | [@JWT](#jwt) | JWT令牌格式验证 |
-| **基础验证** | [@SemVer](#semver) | 语义化版本验证 |
-| **基础验证** | [@FileExtension](#fileextension) | 文件扩展名验证 |
-| **基础验证** | [@FileSize](#filesize) | 文件大小范围验证 |
-| **基础验证** | [@Age](#age) | 年龄验证（从出生日期或身份证） |
-| **基础验证** | [@Port](#port) | 端口号验证（0-65535） |
-| **身份验证相关** | [@ChineseIdCard](#chineseidcard) | 中国身份证验证 |
-| **身份验证相关** | [@ChinesePassport](#chinesepassport) | 中国护照验证 |
-| **身份验证相关** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | 军官证验证 |
-| **身份验证相关** | [@ChineseSoldier](#chinesesoldier) | 士兵证验证 |
-| **身份验证相关** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | 外国人永久居留身份证 |
-| **身份验证相关** | [@HKMacauResidence](#hkmacauresidence) | 港澳居民居住证 |
-| **身份验证相关** | [@HKMacauPass](#hkmacaupass) | 港澳居民来往内地通行证 |
-| **身份验证相关** | [@TaiwanResidence](#taiwanresidence) | 台湾居民居住证 |
-| **身份验证相关** | [@TaiwanPass](#taiwanpass) | 台湾居民来往大陆通行证 |
-| **身份验证相关** | [@ForeignerWorkPermit](#foreignerworkpermit) | 外国人工作许可证 |
-| **身份验证相关** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | 统一社会信用代码 |
-| **身份验证相关** | [@ChinesePhone](#chinesephone) | 中国手机号验证 |
-| **身份验证相关** | [@ChineseLandline](#chineselandline) | 中国座机号验证 |
-| **身份验证相关** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | 中国手机号或座机号 |
-| **身份验证相关** | [@PhoneNumber](#phonenumber) | 国际电话号码验证 |
-| **身份验证相关** | [@Email](#email) | 电子邮箱验证 |
-| **金融验证相关** | [@BankCard](#bankcard) | 银行卡号验证（Luhn算法） |
-| **金融验证相关** | [@CVV](#cvv) | CVV/CVC安全码验证 |
-| **金融验证相关** | [@IBAN](#iban) | IBAN账号验证 |
-| **金融验证相关** | [@SWIFT](#swift) | SWIFT/BIC代码验证 |
-| **金融验证相关** | [@StockCode](#stockcode) | 股票代码验证 |
-| **金融验证相关** | [@TradeOrderNumber](#tradeordernumber) | 交易订单号验证 |
-| **金融验证相关** | [@FinancialProductCode](#financialproductcode) | 金融产品代码验证 |
-| **教育/职业资格验证** | [@DegreeCertificate](#degreecertificate) | 学位证书编号 |
-| **教育/职业资格验证** | [@Doctor](#doctor) | 医师资格证书 |
-| **教育/职业资格验证** | [@Teacher](#teacher) | 教师资格证书 |
-| **教育/职业资格验证** | [@Lawyer](#lawyer) | 法律职业资格证书 |
-| **教育/职业资格验证** | [@PMP](#pmp) | PMP证书验证 |
-| **教育/职业资格验证** | [@Constructor](#constructor) | 建造师证书 |
-| **教育/职业资格验证** | [@Accountant](#accountant) | 会计资格证书 |
-| **网络相关** | [@Domain](#domain) | 域名验证 |
-| **网络相关** | [@Ip](#ip) | IP地址验证（IPv4/IPv6） |
-| **网络相关** | [@Mac](#mac) | MAC地址验证 |
-| **网络相关** | [@Url](#url) | URL地址验证 |
-| **网络相关** | [@SubnetMask](#subnetmask) | 子网掩码验证 |
-| **中国特定验证** | [@ChineseLicensePlate](#chineselicenseplate) | 中国车牌号验证 |
-| **中国特定验证** | [@ChinesePatent](#chinesepatent) | 中国专利号验证 |
-| **中国特定验证** | [@ChineseTrademark](#chinesetrademark) | 中国商标注册号 |
-| **中国特定验证** | [@SoftwareCopyright](#softwarecopyright) | 软件著作权登记号 |
-| **中国特定验证** | [@WorkCopyright](#workcopyright) | 一般作品著作权登记号 |
-| **中国特定验证** | [@ChineseZipCode](#chinesezipcode) | 中国邮政编码验证 |
-| **中国特定验证** | [@DrugApproval](#drugapproval) | 药品批准文号验证 |
-| **中国特定验证** | [@DrugCode](#drugcode) | 药品本位码验证 |
-| **中国特定验证** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | 医疗器械注册证号 |
-| **中国特定验证** | [@QQ](#qq) | QQ号验证 |
-| **中国特定验证** | [@WeChat](#wechat) | 微信号验证 |
-| **汽车相关验证** | [@VIN](#vin) | 车辆识别代码 |
-| **汽车相关验证** | [@VehicleEngine](#vehicleengine) | 车辆发动机号验证 |
-| **图书相关验证** | [@ISBN](#isbn) | ISBN书号验证 |
-| **图书相关验证** | [@ISSN](#issn) | ISSN期刊号验证 |
-| **图书相关验证** | [@DOI](#doi) | DOI标识符验证 |
-| **图书相关验证** | [@CLC](#clc) | 中图分类号 |
-| **图书相关验证** | [@DDC](#ddc) | 杜威十进分类法 |
-| **图书相关验证** | [@ORCID](#orcid) | ORCID研究者ID验证 |
-| **图书相关验证** | [@IPC](#ipc) | 国际专利分类号 |
-| **手机相关验证** | [@IMEI](#imei) | IMEI设备号验证 |
+| 分类 | 注解 | 说明 | 版本    |
+|------|------|------|-------|
+| **基础验证** | [@Alpha](#alpha) | 纯英文字母验证 | 1.0.0 |
+| **基础验证** | [@AlphaDash](#alphadash) | 字母数字下划线横线组合 | 1.0.0 |
+| **基础验证** | [@AlphaNumber](#alphanumber) | 字母数字组合验证 | 1.0.0 |
+| **基础验证** | [@Chinese](#chinese) | 纯中文字符验证 | 1.0.0 |
+| **基础验证** | [@ChineseAlpha](#chinesealpha) | 中文字符和字母组合 | 1.0.0 |
+| **基础验证** | [@ChineseAlphaNum](#chinesealphanum) | 中文字符、字母和数字组合 | 1.0.0 |
+| **基础验证** | [@ChineseAlphaDash](#chinesealphadash) | 中文、字母、数字、下划线、横线组合 | 1.0.0 |
+| **基础验证** | [@Lower](#lower) | 小写字符验证 | 1.0.0 |
+| **基础验证** | [@Upper](#upper) | 大写字符验证 | 1.0.0 |
+| **基础验证** | [@Xdigit](#xdigit) | 十六进制字符串验证 | 1.0.0 |
+| **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） | 1.0.0 |
+| **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） | 1.0.0 |
+| **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 | 1.0.0 |
+| **基础验证** | [@FutureDate](#futuredate) | 未来日期验证 | 1.0.0 |
+| **基础验证** | [@PastDate](#pastdate) | 过去日期验证 | 1.0.0 |
+| **基础验证** | [@HourMinute](#hourminute) | 时分格式（HH:mm） | 1.0.0 |
+| **基础验证** | [@HourMinuteSecond](#hourminutesecond) | 时分秒格式（HH:mm:ss） | 1.0.0 |
+| **基础验证** | [@Timestamp](#timestamp) | Unix时间戳验证 | 1.0.0 |
+| **基础验证** | [@CronExpression](#cronexpression) | Cron表达式验证 | 1.0.0 |
+| **基础验证** | [@Duration](#duration) | 时间段格式验证 | 1.0.0 |
+| **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 | 1.0.0 |
+| **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 | 1.0.0 |
+| **基础验证** | [@Contains](#contains) | 字符串包含子串验证 | 1.0.1 |
+| **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 | 1.0.0 |
+| **基础验证** | [@In](#in) | 值必须在指定列表中 | 1.0.0 |
+| **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 | 1.0.0 |
+| **基础验证** | [@Enum](#enum) | 枚举值验证 | 1.0.0 |
+| **基础验证** | [@Color](#color) | 颜色格式（HEX/RGB/RGBA） | 1.0.0 |
+| **基础验证** | [@Password](#password) | 密码强度验证 | 1.0.0 |
+| **基础验证** | [@UUID](#uuid) | UUID格式验证 | 1.0.0 |
+| **基础验证** | [@Base64](#base64) | Base64编码验证 | 1.0.0 |
+| **基础验证** | [@JSON](#json) | JSON格式验证 | 1.0.0 |
+| **基础验证** | [@JWT](#jwt) | JWT令牌格式验证 | 1.0.0 |
+| **基础验证** | [@SemVer](#semver) | 语义化版本验证 | 1.0.0 |
+| **基础验证** | [@FileExtension](#fileextension) | 文件扩展名验证 | 1.0.0 |
+| **基础验证** | [@FileSize](#filesize) | 文件大小范围验证 | 1.0.0 |
+| **基础验证** | [@Age](#age) | 年龄验证（从出生日期或身份证） | 1.0.0 |
+| **基础验证** | [@Port](#port) | 端口号验证（0-65535） | 1.0.0 |
+| **身份验证相关** | [@ChineseIdCard](#chineseidcard) | 中国身份证验证 | 1.0.0 |
+| **身份验证相关** | [@ChinesePassport](#chinesepassport) | 中国护照验证 | 1.0.0 |
+| **身份验证相关** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | 军官证验证 | 1.0.0 |
+| **身份验证相关** | [@ChineseSoldier](#chinesesoldier) | 士兵证验证 | 1.0.0 |
+| **身份验证相关** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | 外国人永久居留身份证 | 1.0.0 |
+| **身份验证相关** | [@HKMacauResidence](#hkmacauresidence) | 港澳居民居住证 | 1.0.0 |
+| **身份验证相关** | [@HKMacauPass](#hkmacaupass) | 港澳居民来往内地通行证 | 1.0.0 |
+| **身份验证相关** | [@TaiwanResidence](#taiwanresidence) | 台湾居民居住证 | 1.0.0 |
+| **身份验证相关** | [@TaiwanPass](#taiwanpass) | 台湾居民来往大陆通行证 | 1.0.0 |
+| **身份验证相关** | [@ForeignerWorkPermit](#foreignerworkpermit) | 外国人工作许可证 | 1.0.0 |
+| **身份验证相关** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | 统一社会信用代码 | 1.0.0 |
+| **身份验证相关** | [@ChinesePhone](#chinesephone) | 中国手机号验证 | 1.0.0 |
+| **身份验证相关** | [@ChineseLandline](#chineselandline) | 中国座机号验证 | 1.0.0 |
+| **身份验证相关** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | 中国手机号或座机号 | 1.0.0 |
+| **身份验证相关** | [@PhoneNumber](#phonenumber) | 国际电话号码验证 | 1.0.0 |
+| **身份验证相关** | [@Email](#email) | 电子邮箱验证 | 1.0.0 |
+| **金融验证相关** | [@BankCard](#bankcard) | 银行卡号验证（Luhn算法） | 1.0.0 |
+| **金融验证相关** | [@CVV](#cvv) | CVV/CVC安全码验证 | 1.0.0 |
+| **金融验证相关** | [@IBAN](#iban) | IBAN账号验证 | 1.0.0 |
+| **金融验证相关** | [@SWIFT](#swift) | SWIFT/BIC代码验证 | 1.0.0 |
+| **金融验证相关** | [@StockCode](#stockcode) | 股票代码验证 | 1.0.0 |
+| **金融验证相关** | [@TradeOrderNumber](#tradeordernumber) | 交易订单号验证 | 1.0.0 |
+| **金融验证相关** | [@FinancialProductCode](#financialproductcode) | 金融产品代码验证 | 1.0.0 |
+| **教育/职业资格验证** | [@DegreeCertificate](#degreecertificate) | 学位证书编号 | 1.0.0 |
+| **教育/职业资格验证** | [@Doctor](#doctor) | 医师资格证书 | 1.0.0 |
+| **教育/职业资格验证** | [@Teacher](#teacher) | 教师资格证书 | 1.0.0 |
+| **教育/职业资格验证** | [@Lawyer](#lawyer) | 法律职业资格证书 | 1.0.0 |
+| **教育/职业资格验证** | [@PMP](#pmp) | PMP证书验证 | 1.0.0 |
+| **教育/职业资格验证** | [@Constructor](#constructor) | 建造师证书 | 1.0.0 |
+| **教育/职业资格验证** | [@Accountant](#accountant) | 会计资格证书 | 1.0.0 |
+| **网络相关** | [@Domain](#domain) | 域名验证 | 1.0.0 |
+| **网络相关** | [@Ip](#ip) | IP地址验证（IPv4/IPv6） | 1.0.0 |
+| **网络相关** | [@Mac](#mac) | MAC地址验证 | 1.0.0 |
+| **网络相关** | [@Url](#url) | URL地址验证 | 1.0.0 |
+| **网络相关** | [@SubnetMask](#subnetmask) | 子网掩码验证 | 1.0.0 |
+| **中国特定验证** | [@ChineseLicensePlate](#chineselicenseplate) | 中国车牌号验证 | 1.0.0 |
+| **中国特定验证** | [@ChinesePatent](#chinesepatent) | 中国专利号验证 | 1.0.0 |
+| **中国特定验证** | [@ChineseTrademark](#chinesetrademark) | 中国商标注册号 | 1.0.0 |
+| **中国特定验证** | [@SoftwareCopyright](#softwarecopyright) | 软件著作权登记号 | 1.0.0 |
+| **中国特定验证** | [@WorkCopyright](#workcopyright) | 一般作品著作权登记号 | 1.0.0 |
+| **中国特定验证** | [@ChineseZipCode](#chinesezipcode) | 中国邮政编码验证 | 1.0.0 |
+| **中国特定验证** | [@DrugApproval](#drugapproval) | 药品批准文号验证 | 1.0.0 |
+| **中国特定验证** | [@DrugCode](#drugcode) | 药品本位码验证 | 1.0.0 |
+| **中国特定验证** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | 医疗器械注册证号 | 1.0.0 |
+| **中国特定验证** | [@QQ](#qq) | QQ号验证 | 1.0.0 |
+| **中国特定验证** | [@WeChat](#wechat) | 微信号验证 | 1.0.0 |
+| **汽车相关验证** | [@VIN](#vin) | 车辆识别代码 | 1.0.0 |
+| **汽车相关验证** | [@VehicleEngine](#vehicleengine) | 车辆发动机号验证 | 1.0.0 |
+| **图书相关验证** | [@ISBN](#isbn) | ISBN书号验证 | 1.0.0 |
+| **图书相关验证** | [@ISSN](#issn) | ISSN期刊号验证 | 1.0.0 |
+| **图书相关验证** | [@DOI](#doi) | DOI标识符验证 | 1.0.0 |
+| **图书相关验证** | [@CLC](#clc) | 中图分类号 | 1.0.0 |
+| **图书相关验证** | [@DDC](#ddc) | 杜威十进分类法 | 1.0.0 |
+| **图书相关验证** | [@ORCID](#orcid) | ORCID研究者ID验证 | 1.0.0 |
+| **图书相关验证** | [@IPC](#ipc) | 国际专利分类号 | 1.0.0 |
+| **手机相关验证** | [@IMEI](#imei) | IMEI设备号验证 | 1.0.0 |
 
 ---
 
@@ -712,9 +707,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlpha("abcDEF");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @AlphaDash
 * 校验规则：字母数字下划线破折号验证，允许英文字母、数字、下划线和破折号。
@@ -726,9 +723,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlphaDash("abc-123_def");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @AlphaNumber
 * 校验规则：字母和数字组合验证，只允许英文字母和数字。
@@ -740,9 +739,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlphaNumber("abc123");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Chinese
 * 校验规则：纯汉字验证，只允许中文字符（Unicode中文字符）。
@@ -754,9 +755,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String name;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinese("汉字");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseAlpha
 * 校验规则：汉字字母验证，允许中文字符和英文字母。
@@ -768,9 +771,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String name;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlpha("汉字abc");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseAlphaNum
 * 校验规则：汉字字母数字验证，允许中文字符、英文字母和数字。
@@ -782,9 +787,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlphaNum("汉字abc123");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseAlphaDash
 * 校验规则：汉字字母数字下划线破折号验证，允许中文字符、英文字母、数字、下划线和破折号。
@@ -796,9 +803,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlphaDash("汉字abc-123_def");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Longitude
 * 校验规则：经度验证，验证经度值是否在-180到180之间。
@@ -810,9 +819,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String longitude;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLongitude("116.4074");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Latitude
 * 校验规则：纬度验证，验证纬度值是否在-90到90之间。
@@ -824,9 +835,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String latitude;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLatitude("39.9042");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @GeoPoint
 * 校验规则：地理坐标对验证（经纬度），验证坐标格式是否正确且数值在有效范围内。
@@ -856,11 +869,13 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String gps;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isGeoPoint("116.4074,39.9042");  // 默认：经度在前
   validator.isGeoPoint("39.9042,116.4074", true);  // 纬度在前
   validator.isGeoPoint("116.4074,39.9042", false, GeoPoint.SeparatorType.COMMA);  // 指定分隔符
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @FutureDate
 * 校验规则：未来日期验证，验证日期是否为未来日期。
@@ -875,11 +890,13 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String deadline;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isFutureDate("2025-12-31");
   // 或包含今天
   validator.isFutureDate("2025-12-31", true);
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @PastDate
 * 校验规则：过去日期验证，验证日期是否为过去日期。
@@ -894,11 +911,13 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String birthDate;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPastDate("2020-01-01");
   // 或包含今天
   validator.isPastDate("2020-01-01", true);
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @HourMinute
 * 校验规则：小时分钟时间格式验证，验证时间格式是否为HH:mm。
@@ -910,9 +929,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String time;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHourMinute("23:20");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @HourMinuteSecond
 * 校验规则：时分秒时间格式验证，验证时间格式是否为HH:mm:ss。
@@ -924,9 +945,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String time;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHourMinuteSecond("23:50:29");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @In
 * 校验规则：单个元素、或者多个元素匹配验证，验证值是否在指定的值列表中。
@@ -942,13 +965,15 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private List<String> roles;
   
   // 链式调用方式使用 - 单个值验证
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIn("value1", new String[]{"value1", "value2"});
   
   // 链式调用方式使用 - 集合验证
   List<String> roles = Arrays.asList("admin", "user");
   validator.isIn(roles, new String[]{"admin", "user", "guest"});
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @NotIn
 * 校验规则：单个元素、或者多个元素不匹配验证，验证值是否不在指定的值列表中。
@@ -964,13 +989,15 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private List<String> forbiddenRoles;
   
   // 链式调用方式使用 - 单个值验证
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isNotIn("value3", new String[]{"value1", "value2"});
   
   // 链式调用方式使用 - 集合验证
   List<String> roles = Arrays.asList("user", "guest");
   validator.isNotIn(roles, new String[]{"admin", "root", "superuser"});
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @FileExtension
 * 校验规则：文件后缀名验证，验证文件名的后缀是否在指定的后缀列表中。
@@ -987,7 +1014,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用链式调用时也可以指定是否忽略大小写：
   ```java
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // 默认忽略大小写
   validator.isFileExtension("document.xls", new String[]{"XLS"});
@@ -998,6 +1025,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 不忽略大小写
   validator.isFileExtension("document.xls", new String[]{"XLS"}, false);
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @FileSize
 * 校验规则：文件大小验证，验证文件大小是否在指定范围内。
@@ -1030,7 +1059,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private MultipartFile avatar;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 只指定最大值
   validator.isFileSize(file, "10MB");
@@ -1045,6 +1074,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - MIME 类型验证仅对 MultipartFile 有效
   - MultipartFile 支持使用反射实现，不需要强依赖 Spring
 
+
+[↑ 返回快速查询表](#快速查询表)
+
 #### @Lower
 * 校验规则：小写字符验证，只允许小写英文字母。
 * 示例格式：`abcdef`
@@ -1055,9 +1087,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String text;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLower("abcdef");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Upper
 * 校验规则：大写字符验证，只允许大写英文字母。
@@ -1069,9 +1103,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String text;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUpper("ABCDEF");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Xdigit
 * 校验规则：十六进制字符串验证，只允许十六进制字符（0-9, a-f, A-F）。
@@ -1083,9 +1119,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String hex;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isXdigit("0a1B2c3D");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Password
 * 校验规则：密码强度验证，验证密码是否满足指定的强度要求。
@@ -1113,7 +1151,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用链式调用时也可以指定密码强度要求：
   ```java
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // 使用默认规则（最小长度8位，必须包含大小写字母、数字和特殊字符）
   validator.isPassword("MyPassword123!");
@@ -1124,6 +1162,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 完全自定义规则（最小长度8位，不要求大写字母，要求小写字母、数字，不要求特殊字符）
   validator.isPassword("mypassword123", 8, false, true, true, false);
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @UUID
 * 校验规则：UUID（通用唯一识别码）格式验证，支持标准格式（带连字符）和紧凑格式（不带连字符）。
@@ -1143,7 +1183,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String transactionId;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证标准格式
   validator.isUUID("550e8400-e29b-41d4-a716-446655440000");
@@ -1156,6 +1196,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 标准格式必须在特定位置包含恰好4个连字符
   - 紧凑格式必须是恰好32个十六进制字符
   - 支持所有常见的UUID版本（v1、v4等）
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Base64
 * 校验规则：Base64编码格式验证，支持标准Base64和URL-safe Base64格式。
@@ -1184,7 +1227,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String jwtPayload;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证标准格式
   validator.isBase64("SGVsbG8gV29ybGQ=");
@@ -1200,6 +1243,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 填充符=只能出现在末尾，最多2个
   - 字符串长度必须是4的倍数（除非启用allowNoPadding）
   - 常见应用场景：文件上传、JWT令牌、图片数据传输
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Age
 * 校验规则：基于出生日期或身份证号码的年龄验证，支持最小年龄和最大年龄限制。
@@ -1231,7 +1277,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String birthDate;  // "1990/01/01"
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 只验证最小年龄
   validator.isAge(LocalDate.now().minusYears(25), 18);
@@ -1251,6 +1297,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - null或空值通过验证（由@NotNull/@NotEmpty处理）
   - 未来的出生日期视为0岁
   - 自动尝试常见日期格式:yyyy-MM-dd、yyyy/MM/dd、yyyyMMdd
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @JSON
 * 校验规则：JSON格式验证，支持标准JSON语法，可配置类型限制、深度限制和长度限制。
@@ -1291,7 +1340,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String apiRequest;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证任意JSON类型
   validator.isJSON("{\"name\":\"John\",\"age\":30}");
@@ -1313,6 +1362,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 深度限制有助于防止深度嵌套结构导致的栈溢出
   - 长度限制有助于防止大型JSON字符串导致的内存问题
   - 常见应用场景：API请求/响应验证、配置文件验证、数据序列化
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @PhoneNumber
 * 校验规则：国际电话号码验证，支持多种国际电话号码格式，包括E.164标准格式。
@@ -1355,7 +1407,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String companyPhone;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证任意电话号码
   validator.isPhoneNumber("+8613812345678");
@@ -1378,6 +1430,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 严格模式强制执行国际格式（必须以+开头）
   - 常见应用场景：用户注册、联系人管理、国际通信
 
+
+[↑ 返回快速查询表](#快速查询表)
+
 #### @JWT
 * 校验规则：JWT（JSON Web Token）格式验证，验证JWT Token的基本格式是否正确。
 * JWT格式说明：
@@ -1395,7 +1450,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String token;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U");
   ```
 * 注意事项：
@@ -1403,6 +1458,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 不验证签名的有效性（需要密钥）
   - 不验证过期时间等声明
   - 常见应用场景：API认证、单点登录(SSO)、信息交换
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @SemVer
 * 校验规则：语义化版本号（Semantic Versioning）格式验证，验证版本号是否符合SemVer 2.0.0规范。
@@ -1431,12 +1489,12 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String versionWithPrefix;
 
   // 链式调用方式使用 - 标准格式
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSemVer("1.0.0");
   validator.isSemVer("2.1.3-beta.1");
 
   // 链式调用方式使用 - 允许v前缀
-  ValidaX validator2 = ValidaX.init();
+  ValidX validator2 = ValidX.init();
   validator2.isSemVer("v1.0.0", true);
   validator2.isSemVer("v2.1.3-rc.1", true);
   ```
@@ -1448,6 +1506,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 构建元数据不影响版本优先级，仅用于标识构建信息
   - 默认不允许v前缀，需要时通过`allowVPrefix=true`开启
   - 常见应用场景：软件版本管理、npm包版本、API版本控制、Git标签
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Timestamp
 * 校验规则：Unix时间戳格式验证，验证值是否为有效的Unix时间戳（支持秒和毫秒）。
@@ -1475,12 +1536,12 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private Long createTimeMs;
 
   // 链式调用方式使用 - 默认ANY模式
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTimestamp("1700000000");
   validator.isTimestamp("1700000000000");
 
   // 链式调用方式使用 - 指定单位
-  ValidaX validator2 = ValidaX.init();
+  ValidX validator2 = ValidX.init();
   validator2.isTimestamp("1700000000", Timestamp.TimestampUnit.SECONDS);
   validator2.isTimestamp(1700000000000L, Timestamp.TimestampUnit.MILLISECONDS);
   ```
@@ -1492,6 +1553,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - null值不由本注解校验（需要null检查请搭配`@NotNull`使用）
   - 任何模式下，位数不正确的值（如9位、11位、12位）都会被拒绝
   - 常见应用场景：API时间戳参数、数据库时间字段、消息队列时间戳
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @CronExpression
 * 校验规则：Cron表达式格式验证，验证值是否为有效的Cron表达式。
@@ -1515,7 +1579,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String schedule;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCronExpression("0 0 12 * * ?");
   validator.isCronExpression("0 0/15 * * * ?");
   validator.isCronExpression("0 0 9 ? * MON-FRI");
@@ -1526,6 +1590,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 秒、分：0-59；时：0-23；日：1-31；月：1-12；周：0-7（0和7都代表周日）
   - 年份范围：1970-2099（可选字段）
   - 常见应用场景：定时任务、作业调度、定时器触发
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Duration
 * 校验规则：时间段格式验证，验证值是否为有效的时间段格式。
@@ -1559,7 +1626,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String simpleDuration;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证任意格式
   validator.isDuration("PT2H30M");
@@ -1578,6 +1645,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 必须至少指定一个时间单位
   - 年是ISO 8601标准支持的最大单位
   - 常见应用场景：任务持续时间、时间段配置、超时设置
+
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ExpressNumber
 * 校验规则：快递单号格式验证，验证值是否为有效的快递单号。
@@ -1615,7 +1685,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String mixedNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证任意支持的快递公司
   validator.isExpressNumber("123456789012");
@@ -1636,6 +1706,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - EMS格式不区分大小写
   - 常见应用场景：电商订单管理、物流跟踪、发货验证
 
+
+[↑ 返回快速查询表](#快速查询表)
+
 #### @StartsWith
 * 校验规则：前缀验证，验证字符串是否以指定的前缀开头。
 * 示例格式：以指定字符串开头
@@ -1646,9 +1719,62 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @Contains
+* 校验规则：包含验证，验证字符串是否包含指定的子字符串。支持多种匹配模式（OR/AND）和忽略大小写。
+* 示例格式：`"hello world"` 包含 `"hello"`，`"test@example.com"` 同时包含 `"@"` 和 `"."`
+* 配置选项：
+  - `value`：要匹配的子字符串数组
+  - `ignoreCase`：是否忽略大小写，默认为 `false`
+  - `matchAll`：匹配模式，默认为 `false`
+    - `false`（默认）：OR 逻辑 - 包含任意一个子字符串即可
+    - `true`：AND 逻辑 - 必须包含所有子字符串
+* 使用示例：
+  ```java
+  // 注解方式使用 - 单个子字符串（OR 逻辑）
+  @Contains({"@"})
+  private String email;
+
+  // 多个子字符串（OR 逻辑 - 满足任意一个）
+  @Contains({"产品", "服务"})
+  private String description;
+
+  // 多个子字符串（AND 逻辑 - 必须全部满足）
+  @Contains(value = {"@", "."}, matchAll = true)
+  private String emailStrict;
+
+  // 忽略大小写匹配
+  @Contains(value = {"HELLO"}, ignoreCase = true)
+  private String greeting;
+
+  // 链式调用方式使用
+  ValidX validator = ValidX.init();
+
+  // 基本用法（OR 逻辑）
+  validator.isContains("hello world", new String[]{"hello"});
+
+  // 多个子字符串（OR 逻辑）
+  validator.isContains("test@example.com", new String[]{"@", ".com"});
+
+  // 忽略大小写（OR 逻辑）
+  validator.isContains("Hello World", new String[]{"hello"}, true);
+
+  // AND 逻辑 - 必须包含所有子字符串
+  validator.isContains("test@example.com", new String[]{"@", "."}, false, true);
+  ```
+* 注意事项：
+  - **OR 逻辑**（默认）：只要包含数组中的任意一个子字符串即可通过验证
+  - **AND 逻辑**（`matchAll = true`）：必须包含数组中的所有子字符串才能通过验证
+  - 子字符串可以出现在任何位置（开头、中间或结尾）
+  - 默认区分大小写；使用 `ignoreCase = true` 可忽略大小写
+  - 常见应用场景：邮箱验证（`@`）、严格邮箱验证（`@` 和 `.`）、URL检查（`http://`）、密码强度验证（必须包含多种字符类型）、内容过滤
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @EndsWith
 * 校验规则：后缀验证，验证字符串是否以指定的后缀结尾。
@@ -1660,9 +1786,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String code;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isEndsWith("string_suffix", new String[]{"suffix"});
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Enum
 * 校验规则：单个元素或者多个元素的枚举值验证，验证其是否为指定枚举中的有效值。
@@ -1688,7 +1816,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用链式调用时也可以指定枚举字段：
   ```java
   // 链式调用方式使用 - 单个值验证
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // 验证枚举的name()值（默认）
   validator.isEnum("VALUE1", MyEnum.class);
@@ -1722,6 +1850,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   }
   ```
 
+[↑ 返回快速查询表](#快速查询表)
+
 #### @Color
 * 校验规则：颜色格式验证，验证字符串是否为有效的HEX颜色值，支持 #FFF 或 #FFFFFF 格式。
 * 示例格式：`#FF0000`, `#F00`, `#ffffff`, `#000`
@@ -1732,9 +1862,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String color;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isColor("#FF0000");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 身份验证相关
 
@@ -1748,9 +1880,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String idCard;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseIdCard("11010119900307211X");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChinesePassport
 * 校验规则：中国护照号码验证，支持各种类型的中国护照号码。
@@ -1762,9 +1896,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String passportNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePassport("G12345678");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseMilitaryOfficer
 * 校验规则：中国军官证验证，支持各种类型的中国军官证。
@@ -1776,9 +1912,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseMilitaryOfficer("军字第1234567号");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseSoldier
 * 校验规则：中国士兵证验证，支持各种类型的中国士兵证。
@@ -1790,9 +1928,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseSoldier("沈字第0100000号");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ForeignerPermanentResidenceIdentity
 * 校验规则：外国人永久居留身份证验证，验证外国人永久居留身份证号码。
@@ -1804,9 +1944,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String identityNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isForeignerPermanentResidenceIdentity("911124198108030028");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @HKMacauResidence
 * 校验规则：港澳居民居住证验证，验证港澳居民居住证号码。
@@ -1818,9 +1960,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String residenceNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHKMacauResidence("810000000000000001");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @HKMacauPass
 * 校验规则：港澳居民来往内地通行证(回乡证)验证，验证港澳居民来往内地通行证号码。
@@ -1832,9 +1976,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String passNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHKMacauPass("H1234567800");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @TaiwanResidence
 * 校验规则：台湾居民居住证验证，验证台湾居民居住证号码。
@@ -1846,9 +1992,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String residenceNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTaiwanResidence("830000000000000001");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @TaiwanPass
 * 校验规则：台湾居民来往大陆通行证(台胞证)验证，验证台湾居民来往大陆通行证号码。
@@ -1860,9 +2008,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String passNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTaiwanPass("1234567800");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ForeignerWorkPermit
 * 校验规则：外国人工作许可证验证，验证外国人工作许可证号码。
@@ -1874,9 +2024,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String permitNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @UnifiedSocialCreditCode
 * 校验规则：统一社会信用代码验证，验证统一社会信用代码。
@@ -1888,9 +2040,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String creditCode;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUnifiedSocialCreditCode("91350100M000100Y43");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChinesePhoneOrLandline
 * 校验规则：中国电话号码验证，支持手机号和固定电话。
@@ -1902,9 +2056,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String phoneNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePhoneOrLandline("010-12345678");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChinesePhone
 * 校验规则：中国手机号码验证，验证中国手机号码。
@@ -1916,9 +2072,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String phoneNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePhone("13812345678");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseLandline
 * 校验规则：中国固定电话验证，验证中国固定电话号码。
@@ -1930,9 +2088,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String phoneNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseLandline("010-12345678");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 金融验证相关
 
@@ -1950,9 +2110,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String cardNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isBankCard("4012888888881881");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @CVV
 * 校验规则：CVV/CVC安全码验证，验证信用卡背面的3位或4位安全码。
@@ -1964,9 +2126,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String cvv;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCVV("123");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @IBAN
 * 校验规则：IBAN国际银行账户号码验证，验证国际银行账户号码(IBAN)格式和校验位。
@@ -1978,9 +2142,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String iban;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIBAN("DE44500800000123456789");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @SWIFT
 * 校验规则：SWIFT/BIC代码验证，验证SWIFT/BIC银行代码格式，用于国际电汇中识别特定银行。
@@ -1992,9 +2158,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String swiftCode;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSWIFT("COBADEFF");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @StockCode
 * 校验规则：股票代码验证，验证不同交易所的股票代码格式。
@@ -2026,7 +2194,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   
   ```java
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // 默认支持所有交易所
   validator.isStockCode("600000");
@@ -2040,6 +2208,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 验证香港或纽约交易所
   validator.isStockCode("00700", StockCode.Exchange.HONG_KONG, StockCode.Exchange.NEW_YORK);
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @TradeOrderNumber
 * 校验规则：交易订单号验证，验证金融交易订单号的格式。
@@ -2058,7 +2228,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   
   ```java
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // 验证T开头+18位数字格式
   validator.isTradeOrderNumber("T123456789012345678");
@@ -2072,6 +2242,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 验证UUID格式（不带连字符）
   validator.isTradeOrderNumber("550e8400e29b41d4a716446655440000");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @FinancialProductCode
 * 校验规则：金融产品代码验证，验证基金代码、债券代码等金融产品的代码格式。
@@ -2107,7 +2279,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   
   ```java
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // 默认支持所有产品类型
   validator.isFinancialProductCode("500001");
@@ -2121,6 +2293,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 验证基金和债券产品
   validator.isFinancialProductCode("500001", FinancialProductCode.ProductType.FUND, FinancialProductCode.ProductType.BOND);
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 教育/职业资格验证/认证相关的验证
 
@@ -2136,9 +2310,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDegreeCertificate("1075522008000001");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Doctor
 * 校验规则：医师资格证编号验证，验证医师资格证编号。
@@ -2151,9 +2327,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDoctor("20251111014406081973100014");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Teacher
 * 校验规则：教师资格证编号验证，验证教师资格证编号。
@@ -2166,9 +2344,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTeacher("20253412345678901");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Lawyer
 * 校验规则：法律职业资格证书/律师执业证验证，验证法律职业资格证书或律师执业证。
@@ -2185,9 +2365,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLawyer("11101201810123456");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @PMP
 * 校验规则：PMP证书编号验证，验证PMP（Project Management Professional）证书编号格式
@@ -2200,9 +2382,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPMP("1234567");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Constructor
 * 校验规则：建造师证书编号验证，验证一级/二级建造师证书编号格式
@@ -2215,9 +2399,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isConstructor("京111050700001");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Accountant
 * 校验规则：会计资格证书编号验证，验证会计资格证书编号格式
@@ -2230,9 +2416,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String certificateNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAccountant("21010203451");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 网络相关
 
@@ -2246,9 +2434,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String domain;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDomain("example.com");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Ip
 * 校验规则：IP地址验证，支持IPv4和IPv6地址验证，可通过参数指定验证的IP版本。
@@ -2274,7 +2464,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String ipv6Address;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // 验证任意IP地址（默认）
   validator.isIp("192.168.1.1");
@@ -2289,6 +2479,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   validator.isIp("192.168.1.1", Ip.IpVersion.ANY);
   ```
 
+[↑ 返回快速查询表](#快速查询表)
+
 #### @Mac
 * 校验规则：MAC地址验证，验证MAC地址。
 * 示例格式：`00:1A:2B:3C:4D:5E`, `00-1A-2B-3C-4D-5E`
@@ -2299,9 +2491,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String macAddress;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isMac("00:1A:2B:3C:4D:5E");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Url
 * 校验规则：URL地址验证，验证URL地址格式。
@@ -2313,9 +2507,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String url;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUrl("http://example.com");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Email
 * 校验规则：邮箱地址验证，验证邮箱地址格式。
@@ -2327,9 +2523,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String email;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isEmail("test@example.com");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @SubnetMask
 * 校验规则：子网掩码验证，验证子网掩码格式。
@@ -2341,9 +2539,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String subnetMask;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSubnetMask("255.255.255.0");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @Port
 * 校验规则：端口号验证，验证端口号是否在0-65535范围内。
@@ -2355,9 +2555,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String port;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPort("8080");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 中国特定验证
 
@@ -2371,9 +2573,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String licensePlate;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseLicensePlate("京A12345");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChinesePatent
 * 校验规则：中国专利号验证，验证中国专利号。
@@ -2385,9 +2589,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String patentNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePatent("ZL2013106997442");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseTrademark
 * 校验规则：中国商标注册号验证，验证中国商标注册号。
@@ -2399,9 +2605,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String trademarkNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseTrademark("1234567");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @SoftwareCopyright
 * 校验规则：计算机软件著作权登记号验证，验证计算机软件著作权登记号。
@@ -2413,9 +2621,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String copyrightNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSoftwareCopyright("软著登字第2023001234号");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @WorkCopyright
 * 校验规则：一般作品著作权登记号验证，验证一般作品著作权登记号。
@@ -2427,9 +2637,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String copyrightNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isWorkCopyright("作登字22-2023-A-0018号");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ChineseZipCode
 * 校验规则：中国邮政编码验证，验证中国邮政编码。
@@ -2441,9 +2653,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String zipCode;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseZipCode("100000");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @DrugApproval
 * 校验规则：验证字符串是否是有效的中国药品批准文号.药品批准文号是国家药品监督管理部门批准药品生产企业生产药品的文号
@@ -2455,9 +2669,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String approvalNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDrugApproval("国药准字H20210039");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @DrugCode
 * 校验规则：验证字符串是否是有效的中国药品本位码.药品本位码是以69开头，20位数字，最后一位为GS1校验位
@@ -2469,9 +2685,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String drugCode;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDrugCode("69012345678901234563");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @MedicalDeviceRegistration
 * 校验规则：医疗器械注册证号验证，用于验证中国医疗器械注册证号格式。
@@ -2483,9 +2701,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String registrationNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isMedicalDeviceRegistration("国械注准20243010001");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @QQ
 * 校验规则：QQ号码验证，验证QQ号码。
@@ -2497,9 +2717,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String qqNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isQQ("123456789");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @WeChat
 * 校验规则：微信账号验证，验证微信账号格式。
@@ -2515,9 +2737,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String wechatId;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isWeChat("wechat123");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 汽车相关的验证
 
@@ -2531,9 +2755,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String vin;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isVIN("WP0AJ2972LL122844");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @VehicleEngine
 * 校验规则：验证车辆发动机编码格式。
@@ -2545,9 +2771,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String engineCode;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isVehicleEngine("123456");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 图书相关的验证
 
@@ -2561,9 +2789,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String isbn;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isISBN("9780306406157");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ISSN
 * 校验规则：国际标准连续出版物号验证，支持8位ISSN格式。
@@ -2575,9 +2805,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String issn;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isISSN("0317-8471");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @DOI
 * 校验规则：数字对象标识符验证，用于数字资源的唯一标识，广泛用于学术出版物。
@@ -2589,9 +2821,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String doi;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDOI("10.1000/182");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @CLC
 * 校验规则：验证字符串是否是有效的中国图书馆分类法（CLC）分类号。中国图书馆分类法是中国图书馆普遍采用的图书分类法
@@ -2603,9 +2837,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String clcNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCLC("TP311.138");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @DDC
 * 校验规则：验证字符串是否是有效的杜威十进制分类法（DDC）分类号。杜威十进制分类法是广泛应用于图书馆的分类系统
@@ -2617,9 +2853,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String ddcNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDDC("516.3");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @ORCID
 * 校验规则：开放研究者与贡献者身份识别码验证，用于唯一标识学术作者和贡献者。
@@ -2631,9 +2869,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String orcidId;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isORCID("0000-0002-1825-0097");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 #### @IPC
 * 校验规则：国际专利分类号验证，用于标识专利技术领域。
@@ -2645,9 +2885,11 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String ipcNumber;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIPC("A01B1/00");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
 
 ### 手机相关的验证
 
@@ -2661,12 +2903,14 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   private String imei;
 
   // 链式调用方式使用
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIMEI("123412341234564");
   ```
 
+[↑ 返回快速查询表](#快速查询表)
+
 ## 更多的的验证注解
-如果你需要更多的验证。可以连续我们进行扩展和支持。联系方式：
+如果你需要更多的验证。可以联系我们进行扩展和支持。联系方式：
 
 Sharif
 

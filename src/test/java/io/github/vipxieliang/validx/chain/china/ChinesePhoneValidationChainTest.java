@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,14 +26,14 @@ public class ChinesePhoneValidationChainTest {
     // isChinesePhone 测试用例
     @Test
     public void testValidChinesePhone() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePhone((Object)"13812345678");
         assertTrue(chain.passed(), "有效的中国手机号码应该通过验证");
     }
 
     @Test
     public void testInvalidChinesePhone() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePhone((Object)"12345678901");
         assertFalse(chain.passed(), "无效的中国手机号码不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class ChinesePhoneValidationChainTest {
     @Test
     public void testNullAndEmptyValuesForPhone() {
         // 测试null值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isChinesePhone((Object)null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isChinesePhone((Object)"");
         assertTrue(validator.passed(), "empty string should pass validation");
     }
@@ -55,18 +55,18 @@ public class ChinesePhoneValidationChainTest {
     // isChinesePhoneOrLandline 测试用例
     @Test
     public void testValidChinesePhoneOrLandline() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePhoneOrLandline((Object)"13812345678");
         assertTrue(chain.passed(), "有效的中国手机号码应该通过验证");
         
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isChinesePhoneOrLandline((Object)"010-12345678");
         assertTrue(chain.passed(), "有效的中国座机号码应该通过验证");
     }
 
     @Test
     public void testInvalidChinesePhoneOrLandline() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePhoneOrLandline((Object)"12345");
         assertFalse(chain.passed(), "无效的号码不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -75,12 +75,12 @@ public class ChinesePhoneValidationChainTest {
     @Test
     public void testNullAndEmptyValuesForPhoneOrLandline() {
         // 测试null值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isChinesePhoneOrLandline((Object)null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isChinesePhoneOrLandline((Object)"");
         assertTrue(validator.passed(), "empty string should pass validation");
     }
@@ -88,18 +88,18 @@ public class ChinesePhoneValidationChainTest {
     // isChineseLandline 测试用例
     @Test
     public void testValidChineseLandline() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChineseLandline((Object)"010-12345678");
         assertTrue(chain.passed(), "有效的中国座机号码应该通过验证");
         
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isChineseLandline((Object)"0512-87654321");
         assertTrue(chain.passed(), "有效的中国座机号码应该通过验证");
     }
 
     @Test
     public void testInvalidChineseLandline() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChineseLandline((Object)"12345");
         assertFalse(chain.passed(), "无效的座机号码不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -108,12 +108,12 @@ public class ChinesePhoneValidationChainTest {
     @Test
     public void testNullAndEmptyValuesForLandline() {
         // 测试null值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isChineseLandline((Object)null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isChineseLandline((Object)"");
         assertTrue(validator.passed(), "empty string should pass validation");
     }

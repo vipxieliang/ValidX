@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ public class PastDateValidationChainTest {
 
     @Test
     public void testValidPastDate() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用昨天的日期进行测试
         String pastDate = java.time.LocalDate.now().minusDays(1).toString();
         chain = chain.isPastDate((Object)pastDate,false);
@@ -33,14 +33,14 @@ public class PastDateValidationChainTest {
         
         // 使用过去的日期时间进行测试
         String pastDateTime = java.time.LocalDateTime.now().minusDays(1).format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isPastDate((Object)pastDateTime,false);
         assertTrue(chain.passed(), "有效的过去日期时间应该通过验证");
     }
 
     @Test
     public void testInvalidPastDate() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         // 使用明天的日期进行测试
         String futureDate = java.time.LocalDate.now().plusDays(1).toString();
         chain = chain.isPastDate((Object)futureDate,false);
@@ -50,14 +50,14 @@ public class PastDateValidationChainTest {
         
         // 使用今天的日期进行测试（不是过去日期）
         String today = java.time.LocalDate.now().toString();
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isPastDate((Object)today,false);
         assertFalse(chain.passed(), "今天的日期不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("日期必须是过去的日期", chain.getErrors().get(0));
         
         // 使用无效的日期格式进行测试
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isPastDate((Object)"invalid-date",false);
         assertFalse(chain.passed(), "无效的日期格式不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -67,12 +67,12 @@ public class PastDateValidationChainTest {
     @Test
     public void testNullAndEmptyPastDate() {
         // 测试null值应该通过验证
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isPastDate(null, false);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isPastDate((Object)"", false);
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

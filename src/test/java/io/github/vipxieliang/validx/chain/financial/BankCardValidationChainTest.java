@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.financial;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 import org.junit.jupiter.api.Test;
 
@@ -29,19 +29,19 @@ public class BankCardValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidaX validation = ValidaX.init();
+        ValidX validation = ValidX.init();
         validation.isBankCard(null);
         assertTrue(validation.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        validation = ValidaX.init();
+        validation = ValidX.init();
         validation.isBankCard("");
         assertTrue(validation.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidBankCard() {
-        ValidaX validation = ValidaX.init();
+        ValidX validation = ValidX.init();
         
         // 测试有效的银行卡号
         validation.isBankCard("4012888888881881"); // Visa
@@ -55,7 +55,7 @@ public class BankCardValidationChainTest {
     
     @Test
     public void testInvalidBankCard() {
-        ValidaX validation = ValidaX.init();
+        ValidX validation = ValidX.init();
 
         // 测试无效的银行卡号
         validation.isBankCard("1234567890123456"); // Luhn校验失败

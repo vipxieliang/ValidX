@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,24 +25,24 @@ public class AlphaNumValidationChainTest {
 
     @Test
     public void testValidAlphaNum() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isAlphaNum((Object)"abc123");
         assertTrue(chain.passed(), "有效的字母数字组合应该通过验证");
         
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isAlphaNum((Object)"ABCDEF");
         assertTrue(chain.passed(), "有效的字母组合应该通过验证");
     }
 
     @Test
     public void testInvalidAlphaNum() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isAlphaNum((Object)"abc_def");
         assertFalse(chain.passed(), "包含下划线的字符串不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("输入不是有效的字母数字字符", chain.getErrors().get(0));
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isAlphaNum((Object)"abc-123");
         assertFalse(chain.passed(), "包含连字符的字符串不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -52,12 +52,12 @@ public class AlphaNumValidationChainTest {
     @Test
     public void testNullAndEmptyAlphaNum() {
         // 测试null值应该通过验证（交给@NotNull处理）
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isAlphaNum(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isAlphaNum((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -42,18 +42,18 @@ public class EnumValidationChainTest {
 
     @Test
     public void testValidEnumWithNameField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEnum("VALUE1", TestEnum.class);
         assertTrue(chain.passed(), "有效的枚举值应该通过验证");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isEnum("VALUE2", TestEnum.class);
         assertTrue(chain.passed(), "有效的枚举值应该通过验证");
     }
 
     @Test
     public void testInvalidEnumWithNameField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEnum("INVALID_VALUE", TestEnum.class);
         assertFalse(chain.passed(), "无效的枚举值不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -62,18 +62,18 @@ public class EnumValidationChainTest {
 
     @Test
     public void testValidEnumWithCustomField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEnum("code1", TestEnum.class, "code");
         assertTrue(chain.passed(), "有效的枚举值应该通过验证");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isEnum("code2", TestEnum.class, "code");
         assertTrue(chain.passed(), "有效的枚举值应该通过验证");
     }
 
     @Test
     public void testInvalidEnumWithCustomField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEnum("invalid_code", TestEnum.class, "code");
         assertFalse(chain.passed(), "无效的枚举值不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -83,7 +83,7 @@ public class EnumValidationChainTest {
     @Test
     public void testNullValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEnum(null, TestEnum.class);
         assertTrue(chain.passed(), "null值应该通过验证");
     }
@@ -91,7 +91,7 @@ public class EnumValidationChainTest {
     @Test
     public void testEmptyStringValue() {
         // 测试空字符串
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEnum("", TestEnum.class);
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

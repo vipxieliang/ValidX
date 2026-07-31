@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.book;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +28,7 @@ public class DOIValidationChainTest {
 
     @Test
     public void testValidDOI() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDOI("10.1000/182");
         
         assertTrue(validator.passed());
@@ -36,7 +36,7 @@ public class DOIValidationChainTest {
 
     @Test
     public void testValidDOIPrefix() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDOI("doi:10.1000/182");
         
         assertTrue(validator.passed());
@@ -44,7 +44,7 @@ public class DOIValidationChainTest {
 
     @Test
     public void testInvalidDOI() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDOI("invalid-doi");
 
         assertFalse(validator.passed());
@@ -54,12 +54,12 @@ public class DOIValidationChainTest {
     @Test
     public void testNullAndEmptyDOI() {
         // 测试 null 值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isDOI(null);
         assertTrue(validator.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isDOI("");
         assertTrue(validator.passed(), "空字符串应该通过验证");
     }

@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.financial;
 
 import io.github.vipxieliang.validx.annotations.StockCode;
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -31,66 +31,66 @@ public class StockCodeValidationChainTest {
 
     @Test
     public void testValidShanghaiStockCode() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的上海证券交易所股票代码
         validator.isStockCode("600000");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("600001", StockCode.Exchange.SHANGHAI);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testValidShenzhenStockCode() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的深圳证券交易所股票代码
         validator.isStockCode("000001");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("300001", StockCode.Exchange.SHENZHEN);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testValidHongKongStockCode() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的香港联合交易所股票代码
         validator.isStockCode("00700");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("00700", StockCode.Exchange.HONG_KONG);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testValidNewYorkStockCode() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的纽约证券交易所股票代码
         validator.isStockCode("AAPL");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("AAPL", StockCode.Exchange.NEW_YORK);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidStockCode() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的股票代码
         validator.isStockCode("700000");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("700000", StockCode.Exchange.SHANGHAI);
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
@@ -98,20 +98,20 @@ public class StockCodeValidationChainTest {
 
     @Test
     public void testValidStockCodeWithMultipleExchanges() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试指定多个交易所的股票代码
         validator.isStockCode("600000", StockCode.Exchange.SHANGHAI, StockCode.Exchange.SHENZHEN);
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("00700", StockCode.Exchange.SHANGHAI, StockCode.Exchange.HONG_KONG);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidStockCodeWithLimitedExchanges() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试在限制交易所范围时，其他交易所的代码应该失败
         validator.isStockCode("00700", StockCode.Exchange.SHANGHAI);
@@ -121,21 +121,21 @@ public class StockCodeValidationChainTest {
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isStockCode(null);
         assertTrue(validator.passed());
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isStockCode("");
         assertTrue(validator.passed());
     }
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isStockCode("invalid");
@@ -146,7 +146,7 @@ public class StockCodeValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isStockCode("invalid");

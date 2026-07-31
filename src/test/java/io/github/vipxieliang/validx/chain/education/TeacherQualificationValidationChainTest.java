@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.education;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -30,7 +30,7 @@ public class TeacherQualificationValidationChainTest {
 
     @Test
     public void testValidTeacherQualification() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的教师资格证编号 (符合所有规则)
         validator.isTeacher("20251112312345678"); // 北京市，小学教师，男性
@@ -39,7 +39,7 @@ public class TeacherQualificationValidationChainTest {
 
     @Test
     public void testInvalidTeacherQualification() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的教师资格证编号
         validator.isTeacher("2025341234567890"); // 16位
@@ -49,7 +49,7 @@ public class TeacherQualificationValidationChainTest {
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isTeacher(null);
@@ -58,7 +58,7 @@ public class TeacherQualificationValidationChainTest {
 
     @Test
     public void testEmptyValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试空字符串
         validator.isTeacher("");
@@ -67,7 +67,7 @@ public class TeacherQualificationValidationChainTest {
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isTeacher("invalid");
@@ -78,7 +78,7 @@ public class TeacherQualificationValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isTeacher("invalid");

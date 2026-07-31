@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class LawyerQualificationValidationChainTest {
 
     @Test
     public void testValidLawyerQualification() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isLawyer((Object)"1234567890123456");
         assertTrue(chain.passed(), "有效的律师资格证应该通过验证");
     }
 
     @Test
     public void testInvalidLawyerQualification() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isLawyer((Object)"123456789012345");
         assertFalse(chain.passed(), "无效的律师资格证不应该通过验证");
         assertEquals(1, chain.getErrors().size());

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.network;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,26 +26,26 @@ public class MacAddressValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isMacAddress(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isMacAddress((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidMacAddress() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isMacAddress((Object)"00:1A:2B:3C:4D:5E");
         assertTrue(chain.passed(), "有效MAC地址应该通过验证");
     }
 
     @Test
     public void testInvalidMacAddress() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isMacAddress((Object)"00:1A:2B:3C:4D:5G");
         assertFalse(chain.passed(), "无效MAC地址不应该通过验证");
         assertEquals(1, chain.getErrors().size());
