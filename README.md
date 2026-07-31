@@ -596,102 +596,102 @@ ValidX provides rich validation annotations covering various scenarios. The foll
 
 Click on the annotation name to jump to its detailed documentation.
 
-| Category | Annotation | Description |
-|----------|------------|-------------|
-| **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation |
-| **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen |
-| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination |
-| **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation |
-| **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters |
-| **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers |
-| **Basic Validation** | [@ChineseAlphaDash](#chinesealphadash) | Chinese, letters, numbers, underscore, hyphen |
-| **Basic Validation** | [@Lower](#lower) | Lowercase character validation |
-| **Basic Validation** | [@Upper](#upper) | Uppercase character validation |
-| **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation |
-| **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) |
-| **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) |
-| **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation |
-| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation |
-| **Basic Validation** | [@PastDate](#pastdate) | Past date validation |
-| **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) |
-| **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) |
-| **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation |
-| **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation |
-| **Basic Validation** | [@Duration](#duration) | Duration format validation |
-| **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation |
-| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation |
-| **Basic Validation** | [@Contains](#contains) | String contains substring validation |
-| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation |
-| **Basic Validation** | [@In](#in) | Value in specified list |
-| **Basic Validation** | [@NotIn](#notin) | Value not in specified list |
-| **Basic Validation** | [@Enum](#enum) | Enumeration value validation |
-| **Basic Validation** | [@Color](#color) | Color format (HEX/RGB/RGBA) |
-| **Basic Validation** | [@Password](#password) | Password strength validation |
-| **Basic Validation** | [@UUID](#uuid) | UUID format validation |
-| **Basic Validation** | [@Base64](#base64) | Base64 encoding validation |
-| **Basic Validation** | [@JSON](#json) | JSON format validation |
-| **Basic Validation** | [@JWT](#jwt) | JWT token format validation |
-| **Basic Validation** | [@SemVer](#semver) | Semantic versioning validation |
-| **Basic Validation** | [@FileExtension](#fileextension) | File extension validation |
-| **Basic Validation** | [@FileSize](#filesize) | File size range validation |
-| **Basic Validation** | [@Age](#age) | Age validation from birth date or ID |
-| **Basic Validation** | [@Port](#port) | Port number validation (0-65535) |
-| **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation |
-| **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation |
-| **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate |
-| **Identity Validation** | [@ChineseSoldier](#chinesesoldier) | Soldier certificate validation |
-| **Identity Validation** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | Foreigner permanent residence ID |
-| **Identity Validation** | [@HKMacauResidence](#hkmacauresidence) | HK/Macau residence permit |
-| **Identity Validation** | [@HKMacauPass](#hkmacaupass) | HK/Macau travel permit |
-| **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit |
-| **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit |
-| **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit |
-| **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code |
-| **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone |
-| **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline |
-| **Identity Validation** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | Chinese phone or landline |
-| **Identity Validation** | [@PhoneNumber](#phonenumber) | International phone number |
-| **Identity Validation** | [@Email](#email) | Email address validation |
-| **Financial Validation** | [@BankCard](#bankcard) | Bank card number (Luhn) |
-| **Financial Validation** | [@CVV](#cvv) | CVV/CVC security code |
-| **Financial Validation** | [@IBAN](#iban) | IBAN account number |
-| **Financial Validation** | [@SWIFT](#swift) | SWIFT/BIC code |
-| **Financial Validation** | [@StockCode](#stockcode) | Stock code validation |
-| **Financial Validation** | [@TradeOrderNumber](#tradeordernumber) | Trade order number |
-| **Financial Validation** | [@FinancialProductCode](#financialproductcode) | Financial product code |
-| **Education/Professional Qualification** | [@DegreeCertificate](#degreecertificate) | Degree certificate number |
-| **Education/Professional Qualification** | [@Doctor](#doctor) | Doctor qualification |
-| **Education/Professional Qualification** | [@Teacher](#teacher) | Teacher qualification |
-| **Education/Professional Qualification** | [@Lawyer](#lawyer) | Legal professional qualification |
-| **Education/Professional Qualification** | [@PMP](#pmp) | PMP certificate |
-| **Education/Professional Qualification** | [@Constructor](#constructor) | Constructor certificate |
-| **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate |
-| **Network Validation** | [@Domain](#domain) | Domain name validation |
-| **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) |
-| **Network Validation** | [@Mac](#mac) | MAC address validation |
-| **Network Validation** | [@Url](#url) | URL address validation |
-| **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation |
-| **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate |
-| **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number |
-| **China-Specific Validation** | [@ChineseTrademark](#chinesetrademark) | Chinese trademark registration |
-| **China-Specific Validation** | [@SoftwareCopyright](#softwarecopyright) | Software copyright registration |
-| **China-Specific Validation** | [@WorkCopyright](#workcopyright) | Work copyright registration |
-| **China-Specific Validation** | [@ChineseZipCode](#chinesezipcode) | Chinese postal code |
-| **China-Specific Validation** | [@DrugApproval](#drugapproval) | Drug approval number |
-| **China-Specific Validation** | [@DrugCode](#drugcode) | Drug code validation |
-| **China-Specific Validation** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | Medical device registration |
-| **China-Specific Validation** | [@QQ](#qq) | QQ number validation |
-| **China-Specific Validation** | [@WeChat](#wechat) | WeChat ID validation |
-| **Automotive Validation** | [@VIN](#vin) | Vehicle Identification Number |
-| **Automotive Validation** | [@VehicleEngine](#vehicleengine) | Vehicle engine number |
-| **Book-Related Validation** | [@ISBN](#isbn) | ISBN book number |
-| **Book-Related Validation** | [@ISSN](#issn) | ISSN serial number |
-| **Book-Related Validation** | [@DOI](#doi) | DOI identifier |
-| **Book-Related Validation** | [@CLC](#clc) | Chinese Library Classification |
-| **Book-Related Validation** | [@DDC](#ddc) | Dewey Decimal Classification |
-| **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID |
-| **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification |
-| **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number |
+| Category | Annotation | Description | Version |
+|----------|------------|-------------|---------|
+| **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation | 1.0.0   |
+| **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen | 1.0.0   |
+| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination | 1.0.0   |
+| **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation | 1.0.0   |
+| **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters | 1.0.0   |
+| **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers | 1.0.0   |
+| **Basic Validation** | [@ChineseAlphaDash](#chinesealphadash) | Chinese, letters, numbers, underscore, hyphen | 1.0.0   |
+| **Basic Validation** | [@Lower](#lower) | Lowercase character validation | 1.0.0   |
+| **Basic Validation** | [@Upper](#upper) | Uppercase character validation | 1.0.0   |
+| **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   |
+| **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   |
+| **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   |
+| **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   |
+| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   |
+| **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   |
+| **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) | 1.0.0   |
+| **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) | 1.0.0   |
+| **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation | 1.0.0   |
+| **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation | 1.0.0   |
+| **Basic Validation** | [@Duration](#duration) | Duration format validation | 1.0.0   |
+| **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   |
+| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   |
+| **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   |
+| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   |
+| **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   |
+| **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   |
+| **Basic Validation** | [@Enum](#enum) | Enumeration value validation | 1.0.0   |
+| **Basic Validation** | [@Color](#color) | Color format (HEX/RGB/RGBA) | 1.0.0   |
+| **Basic Validation** | [@Password](#password) | Password strength validation | 1.0.0   |
+| **Basic Validation** | [@UUID](#uuid) | UUID format validation | 1.0.0   |
+| **Basic Validation** | [@Base64](#base64) | Base64 encoding validation | 1.0.0   |
+| **Basic Validation** | [@JSON](#json) | JSON format validation | 1.0.0   |
+| **Basic Validation** | [@JWT](#jwt) | JWT token format validation | 1.0.0   |
+| **Basic Validation** | [@SemVer](#semver) | Semantic versioning validation | 1.0.0   |
+| **Basic Validation** | [@FileExtension](#fileextension) | File extension validation | 1.0.0   |
+| **Basic Validation** | [@FileSize](#filesize) | File size range validation | 1.0.0   |
+| **Basic Validation** | [@Age](#age) | Age validation from birth date or ID | 1.0.0   |
+| **Basic Validation** | [@Port](#port) | Port number validation (0-65535) | 1.0.0   |
+| **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation | 1.0.0   |
+| **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation | 1.0.0   |
+| **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate | 1.0.0   |
+| **Identity Validation** | [@ChineseSoldier](#chinesesoldier) | Soldier certificate validation | 1.0.0   |
+| **Identity Validation** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | Foreigner permanent residence ID | 1.0.0   |
+| **Identity Validation** | [@HKMacauResidence](#hkmacauresidence) | HK/Macau residence permit | 1.0.0   |
+| **Identity Validation** | [@HKMacauPass](#hkmacaupass) | HK/Macau travel permit | 1.0.0   |
+| **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit | 1.0.0   |
+| **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit | 1.0.0   |
+| **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit | 1.0.0   |
+| **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code | 1.0.0   |
+| **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone | 1.0.0   |
+| **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline | 1.0.0   |
+| **Identity Validation** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | Chinese phone or landline | 1.0.0   |
+| **Identity Validation** | [@PhoneNumber](#phonenumber) | International phone number | 1.0.0   |
+| **Identity Validation** | [@Email](#email) | Email address validation | 1.0.0   |
+| **Financial Validation** | [@BankCard](#bankcard) | Bank card number (Luhn) | 1.0.0   |
+| **Financial Validation** | [@CVV](#cvv) | CVV/CVC security code | 1.0.0   |
+| **Financial Validation** | [@IBAN](#iban) | IBAN account number | 1.0.0   |
+| **Financial Validation** | [@SWIFT](#swift) | SWIFT/BIC code | 1.0.0   |
+| **Financial Validation** | [@StockCode](#stockcode) | Stock code validation | 1.0.0   |
+| **Financial Validation** | [@TradeOrderNumber](#tradeordernumber) | Trade order number | 1.0.0   |
+| **Financial Validation** | [@FinancialProductCode](#financialproductcode) | Financial product code | 1.0.0   |
+| **Education/Professional Qualification** | [@DegreeCertificate](#degreecertificate) | Degree certificate number | 1.0.0   |
+| **Education/Professional Qualification** | [@Doctor](#doctor) | Doctor qualification | 1.0.0   |
+| **Education/Professional Qualification** | [@Teacher](#teacher) | Teacher qualification | 1.0.0   |
+| **Education/Professional Qualification** | [@Lawyer](#lawyer) | Legal professional qualification | 1.0.0   |
+| **Education/Professional Qualification** | [@PMP](#pmp) | PMP certificate | 1.0.0   |
+| **Education/Professional Qualification** | [@Constructor](#constructor) | Constructor certificate | 1.0.0   |
+| **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate | 1.0.0   |
+| **Network Validation** | [@Domain](#domain) | Domain name validation | 1.0.0   |
+| **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) | 1.0.0   |
+| **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   |
+| **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   |
+| **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation | 1.0.0   |
+| **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate | 1.0.0   |
+| **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number | 1.0.0   |
+| **China-Specific Validation** | [@ChineseTrademark](#chinesetrademark) | Chinese trademark registration | 1.0.0   |
+| **China-Specific Validation** | [@SoftwareCopyright](#softwarecopyright) | Software copyright registration | 1.0.0   |
+| **China-Specific Validation** | [@WorkCopyright](#workcopyright) | Work copyright registration | 1.0.0   |
+| **China-Specific Validation** | [@ChineseZipCode](#chinesezipcode) | Chinese postal code | 1.0.0   |
+| **China-Specific Validation** | [@DrugApproval](#drugapproval) | Drug approval number | 1.0.0   |
+| **China-Specific Validation** | [@DrugCode](#drugcode) | Drug code validation | 1.0.0   |
+| **China-Specific Validation** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | Medical device registration | 1.0.0   |
+| **China-Specific Validation** | [@QQ](#qq) | QQ number validation | 1.0.0   |
+| **China-Specific Validation** | [@WeChat](#wechat) | WeChat ID validation | 1.0.0   |
+| **Automotive Validation** | [@VIN](#vin) | Vehicle Identification Number | 1.0.0   |
+| **Automotive Validation** | [@VehicleEngine](#vehicleengine) | Vehicle engine number | 1.0.0   |
+| **Book-Related Validation** | [@ISBN](#isbn) | ISBN book number | 1.0.0   |
+| **Book-Related Validation** | [@ISSN](#issn) | ISSN serial number | 1.0.0   |
+| **Book-Related Validation** | [@DOI](#doi) | DOI identifier | 1.0.0   |
+| **Book-Related Validation** | [@CLC](#clc) | Chinese Library Classification | 1.0.0   |
+| **Book-Related Validation** | [@DDC](#ddc) | Dewey Decimal Classification | 1.0.0   |
+| **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID | 1.0.0   |
+| **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification | 1.0.0   |
+| **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number | 1.0.0   |
 
 ---
 

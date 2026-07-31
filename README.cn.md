@@ -596,102 +596,102 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 
 点击注解名称可快速跳转到详细文档。
 
-| 分类 | 注解 | 说明 |
-|------|------|------|
-| **基础验证** | [@Alpha](#alpha) | 纯英文字母验证 |
-| **基础验证** | [@AlphaDash](#alphadash) | 字母数字下划线横线组合 |
-| **基础验证** | [@AlphaNumber](#alphanumber) | 字母数字组合验证 |
-| **基础验证** | [@Chinese](#chinese) | 纯中文字符验证 |
-| **基础验证** | [@ChineseAlpha](#chinesealpha) | 中文字符和字母组合 |
-| **基础验证** | [@ChineseAlphaNum](#chinesealphanum) | 中文字符、字母和数字组合 |
-| **基础验证** | [@ChineseAlphaDash](#chinesealphadash) | 中文、字母、数字、下划线、横线组合 |
-| **基础验证** | [@Lower](#lower) | 小写字符验证 |
-| **基础验证** | [@Upper](#upper) | 大写字符验证 |
-| **基础验证** | [@Xdigit](#xdigit) | 十六进制字符串验证 |
-| **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） |
-| **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） |
-| **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 |
-| **基础验证** | [@FutureDate](#futuredate) | 未来日期验证 |
-| **基础验证** | [@PastDate](#pastdate) | 过去日期验证 |
-| **基础验证** | [@HourMinute](#hourminute) | 时分格式（HH:mm） |
-| **基础验证** | [@HourMinuteSecond](#hourminutesecond) | 时分秒格式（HH:mm:ss） |
-| **基础验证** | [@Timestamp](#timestamp) | Unix时间戳验证 |
-| **基础验证** | [@CronExpression](#cronexpression) | Cron表达式验证 |
-| **基础验证** | [@Duration](#duration) | 时间段格式验证 |
-| **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 |
-| **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 |
-| **基础验证** | [@Contains](#contains) | 字符串包含子串验证 |
-| **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 |
-| **基础验证** | [@In](#in) | 值必须在指定列表中 |
-| **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 |
-| **基础验证** | [@Enum](#enum) | 枚举值验证 |
-| **基础验证** | [@Color](#color) | 颜色格式（HEX/RGB/RGBA） |
-| **基础验证** | [@Password](#password) | 密码强度验证 |
-| **基础验证** | [@UUID](#uuid) | UUID格式验证 |
-| **基础验证** | [@Base64](#base64) | Base64编码验证 |
-| **基础验证** | [@JSON](#json) | JSON格式验证 |
-| **基础验证** | [@JWT](#jwt) | JWT令牌格式验证 |
-| **基础验证** | [@SemVer](#semver) | 语义化版本验证 |
-| **基础验证** | [@FileExtension](#fileextension) | 文件扩展名验证 |
-| **基础验证** | [@FileSize](#filesize) | 文件大小范围验证 |
-| **基础验证** | [@Age](#age) | 年龄验证（从出生日期或身份证） |
-| **基础验证** | [@Port](#port) | 端口号验证（0-65535） |
-| **身份验证相关** | [@ChineseIdCard](#chineseidcard) | 中国身份证验证 |
-| **身份验证相关** | [@ChinesePassport](#chinesepassport) | 中国护照验证 |
-| **身份验证相关** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | 军官证验证 |
-| **身份验证相关** | [@ChineseSoldier](#chinesesoldier) | 士兵证验证 |
-| **身份验证相关** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | 外国人永久居留身份证 |
-| **身份验证相关** | [@HKMacauResidence](#hkmacauresidence) | 港澳居民居住证 |
-| **身份验证相关** | [@HKMacauPass](#hkmacaupass) | 港澳居民来往内地通行证 |
-| **身份验证相关** | [@TaiwanResidence](#taiwanresidence) | 台湾居民居住证 |
-| **身份验证相关** | [@TaiwanPass](#taiwanpass) | 台湾居民来往大陆通行证 |
-| **身份验证相关** | [@ForeignerWorkPermit](#foreignerworkpermit) | 外国人工作许可证 |
-| **身份验证相关** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | 统一社会信用代码 |
-| **身份验证相关** | [@ChinesePhone](#chinesephone) | 中国手机号验证 |
-| **身份验证相关** | [@ChineseLandline](#chineselandline) | 中国座机号验证 |
-| **身份验证相关** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | 中国手机号或座机号 |
-| **身份验证相关** | [@PhoneNumber](#phonenumber) | 国际电话号码验证 |
-| **身份验证相关** | [@Email](#email) | 电子邮箱验证 |
-| **金融验证相关** | [@BankCard](#bankcard) | 银行卡号验证（Luhn算法） |
-| **金融验证相关** | [@CVV](#cvv) | CVV/CVC安全码验证 |
-| **金融验证相关** | [@IBAN](#iban) | IBAN账号验证 |
-| **金融验证相关** | [@SWIFT](#swift) | SWIFT/BIC代码验证 |
-| **金融验证相关** | [@StockCode](#stockcode) | 股票代码验证 |
-| **金融验证相关** | [@TradeOrderNumber](#tradeordernumber) | 交易订单号验证 |
-| **金融验证相关** | [@FinancialProductCode](#financialproductcode) | 金融产品代码验证 |
-| **教育/职业资格验证** | [@DegreeCertificate](#degreecertificate) | 学位证书编号 |
-| **教育/职业资格验证** | [@Doctor](#doctor) | 医师资格证书 |
-| **教育/职业资格验证** | [@Teacher](#teacher) | 教师资格证书 |
-| **教育/职业资格验证** | [@Lawyer](#lawyer) | 法律职业资格证书 |
-| **教育/职业资格验证** | [@PMP](#pmp) | PMP证书验证 |
-| **教育/职业资格验证** | [@Constructor](#constructor) | 建造师证书 |
-| **教育/职业资格验证** | [@Accountant](#accountant) | 会计资格证书 |
-| **网络相关** | [@Domain](#domain) | 域名验证 |
-| **网络相关** | [@Ip](#ip) | IP地址验证（IPv4/IPv6） |
-| **网络相关** | [@Mac](#mac) | MAC地址验证 |
-| **网络相关** | [@Url](#url) | URL地址验证 |
-| **网络相关** | [@SubnetMask](#subnetmask) | 子网掩码验证 |
-| **中国特定验证** | [@ChineseLicensePlate](#chineselicenseplate) | 中国车牌号验证 |
-| **中国特定验证** | [@ChinesePatent](#chinesepatent) | 中国专利号验证 |
-| **中国特定验证** | [@ChineseTrademark](#chinesetrademark) | 中国商标注册号 |
-| **中国特定验证** | [@SoftwareCopyright](#softwarecopyright) | 软件著作权登记号 |
-| **中国特定验证** | [@WorkCopyright](#workcopyright) | 一般作品著作权登记号 |
-| **中国特定验证** | [@ChineseZipCode](#chinesezipcode) | 中国邮政编码验证 |
-| **中国特定验证** | [@DrugApproval](#drugapproval) | 药品批准文号验证 |
-| **中国特定验证** | [@DrugCode](#drugcode) | 药品本位码验证 |
-| **中国特定验证** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | 医疗器械注册证号 |
-| **中国特定验证** | [@QQ](#qq) | QQ号验证 |
-| **中国特定验证** | [@WeChat](#wechat) | 微信号验证 |
-| **汽车相关验证** | [@VIN](#vin) | 车辆识别代码 |
-| **汽车相关验证** | [@VehicleEngine](#vehicleengine) | 车辆发动机号验证 |
-| **图书相关验证** | [@ISBN](#isbn) | ISBN书号验证 |
-| **图书相关验证** | [@ISSN](#issn) | ISSN期刊号验证 |
-| **图书相关验证** | [@DOI](#doi) | DOI标识符验证 |
-| **图书相关验证** | [@CLC](#clc) | 中图分类号 |
-| **图书相关验证** | [@DDC](#ddc) | 杜威十进分类法 |
-| **图书相关验证** | [@ORCID](#orcid) | ORCID研究者ID验证 |
-| **图书相关验证** | [@IPC](#ipc) | 国际专利分类号 |
-| **手机相关验证** | [@IMEI](#imei) | IMEI设备号验证 |
+| 分类 | 注解 | 说明 | 版本    |
+|------|------|------|-------|
+| **基础验证** | [@Alpha](#alpha) | 纯英文字母验证 | 1.0.0 |
+| **基础验证** | [@AlphaDash](#alphadash) | 字母数字下划线横线组合 | 1.0.0 |
+| **基础验证** | [@AlphaNumber](#alphanumber) | 字母数字组合验证 | 1.0.0 |
+| **基础验证** | [@Chinese](#chinese) | 纯中文字符验证 | 1.0.0 |
+| **基础验证** | [@ChineseAlpha](#chinesealpha) | 中文字符和字母组合 | 1.0.0 |
+| **基础验证** | [@ChineseAlphaNum](#chinesealphanum) | 中文字符、字母和数字组合 | 1.0.0 |
+| **基础验证** | [@ChineseAlphaDash](#chinesealphadash) | 中文、字母、数字、下划线、横线组合 | 1.0.0 |
+| **基础验证** | [@Lower](#lower) | 小写字符验证 | 1.0.0 |
+| **基础验证** | [@Upper](#upper) | 大写字符验证 | 1.0.0 |
+| **基础验证** | [@Xdigit](#xdigit) | 十六进制字符串验证 | 1.0.0 |
+| **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） | 1.0.0 |
+| **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） | 1.0.0 |
+| **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 | 1.0.0 |
+| **基础验证** | [@FutureDate](#futuredate) | 未来日期验证 | 1.0.0 |
+| **基础验证** | [@PastDate](#pastdate) | 过去日期验证 | 1.0.0 |
+| **基础验证** | [@HourMinute](#hourminute) | 时分格式（HH:mm） | 1.0.0 |
+| **基础验证** | [@HourMinuteSecond](#hourminutesecond) | 时分秒格式（HH:mm:ss） | 1.0.0 |
+| **基础验证** | [@Timestamp](#timestamp) | Unix时间戳验证 | 1.0.0 |
+| **基础验证** | [@CronExpression](#cronexpression) | Cron表达式验证 | 1.0.0 |
+| **基础验证** | [@Duration](#duration) | 时间段格式验证 | 1.0.0 |
+| **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 | 1.0.0 |
+| **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 | 1.0.0 |
+| **基础验证** | [@Contains](#contains) | 字符串包含子串验证 | 1.0.1 |
+| **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 | 1.0.0 |
+| **基础验证** | [@In](#in) | 值必须在指定列表中 | 1.0.0 |
+| **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 | 1.0.0 |
+| **基础验证** | [@Enum](#enum) | 枚举值验证 | 1.0.0 |
+| **基础验证** | [@Color](#color) | 颜色格式（HEX/RGB/RGBA） | 1.0.0 |
+| **基础验证** | [@Password](#password) | 密码强度验证 | 1.0.0 |
+| **基础验证** | [@UUID](#uuid) | UUID格式验证 | 1.0.0 |
+| **基础验证** | [@Base64](#base64) | Base64编码验证 | 1.0.0 |
+| **基础验证** | [@JSON](#json) | JSON格式验证 | 1.0.0 |
+| **基础验证** | [@JWT](#jwt) | JWT令牌格式验证 | 1.0.0 |
+| **基础验证** | [@SemVer](#semver) | 语义化版本验证 | 1.0.0 |
+| **基础验证** | [@FileExtension](#fileextension) | 文件扩展名验证 | 1.0.0 |
+| **基础验证** | [@FileSize](#filesize) | 文件大小范围验证 | 1.0.0 |
+| **基础验证** | [@Age](#age) | 年龄验证（从出生日期或身份证） | 1.0.0 |
+| **基础验证** | [@Port](#port) | 端口号验证（0-65535） | 1.0.0 |
+| **身份验证相关** | [@ChineseIdCard](#chineseidcard) | 中国身份证验证 | 1.0.0 |
+| **身份验证相关** | [@ChinesePassport](#chinesepassport) | 中国护照验证 | 1.0.0 |
+| **身份验证相关** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | 军官证验证 | 1.0.0 |
+| **身份验证相关** | [@ChineseSoldier](#chinesesoldier) | 士兵证验证 | 1.0.0 |
+| **身份验证相关** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | 外国人永久居留身份证 | 1.0.0 |
+| **身份验证相关** | [@HKMacauResidence](#hkmacauresidence) | 港澳居民居住证 | 1.0.0 |
+| **身份验证相关** | [@HKMacauPass](#hkmacaupass) | 港澳居民来往内地通行证 | 1.0.0 |
+| **身份验证相关** | [@TaiwanResidence](#taiwanresidence) | 台湾居民居住证 | 1.0.0 |
+| **身份验证相关** | [@TaiwanPass](#taiwanpass) | 台湾居民来往大陆通行证 | 1.0.0 |
+| **身份验证相关** | [@ForeignerWorkPermit](#foreignerworkpermit) | 外国人工作许可证 | 1.0.0 |
+| **身份验证相关** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | 统一社会信用代码 | 1.0.0 |
+| **身份验证相关** | [@ChinesePhone](#chinesephone) | 中国手机号验证 | 1.0.0 |
+| **身份验证相关** | [@ChineseLandline](#chineselandline) | 中国座机号验证 | 1.0.0 |
+| **身份验证相关** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | 中国手机号或座机号 | 1.0.0 |
+| **身份验证相关** | [@PhoneNumber](#phonenumber) | 国际电话号码验证 | 1.0.0 |
+| **身份验证相关** | [@Email](#email) | 电子邮箱验证 | 1.0.0 |
+| **金融验证相关** | [@BankCard](#bankcard) | 银行卡号验证（Luhn算法） | 1.0.0 |
+| **金融验证相关** | [@CVV](#cvv) | CVV/CVC安全码验证 | 1.0.0 |
+| **金融验证相关** | [@IBAN](#iban) | IBAN账号验证 | 1.0.0 |
+| **金融验证相关** | [@SWIFT](#swift) | SWIFT/BIC代码验证 | 1.0.0 |
+| **金融验证相关** | [@StockCode](#stockcode) | 股票代码验证 | 1.0.0 |
+| **金融验证相关** | [@TradeOrderNumber](#tradeordernumber) | 交易订单号验证 | 1.0.0 |
+| **金融验证相关** | [@FinancialProductCode](#financialproductcode) | 金融产品代码验证 | 1.0.0 |
+| **教育/职业资格验证** | [@DegreeCertificate](#degreecertificate) | 学位证书编号 | 1.0.0 |
+| **教育/职业资格验证** | [@Doctor](#doctor) | 医师资格证书 | 1.0.0 |
+| **教育/职业资格验证** | [@Teacher](#teacher) | 教师资格证书 | 1.0.0 |
+| **教育/职业资格验证** | [@Lawyer](#lawyer) | 法律职业资格证书 | 1.0.0 |
+| **教育/职业资格验证** | [@PMP](#pmp) | PMP证书验证 | 1.0.0 |
+| **教育/职业资格验证** | [@Constructor](#constructor) | 建造师证书 | 1.0.0 |
+| **教育/职业资格验证** | [@Accountant](#accountant) | 会计资格证书 | 1.0.0 |
+| **网络相关** | [@Domain](#domain) | 域名验证 | 1.0.0 |
+| **网络相关** | [@Ip](#ip) | IP地址验证（IPv4/IPv6） | 1.0.0 |
+| **网络相关** | [@Mac](#mac) | MAC地址验证 | 1.0.0 |
+| **网络相关** | [@Url](#url) | URL地址验证 | 1.0.0 |
+| **网络相关** | [@SubnetMask](#subnetmask) | 子网掩码验证 | 1.0.0 |
+| **中国特定验证** | [@ChineseLicensePlate](#chineselicenseplate) | 中国车牌号验证 | 1.0.0 |
+| **中国特定验证** | [@ChinesePatent](#chinesepatent) | 中国专利号验证 | 1.0.0 |
+| **中国特定验证** | [@ChineseTrademark](#chinesetrademark) | 中国商标注册号 | 1.0.0 |
+| **中国特定验证** | [@SoftwareCopyright](#softwarecopyright) | 软件著作权登记号 | 1.0.0 |
+| **中国特定验证** | [@WorkCopyright](#workcopyright) | 一般作品著作权登记号 | 1.0.0 |
+| **中国特定验证** | [@ChineseZipCode](#chinesezipcode) | 中国邮政编码验证 | 1.0.0 |
+| **中国特定验证** | [@DrugApproval](#drugapproval) | 药品批准文号验证 | 1.0.0 |
+| **中国特定验证** | [@DrugCode](#drugcode) | 药品本位码验证 | 1.0.0 |
+| **中国特定验证** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | 医疗器械注册证号 | 1.0.0 |
+| **中国特定验证** | [@QQ](#qq) | QQ号验证 | 1.0.0 |
+| **中国特定验证** | [@WeChat](#wechat) | 微信号验证 | 1.0.0 |
+| **汽车相关验证** | [@VIN](#vin) | 车辆识别代码 | 1.0.0 |
+| **汽车相关验证** | [@VehicleEngine](#vehicleengine) | 车辆发动机号验证 | 1.0.0 |
+| **图书相关验证** | [@ISBN](#isbn) | ISBN书号验证 | 1.0.0 |
+| **图书相关验证** | [@ISSN](#issn) | ISSN期刊号验证 | 1.0.0 |
+| **图书相关验证** | [@DOI](#doi) | DOI标识符验证 | 1.0.0 |
+| **图书相关验证** | [@CLC](#clc) | 中图分类号 | 1.0.0 |
+| **图书相关验证** | [@DDC](#ddc) | 杜威十进分类法 | 1.0.0 |
+| **图书相关验证** | [@ORCID](#orcid) | ORCID研究者ID验证 | 1.0.0 |
+| **图书相关验证** | [@IPC](#ipc) | 国际专利分类号 | 1.0.0 |
+| **手机相关验证** | [@IMEI](#imei) | IMEI设备号验证 | 1.0.0 |
 
 ---
 
