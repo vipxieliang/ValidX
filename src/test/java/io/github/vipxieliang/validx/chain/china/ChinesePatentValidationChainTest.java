@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.china;
 
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,21 +25,21 @@ public class ChinesePatentValidationChainTest {
 
     @Test
     public void testValidChinesePatent() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePatent("ZL2013106997442");
         assertTrue(chain.passed(), "有效的中国专利号应该通过验证");
     }
 
     @Test
     public void testInvalidChinesePatent() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePatent("ZL2013106997449"); // 错误的校验位
         assertFalse(chain.passed(), "无效的中国专利号应该验证失败");
     }
 
     @Test
     public void testInvalidChinesePatentType() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isChinesePatent("ZL2013506997442"); // 无效的专利类型
         assertFalse(chain.passed(), "无效的中国专利号应该验证失败");
     }
@@ -47,12 +47,12 @@ public class ChinesePatentValidationChainTest {
     @Test
     public void testNullAndEmptyValues() {
         // 测试null值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isChinesePatent((String)null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isChinesePatent("");
         assertTrue(validator.passed(), "empty string should pass validation");
     }

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,24 +25,24 @@ public class ColorValidationChainTest {
 
     @Test
     public void testValidColor() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isColor((Object)"#FF0000");
         assertTrue(chain.passed(), "有效的十六进制颜色值应该通过验证");
         
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isColor((Object)"#abcdef");
         assertTrue(chain.passed(), "有效的十六进制颜色值应该通过验证");
     }
 
     @Test
     public void testInvalidColor() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isColor((Object)"#GG0000");
         assertFalse(chain.passed(), "无效的十六进制颜色值不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("无效的颜色格式", chain.getErrors().get(0));
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isColor((Object)"invalid_color");
         assertFalse(chain.passed(), "无效的颜色格式不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -52,12 +52,12 @@ public class ColorValidationChainTest {
     @Test
     public void testNullAndEmptyColor() {
         // 测试null值应该通过验证（交给@NotNull处理）
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isColor(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isColor((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.foreign;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class ForeignerWorkPermitValidationChainTest {
 
     @Test
     public void testValidForeignerWorkPermit() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isForeignerWorkPermit((Object)"123456");
         assertTrue(chain.passed(), "有效的外国人工作许可证应该通过验证");
     }
 
     @Test
     public void testInvalidForeignerWorkPermit() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isForeignerWorkPermit((Object)"12345"); // 长度不足6位
         assertFalse(chain.passed(), "无效的外国人工作许可证不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class ForeignerWorkPermitValidationChainTest {
     @Test
     public void testNullAndEmptyForeignerWorkPermit() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isForeignerWorkPermit((Object)null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isForeignerWorkPermit((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

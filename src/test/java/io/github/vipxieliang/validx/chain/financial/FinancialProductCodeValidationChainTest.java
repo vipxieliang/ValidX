@@ -17,7 +17,7 @@
 package io.github.vipxieliang.validx.chain.financial;
 
 import io.github.vipxieliang.validx.annotations.FinancialProductCode;
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -31,40 +31,40 @@ public class FinancialProductCodeValidationChainTest {
 
     @Test
     public void testValidFundCodes() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的基金代码
         validator.isFinancialProductCode("500001");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isFinancialProductCode("500001", FinancialProductCode.ProductType.FUND);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testValidBondCodes() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的债券代码
         validator.isFinancialProductCode("100001");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isFinancialProductCode("100001", FinancialProductCode.ProductType.BOND);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidFinancialProductCodes() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的金融产品代码
         validator.isFinancialProductCode("600001");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isFinancialProductCode("600001", FinancialProductCode.ProductType.FUND);
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
@@ -72,20 +72,20 @@ public class FinancialProductCodeValidationChainTest {
 
     @Test
     public void testValidFinancialProductCodeWithMultipleTypes() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试指定多个产品类型的金融产品代码
         validator.isFinancialProductCode("500001", FinancialProductCode.ProductType.FUND, FinancialProductCode.ProductType.BOND);
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isFinancialProductCode("100001", FinancialProductCode.ProductType.FUND, FinancialProductCode.ProductType.BOND);
         assertTrue(validator.passed());
     }
 
     @Test
     public void testInvalidFinancialProductCodeWithLimitedTypes() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试在限制产品类型范围时，其他类型的产品代码应该失败
         // "510001"是上海基金代码，但我们只允许债券类型，所以应该验证失败
@@ -97,19 +97,19 @@ public class FinancialProductCodeValidationChainTest {
     @Test
     public void testNullAndEmptyValues() {
         // 测试null值
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isFinancialProductCode(null);
         assertTrue(validator.passed(), "null should pass validation");
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isFinancialProductCode("");
         assertTrue(validator.passed(), "empty string should pass validation");
     }
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isFinancialProductCode("invalid");
@@ -120,7 +120,7 @@ public class FinancialProductCodeValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isFinancialProductCode("invalid");

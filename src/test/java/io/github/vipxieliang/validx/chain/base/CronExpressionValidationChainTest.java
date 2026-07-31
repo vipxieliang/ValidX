@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import io.github.vipxieliang.validx.chain.ValidXConfig;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +31,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_EveryDayAtNoon() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * * ?");
 
         assertTrue(chain.passed(), "每天中午12点的Cron表达式应该通过验证");
@@ -39,7 +39,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_EveryMinute() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 * * * * ?");
 
         assertTrue(chain.passed(), "每分钟执行的Cron表达式应该通过验证");
@@ -47,7 +47,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_Every15Minutes() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0/15 * * * ?");
 
         assertTrue(chain.passed(), "每15分钟执行的Cron表达式应该通过验证");
@@ -55,7 +55,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_WeekdaysAt9AM() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 9 ? * MON-FRI");
 
         assertTrue(chain.passed(), "工作日早上9点的Cron表达式应该通过验证");
@@ -63,7 +63,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_FirstDayOfMonth() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 0 1 * ?");
 
         assertTrue(chain.passed(), "每月第一天的Cron表达式应该通过验证");
@@ -71,7 +71,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_LastDayOfMonth() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 0 L * ?");
 
         assertTrue(chain.passed(), "每月最后一天的Cron表达式应该通过验证");
@@ -79,7 +79,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_WithYear() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * * ? 2025");
 
         assertTrue(chain.passed(), "带年份的Cron表达式应该通过验证");
@@ -87,7 +87,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_SpecificWeekday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 10 ? * 6#3");
 
         assertTrue(chain.passed(), "每月第三个星期五的Cron表达式应该通过验证");
@@ -95,7 +95,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_Workday() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 15W * ?");
 
         assertTrue(chain.passed(), "最接近15号的工作日的Cron表达式应该通过验证");
@@ -103,7 +103,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_MultipleValues() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 8,12,18 * * ?");
 
         assertTrue(chain.passed(), "多个时间点的Cron表达式应该通过验证");
@@ -111,7 +111,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_Range() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 9-17 * * ?");
 
         assertTrue(chain.passed(), "时间范围的Cron表达式应该通过验证");
@@ -119,7 +119,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_MonthNames() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 1 JAN,FEB,MAR ?");
 
         assertTrue(chain.passed(), "使用月份英文缩写的Cron表达式应该通过验证");
@@ -127,7 +127,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_DayNames() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 ? * SUN,SAT");
 
         assertTrue(chain.passed(), "使用星期英文缩写的Cron表达式应该通过验证");
@@ -137,7 +137,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_TooFewFields() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * *");
 
         assertFalse(chain.passed(), "字段数不足的Cron表达式应该失败");
@@ -146,7 +146,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_TooManyFields() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * * ? 2025 extra");
 
         assertFalse(chain.passed(), "字段数过多的Cron表达式应该失败");
@@ -155,7 +155,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidSecond() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"60 0 12 * * ?");
 
         assertFalse(chain.passed(), "秒数超出范围的Cron表达式应该失败");
@@ -164,7 +164,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidMinute() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 60 12 * * ?");
 
         assertFalse(chain.passed(), "分钟超出范围的Cron表达式应该失败");
@@ -173,7 +173,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidHour() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 24 * * ?");
 
         assertFalse(chain.passed(), "小时超出范围的Cron表达式应该失败");
@@ -182,7 +182,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidDay() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 32 * ?");
 
         assertFalse(chain.passed(), "日期超出范围的Cron表达式应该失败");
@@ -191,7 +191,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidMonth() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 1 13 ?");
 
         assertFalse(chain.passed(), "月份超出范围的Cron表达式应该失败");
@@ -200,7 +200,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidWeek() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 ? * 8");
 
         assertFalse(chain.passed(), "星期超出范围的Cron表达式应该失败");
@@ -209,7 +209,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_BothDayAndWeek() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 15 * MON");
 
         assertFalse(chain.passed(), "日和周同时指定的Cron表达式应该失败");
@@ -218,7 +218,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testInvalidCronExpression_InvalidCharacter() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * * @");
 
         assertFalse(chain.passed(), "包含无效字符的Cron表达式应该失败");
@@ -229,7 +229,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_Null() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression(null);
 
         assertTrue(chain.passed(), "null值应该通过验证");
@@ -237,7 +237,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testValidCronExpression_Empty() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"");
 
         assertTrue(chain.passed(), "空字符串应该通过验证");
@@ -247,7 +247,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testMultipleValidations_AllValid() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * * ?")
              .isCronExpression((Object)"0 0/15 * * * ?")
              .isCronExpression((Object)"0 0 9 ? * MON-FRI");
@@ -258,7 +258,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testMultipleValidations_SomeInvalid() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 * * ?")
              .isCronExpression((Object)"invalid cron")
              .isCronExpression((Object)"0 0 9 ? * MON-FRI");
@@ -271,7 +271,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testWithGlobalNotNullConfig() {
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_NULL);
 
         chain.isCronExpression(null);
@@ -282,7 +282,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testWithLocalAllowNull() {
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_NULL);
 
         chain.allowNull().isCronExpression(null);
@@ -292,7 +292,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testWithGlobalNotEmptyConfig() {
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
         chain.isCronExpression((Object)"");
@@ -303,7 +303,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testWithLocalAllowEmpty() {
-        ValidaX chain = ValidaX.init()
+        ValidX chain = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
         chain.allowEmpty().isCronExpression((Object)"");
@@ -313,7 +313,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testWithFieldLabel() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.field("TaskSchedule").isCronExpression((Object)"invalid cron");
 
         assertFalse(chain.passed(), "带字段标签的验证应该失败");
@@ -324,7 +324,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testCronExpression_AllWildcards() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"* * * * * ?");
 
         assertTrue(chain.passed(), "全通配符的Cron表达式应该通过验证");
@@ -332,7 +332,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testCronExpression_ComplexExpression() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0/5 14,18 ? * MON-FRI 2025");
 
         assertTrue(chain.passed(), "复杂的Cron表达式应该通过验证");
@@ -340,7 +340,7 @@ public class CronExpressionValidationChainTest {
 
     @Test
     public void testCronExpression_LastWorkingDay() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain.isCronExpression((Object)"0 0 12 LW * ?");
 
         assertTrue(chain.passed(), "最后一个工作日的Cron表达式应该通过验证");

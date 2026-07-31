@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,14 +25,14 @@ public class UpperValidationChainTest {
 
     @Test
     public void testValidUpper() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isUpper((Object)"ABCDEF");
         assertTrue(chain.passed(), "有效的大写字符组合应该通过验证");
     }
 
     @Test
     public void testInvalidUpper() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isUpper((Object)"ABCdEF");
         assertFalse(chain.passed(), "包含小写字母的字符串不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -42,12 +42,12 @@ public class UpperValidationChainTest {
     @Test
     public void testNullAndEmptyUpper() {
         // 测试null值应该通过验证（交给@NotNull处理）
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isUpper(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isUpper((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.network;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,26 +26,26 @@ public class SubnetMaskValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isSubnetMask(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isSubnetMask((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidSubnetMask() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isSubnetMask((Object)"255.255.255.0");
         assertTrue(chain.passed(), "有效的子网掩码应该通过验证");
     }
 
     @Test
     public void testInvalidSubnetMask() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isSubnetMask((Object)"255.255.255.1");
         assertFalse(chain.passed(), "无效的子网掩码不应该通过验证");
         assertEquals(1, chain.getErrors().size());

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_Standard() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=");  // "Hello World"
 
         assertTrue(validator.passed(), "标准Base64格式应该通过验证");
@@ -41,7 +41,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_StandardWithPlus() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXowMTIzNDU2Nzg5Kysvfg==");
 
         assertTrue(validator.passed(), "包含+的Base64应该通过验证");
@@ -49,7 +49,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_StandardWithSlash() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("PDw/Pz8+Pg==");
 
         assertTrue(validator.passed(), "包含/的Base64应该通过验证");
@@ -57,7 +57,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_OnePadding() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("cGxlYXN1cmU=");  // "pleasure"
 
         assertTrue(validator.passed(), "带1个填充符的Base64应该通过验证");
@@ -65,7 +65,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_TwoPaddings() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("YW55IGNhcm5hbCBwbGVhc3VyZS4=");
 
         assertTrue(validator.passed(), "带2个填充符的Base64应该通过验证");
@@ -73,7 +73,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testInvalidBase64_InvalidCharacters() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ@");
 
         assertFalse(validator.passed(), "包含非法字符的Base64应该验证失败");
@@ -84,7 +84,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testInvalidBase64_NoPadding_WhenNotAllowed() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ");  // No padding
 
         assertFalse(validator.passed(), "不允许时，不带填充符的Base64应该验证失败");
@@ -94,7 +94,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_UrlSafe() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=", true);
 
         assertTrue(validator.passed(), "URL-safe Base64格式应该通过验证");
@@ -102,7 +102,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_UrlSafe_WithHyphen() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXowMTIzNDU2Nzg5Ky0tLn4=", true);
 
         assertTrue(validator.passed(), "包含-的URL-safe Base64应该通过验证");
@@ -110,7 +110,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_UrlSafe_WithUnderscore() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("YWJjZGVmX2hpamtsbW5vcA==", true);
 
         assertTrue(validator.passed(), "包含_的URL-safe Base64应该通过验证");
@@ -118,7 +118,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testInvalidBase64_UrlSafe_WithPlus() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("29zd3t/g4eLj5OXm5+jp6g==", true);  // Contains + and /
 
         assertFalse(validator.passed(), "URL-safe格式不应该包含+和/");
@@ -128,7 +128,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_NoPadding_WhenAllowed() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ", false, true);
 
         assertTrue(validator.passed(), "允许时，不带填充符的Base64应该通过验证");
@@ -136,7 +136,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_WithPadding_WhenFlexible() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=", false, true);
 
         assertTrue(validator.passed(), "允许不带填充时，标准格式也应该通过验证");
@@ -144,7 +144,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testValidBase64_UrlSafeNoPadding() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ", true, true);
 
         assertTrue(validator.passed(), "URL-safe + 不带填充应该通过验证");
@@ -154,7 +154,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testNullBase64() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64(null);
 
         assertTrue(validator.passed(), "null值应该通过验证");
@@ -163,7 +163,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testEmptyBase64() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("");
 
         assertTrue(validator.passed(), "空字符串应该通过验证");
@@ -174,7 +174,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testBase64_VeryShort() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("YQ==");
 
         assertTrue(validator.passed(), "短Base64字符串应该通过验证");
@@ -182,7 +182,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testBase64_VeryLong() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("TG9yZW0gaXBzdW0gZG9sb3Igc2l0IGFtZXQsIGNvbnNlY3RldHVyIGFkaXBpc2NpbmcgZWxpdC4gU2VkIGRvIGVpdXNtb2QgdGVtcG9yIGluY2lkaWR1bnQgdXQgbGFib3JlIGV0IGRvbG9yZSBtYWduYSBhbGlxdWEu");
 
         assertTrue(validator.passed(), "长Base64字符串应该通过验证");
@@ -192,7 +192,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testChainedValidation_MultiplePassing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=")
                 .isBase64("cGxlYXN1cmU=")
                 .isBase64("YW55IGNhcm5hbCBwbGVhc3VyZQ==");
@@ -203,7 +203,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testChainedValidation_OneFailing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=")
                 .isBase64("invalid-base64")
                 .isBase64("cGxlYXN1cmU=");
@@ -214,7 +214,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testChainedValidation_MixedFormats() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=", false)  // Standard
                 .isBase64("SGVsbG8gV29ybGQ=", true)   // URL-safe
                 .isBase64("SGVsbG8gV29ybGQ", false, true);  // No padding
@@ -225,7 +225,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testChainedValidation_AllFailing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("invalid-base64-1")
                 .isBase64("invalid-base64-2")
                 .isBase64("not-valid");
@@ -238,7 +238,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testMixedValidation_Base64AndEmail() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=")
                 .isEmail("test@example.com");
 
@@ -248,7 +248,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testMixedValidation_InvalidBase64_ValidEmail() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("invalid-base64")
                 .isEmail("test@example.com");
 
@@ -258,7 +258,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testMixedValidation_Base64AndUUID() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isBase64("SGVsbG8gV29ybGQ=")
                 .isUUID("550e8400-e29b-41d4-a716-446655440000");
 
@@ -270,7 +270,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testRealWorld_ImageData() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         // 模拟图片数据的Base64编码 (JPEG header)
         validator.isBase64("/9j/4AAQSkZJRgABAQAAAQABAAD/2w==");
 
@@ -279,7 +279,7 @@ public class Base64ValidationChainTest {
 
     @Test
     public void testRealWorld_JWTPayload() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         // JWT payload typically uses URL-safe Base64
         validator.isBase64("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9", true, true);
 

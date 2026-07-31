@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -25,7 +25,7 @@ public class InValidationMessageTest {
 
     @Test
     public void testInValidationMessage() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIn((Object)"grape", new String[]{"apple", "banana", "orange"});
         assertFalse(chain.passed(), "无效的值不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -34,7 +34,7 @@ public class InValidationMessageTest {
 
     @Test
     public void testNotInValidationMessage() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isNotIn((Object)"apple", new String[]{"apple", "banana", "orange"});
         assertFalse(chain.passed(), "包含禁止值不应该通过验证");
         assertEquals(1, chain.getErrors().size());

@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -33,7 +33,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_LocalDate_Adult() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(25);  // 25岁
         validator.isAge(birthDate, 18, 65);
 
@@ -43,7 +43,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_LocalDate_MinAge() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(18);
         validator.isAge(birthDate, 18, 65);
 
@@ -52,7 +52,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_LocalDate_MaxAge() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(65);
         validator.isAge(birthDate, 18, 65);
 
@@ -61,7 +61,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testInvalidAge_LocalDate_TooYoung() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(17);
         validator.isAge(birthDate, 18, 65);
 
@@ -74,7 +74,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testInvalidAge_LocalDate_TooOld() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(66);
         validator.isAge(birthDate, 18, 65);
 
@@ -86,7 +86,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_String_StandardFormat() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("1990-01-01", 18, 65);
 
         assertTrue(validator.passed(), "有效日期字符串应该通过验证");
@@ -94,7 +94,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_String_CustomFormat() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("1990/06/15", 18, 65, false, "yyyy/MM/dd");
 
         assertTrue(validator.passed(), "自定义格式日期应该通过验证");
@@ -102,7 +102,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testInvalidAge_String_InvalidFormat() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("1990-13-32", 18, 65);
 
         assertFalse(validator.passed(), "无效日期格式应该验证失败");
@@ -112,7 +112,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_IdCard18() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("11010119900101001X", 18, 65, true);
 
         assertTrue(validator.passed(), "有效的18位身份证号应该通过验证");
@@ -120,7 +120,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_IdCard15() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("110101800101001", 18, 65, true);
 
         assertTrue(validator.passed(), "有效的15位身份证号应该通过验证");
@@ -128,7 +128,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testInvalidAge_IdCard_TooYoung() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         int currentYear = LocalDate.now().getYear();
         int birthYear = currentYear - 10;  // 10岁
         String idCard = String.format("110101%d0101001X", birthYear);
@@ -139,7 +139,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testInvalidAge_IdCard_InvalidFormat() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("invalid-id-card", 18, 65, true);
 
         assertFalse(validator.passed(), "无效的身份证格式应该验证失败");
@@ -149,7 +149,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_MinOnly() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(30);
         validator.isAge(birthDate, 18);
 
@@ -158,7 +158,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testValidAge_MinOnly_VeryOld() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(100);
         validator.isAge(birthDate, 18);
 
@@ -167,7 +167,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testInvalidAge_MinOnly_TooYoung() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         LocalDate birthDate = LocalDate.now().minusYears(16);
         validator.isAge(birthDate, 18);
 
@@ -178,7 +178,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testNullAge() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(null, 18, 65);
 
         assertTrue(validator.passed(), "null值应该通过验证");
@@ -187,7 +187,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testEmptyStringAge() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("", 18, 65);
 
         assertTrue(validator.passed(), "空字符串应该通过验证");
@@ -197,7 +197,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testChainedValidation_MultiplePassing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(LocalDate.now().minusYears(25), 18, 65)
                 .isAge(LocalDate.now().minusYears(30), 18, 65)
                 .isAge("1995-01-01", 18, 65);
@@ -208,7 +208,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testChainedValidation_OneFailing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(LocalDate.now().minusYears(25), 18, 65)
                 .isAge(LocalDate.now().minusYears(17), 18, 65)  // 失败
                 .isAge(LocalDate.now().minusYears(30), 18, 65);
@@ -219,7 +219,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testChainedValidation_MixedTypes() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(LocalDate.now().minusYears(25), 18, 65)
                 .isAge("1990-01-01", 18, 65)
                 .isAge("11010119850101001X", 18, 65, true);
@@ -230,7 +230,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testChainedValidation_AllFailing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(LocalDate.now().minusYears(17), 18, 65)
                 .isAge(LocalDate.now().minusYears(16), 18, 65)
                 .isAge(LocalDate.now().minusYears(15), 18, 65);
@@ -243,7 +243,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testMixedValidation_AgeAndEmail() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(LocalDate.now().minusYears(25), 18, 65)
                 .isEmail("test@example.com");
 
@@ -253,7 +253,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testMixedValidation_InvalidAge_ValidEmail() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge(LocalDate.now().minusYears(17), 18, 65)
                 .isEmail("test@example.com");
 
@@ -263,7 +263,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testMixedValidation_AgeAndIdCard() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isAge("110101199003072113", 18, 65, true)
                 .isChineseIdCard("110101199003072113");
 
@@ -275,7 +275,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testRealWorld_UserRegistration() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         // 用户注册：验证年龄必须>=18岁
         validator.isAge("2000-05-15", 18);
 
@@ -284,7 +284,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testRealWorld_SeniorDiscount() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         // 老年优惠：验证年龄>=60岁
         LocalDate birthDate = LocalDate.now().minusYears(65);
         validator.isAge(birthDate, 60);
@@ -294,7 +294,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testRealWorld_ChildTicket() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         // 儿童票：验证年龄<=12岁
         LocalDate birthDate = LocalDate.now().minusYears(8);
         validator.isAge(birthDate, 0, 12);
@@ -304,7 +304,7 @@ public class AgeValidationChainTest {
 
     @Test
     public void testRealWorld_IdCardVerification() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         // 身份证实名验证：从身份证提取年龄并验证
         validator.isAge("11010119851015001X", 18, 100, true);
 

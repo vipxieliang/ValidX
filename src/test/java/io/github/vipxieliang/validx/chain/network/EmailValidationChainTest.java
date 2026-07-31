@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.network;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,26 +26,26 @@ public class EmailValidationChainTest {
     @Test
     public void testNullAndEmptyValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEmail(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isEmail((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidEmail() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEmail((Object)"test@example.com");
         assertTrue(chain.passed(), "有效邮箱地址应该通过验证");
     }
 
     @Test
     public void testInvalidEmail() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isEmail((Object)"invalid-email");
         assertFalse(chain.passed(), "无效邮箱地址不应该通过验证");
         assertEquals(1, chain.getErrors().size());

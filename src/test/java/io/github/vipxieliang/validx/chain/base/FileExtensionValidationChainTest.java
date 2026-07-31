@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,14 +26,14 @@ public class FileExtensionValidationChainTest {
     @Test
     public void testNullValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension(null, new String[]{"xls", "xlsx"});
         assertTrue(chain.passed(), "null值应该通过验证");
     }
 
     @Test
     public void testValidFileExtension() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension((Object)"test.xls", new String[]{"xls"});
         assertTrue(chain.passed(), "有效的文件后缀名应该通过验证");
         
@@ -43,13 +43,13 @@ public class FileExtensionValidationChainTest {
 
     @Test
     public void testInvalidFileExtension() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension((Object)"test.doc", new String[]{"xls"});
         assertFalse(chain.passed(), "无效的文件后缀名不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("文件后缀名不在允许的范围内", chain.getErrors().get(0));
         
-        chain = ValidaX.init(); // 创建新的实例
+        chain = ValidX.init(); // 创建新的实例
         chain = chain.isFileExtension((Object)"test", new String[]{"xls"});
         assertFalse(chain.passed(), "没有后缀名的文件不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -59,24 +59,24 @@ public class FileExtensionValidationChainTest {
     
     @Test
     public void testValidFileExtensionWithDirectValue() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension((Object)"test.xls", new String[]{"xls", "xlsx"});
         assertTrue(chain.passed(), "有效的文件后缀名应该通过验证");
         
-        chain = ValidaX.init(); // 创建新的实例
+        chain = ValidX.init(); // 创建新的实例
         chain = chain.isFileExtension((Object)"document.XLS", new String[]{"xlsx", "xls"});
         assertTrue(chain.passed(), "有效的文件后缀名应该通过验证（忽略大小写）");
     }
 
     @Test
     public void testInvalidFileExtensionWithDirectValue() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension((Object)"test.doc", new String[]{"xls", "xlsx"});
         assertFalse(chain.passed(), "无效的文件后缀名不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("文件后缀名不在允许的范围内", chain.getErrors().get(0));
         
-        chain = ValidaX.init(); // 创建新的实例
+        chain = ValidX.init(); // 创建新的实例
         chain = chain.isFileExtension((Object)"test", new String[]{"xls"});
         assertFalse(chain.passed(), "没有后缀名的文件不应该通过验证");
         assertEquals(1, chain.getErrors().size());
@@ -85,18 +85,18 @@ public class FileExtensionValidationChainTest {
     
     @Test
     public void testValidFileExtensionWithIgnoreCase() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension((Object)"test.xls", new String[]{"XLS"}, true);
         assertTrue(chain.passed(), "有效的文件后缀名应该通过验证（忽略大小写）");
         
-        chain = ValidaX.init(); // 创建新的实例
+        chain = ValidX.init(); // 创建新的实例
         chain = chain.isFileExtension((Object)"test.XLS", new String[]{"xls"}, true);
         assertTrue(chain.passed(), "有效的文件后缀名应该通过验证（忽略大小写）");
     }
     
     @Test
     public void testInvalidFileExtensionWithIgnoreCase() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileExtension((Object)"test.xls", new String[]{"XLS"}, false);
         assertFalse(chain.passed(), "大小写不匹配的文件后缀名不应该通过验证");
         assertEquals(1, chain.getErrors().size());

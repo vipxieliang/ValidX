@@ -172,7 +172,7 @@ Perfect for dynamic validation in service layers:
 @Service
 public class UserService {
     public void validateUserData(Map<String, Object> userData) {
-        ValidaX validator = ValidaX.init()
+        ValidX validator = ValidX.init()
             .config(ValidXConfig.GLOBAL_NOT_EMPTY)  // Reject null/empty globally
             .field("Email").isEmail(userData.get("email"))
             .field("Phone").isChinesePhone(userData.get("phone"))
@@ -196,16 +196,16 @@ ValidX supports multilingual error messages, which can be used in the following 
 
 ```java
 // Use system default language
-ValidaX chain1 = ValidaX.init()
+ValidX chain1 = ValidX.init()
         .isEmail("invalid-email");
 
 // Use Chinese
-ValidaX chain2 = ValidaX.init()
+ValidX chain2 = ValidX.init()
         .withLocale(Locale.SIMPLIFIED_CHINESE)
         .isEmail("invalid-email");
 
 // Use English
-ValidaX chain3 = ValidaX.init()
+ValidX chain3 = ValidX.init()
         .withLocale(Locale.ENGLISH)
         .isEmail("invalid-email");
 ```
@@ -248,7 +248,7 @@ ValidX also supports automatic language environment switching without explicitly
 MessageManager.setCurrentLocale(Locale.SIMPLIFIED_CHINESE);
 
 // Validation operations will automatically use the set language environment
-ValidaX chain = ValidaX.init()
+ValidX chain = ValidX.init()
         .isEmail("invalid-email");
 
 // Clear global language environment settings
@@ -334,7 +334,7 @@ public class UserController {
 
 ### 2. Handling Null/Empty Strings in Chain Validation
 
-Chain validation (`ValidaX.init()`) has the same default behavior as annotation-based: **null and empty strings pass validation**.
+Chain validation (`ValidX.init()`) has the same default behavior as annotation-based: **null and empty strings pass validation**.
 
 #### Why this design?
 
@@ -355,7 +355,7 @@ Chain-based validation is suitable for **business logic layer dynamic validation
 @Service
 public class UserService {
     public void process(Map<String, Object> data) {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // Fields in Map may not exist (null), this is normal
         // Chain validation automatically skips null values
@@ -371,7 +371,7 @@ public class UserService {
 
 #### Chain Validation Configuration API
 
-ValidaX now supports flexible configuration for handling null/empty values through both global configuration and local state control.
+ValidX now supports flexible configuration for handling null/empty values through both global configuration and local state control.
 
 ##### Global Configuration
 
@@ -379,7 +379,7 @@ You can set global validation requirements using `ValidXConfig`:
 
 ```java
 // Create validator with global NOT_NULL requirement
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL);
 
 // All validation methods will now reject null values
@@ -387,7 +387,7 @@ validator.isEmail(email)  // Fails if email is null
          .isPhone(phone); // Fails if phone is null
 
 // Create validator with global NOT_EMPTY requirement
-ValidaX validator2 = ValidaX.init()
+ValidX validator2 = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_EMPTY);
 
 // All validation methods will now reject null and empty strings
@@ -404,26 +404,26 @@ validator2.isEmail(email)  // Fails if email is null or ""
 
 ```java
 // ✅ Recommended: Set config once at the start
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .isPhone(phone)
     .allowNull().isQQ(qq);  // Use local method for exceptions
 
 // ⚠️ Not recommended: Multiple config() calls in the middle
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email)
     .config(ValidXConfig.DEFAULT)  // Confusing: hard to track config changes
     .isPhone(phone);
 
 // ✅ If you need different configs, create separate validators
-ValidaX strictValidator = ValidaX.init()
+ValidX strictValidator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .isEmail(email1)
     .isPhone(phone1);
 
-ValidaX lenientValidator = ValidaX.init()
+ValidX lenientValidator = ValidX.init()
     .config(ValidXConfig.DEFAULT)
     .isEmail(email2)
     .isPhone(phone2);
@@ -434,7 +434,7 @@ ValidaX lenientValidator = ValidaX.init()
 You can override global configuration for specific fields using local state methods:
 
 ```java
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL);  // Global: reject null
 
 // Override for specific fields
@@ -455,7 +455,7 @@ validator.field("Optional Email").allowNull().isEmail(optionalEmail)  // Allow n
 Local state always takes precedence over global configuration:
 
 ```java
-ValidaX validator = ValidaX.init()
+ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // Global: reject null and empty
 
 validator.allowNull().isEmail(email);  // Local allowNull() overrides global
@@ -469,7 +469,7 @@ validator.allowNull().isEmail(email);  // Local allowNull() overrides global
 
 ```java
 public void validateUserRegistration(Map<String, Object> request) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .config(ValidXConfig.GLOBAL_NOT_EMPTY);  // Most fields are required
 
     validator.field("Email").isEmail(request.get("email"))
@@ -488,7 +488,7 @@ public void validateUserRegistration(Map<String, Object> request) {
 ```java
 public void updateUserProfile(String userId, Map<String, Object> updates) {
     // Only validate fields that are being updated
-    ValidaX validator = ValidaX.init();  // Default: allow null/empty
+    ValidX validator = ValidX.init();  // Default: allow null/empty
 
     // Only validate fields present in the update map
     if (updates.containsKey("email")) {
@@ -509,7 +509,7 @@ public void updateUserProfile(String userId, Map<String, Object> updates) {
 
 ```java
 public void validateComplexForm(FormData data) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .config(ValidXConfig.GLOBAL_NOT_NULL);  // Most fields required
 
     validator.field("Email").notEmpty().isEmail(data.getEmail())      // Required and non-empty
@@ -530,7 +530,7 @@ public void validateComplexForm(FormData data) {
 **Important:** Local state (notNull/notEmpty/allowNull/allowEmpty) is automatically reset after each validation method call. This ensures each field's validation is independent.
 
 ```java
-ValidaX validator = ValidaX.init();
+ValidX validator = ValidX.init();
 
 validator.notNull().isEmail(email1)   // notNull applies to email1
          .isEmail(email2)              // email2 uses default behavior (state reset)
@@ -542,7 +542,7 @@ validator.notNull().isEmail(email1)   // notNull applies to email1
 When using `.field("label")`, error messages will include the custom label:
 
 ```java
-ValidaX validator = ValidaX.init();
+ValidX validator = ValidX.init();
 
 validator.field("User Email").notEmpty().isEmail("")
          .field("Contact Phone").notNull().isChinesePhone(null);
@@ -558,11 +558,11 @@ if (!validator.passed()) {
 
 ## Thread Safety
 
-**ValidaX instances are not thread-safe.** Each validation should create a new instance:
+**ValidX instances are not thread-safe.** Each validation should create a new instance:
 
 ```java
 // ❌ Wrong: Sharing instance across threads
-private static final ValidaX VALIDATOR = ValidaX.init();
+private static final ValidX VALIDATOR = ValidX.init();
 
 public void validate(User user) {
     VALIDATOR.isEmail(user.getEmail());  // Not thread-safe!
@@ -570,7 +570,7 @@ public void validate(User user) {
 
 // ✅ Correct: Create new instance per validation
 public void validate(User user) {
-    ValidaX validator = ValidaX.init()
+    ValidX validator = ValidX.init()
         .isEmail(user.getEmail())
         .isPhone(user.getPhone());
 
@@ -580,7 +580,7 @@ public void validate(User user) {
 }
 ```
 
-**Why?** ValidaX uses internal mutable state (local requirement flags, field labels, error lists) that is modified during the validation chain. Sharing instances across threads can lead to race conditions and incorrect validation results.
+**Why?** ValidX uses internal mutable state (local requirement flags, field labels, error lists) that is modified during the validation chain. Sharing instances across threads can lead to race conditions and incorrect validation results.
 
 **Thread-safe components:**
 - `ValidXConfig` objects are immutable and can be safely shared
@@ -707,7 +707,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlpha("abcDEF");
   ```
 
@@ -723,7 +723,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlphaDash("abc-123_def");
   ```
 
@@ -739,7 +739,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAlphaNumber("abc123");
   ```
 
@@ -755,7 +755,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String name;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinese("汉字");
   ```
 
@@ -771,7 +771,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String name;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlpha("汉字abc");
   ```
 
@@ -787,7 +787,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlphaNum("汉字abc123");
   ```
 
@@ -803,7 +803,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseAlphaDash("汉字abc-123_def");
   ```
 
@@ -819,7 +819,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String longitude;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLongitude("116.4074");
   ```
 
@@ -835,7 +835,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String latitude;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLatitude("39.9042");
   ```
 
@@ -869,7 +869,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String gps;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isGeoPoint("116.4074,39.9042");  // Default: longitude first
   validator.isGeoPoint("39.9042,116.4074", true);  // Latitude first
   validator.isGeoPoint("116.4074,39.9042", false, GeoPoint.SeparatorType.COMMA);  // Specify separator
@@ -890,7 +890,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String deadline;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isFutureDate("2025-12-31");
   // Or include today
   validator.isFutureDate("2025-12-31", true);
@@ -911,7 +911,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String birthDate;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPastDate("2020-01-01");
   // Or include today
   validator.isPastDate("2020-01-01", true);
@@ -929,7 +929,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String time;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHourMinute("23:20");
   ```
 
@@ -945,7 +945,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String time;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHourMinuteSecond("23:50:29");
   ```
 
@@ -965,7 +965,7 @@ Click on the annotation name to jump to its detailed documentation.
   private List<String> roles;
   
   // Chain call usage - single value validation
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIn("value1", new String[]{"value1", "value2"});
   
   // Chain call usage - collection validation
@@ -989,7 +989,7 @@ Click on the annotation name to jump to its detailed documentation.
   private List<String> forbiddenRoles;
   
   // Chain call usage - single value validation
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isNotIn("value3", new String[]{"value1", "value2"});
   
   // Chain call usage - collection validation
@@ -1014,7 +1014,7 @@ Click on the annotation name to jump to its detailed documentation.
 * When using chain calls, you can also specify whether to ignore case:
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Default case insensitive
   validator.isFileExtension("document.xls", new String[]{"XLS"});
@@ -1059,7 +1059,7 @@ Click on the annotation name to jump to its detailed documentation.
   private MultipartFile avatar;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Only specify maximum
   validator.isFileSize(file, "10MB");
@@ -1087,7 +1087,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String text;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLower("abcdef");
   ```
 
@@ -1103,7 +1103,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String text;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUpper("ABCDEF");
   ```
 
@@ -1119,7 +1119,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String hex;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isXdigit("0a1B2c3D");
   ```
 
@@ -1151,7 +1151,7 @@ Click on the annotation name to jump to its detailed documentation.
 * When using chain calls, you can also specify password strength requirements:
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Use default rules (minimum length 8 characters, must include uppercase and lowercase letters, digits, and special characters)
   validator.isPassword("MyPassword123!");
@@ -1183,7 +1183,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String transactionId;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate standard format
   validator.isUUID("550e8400-e29b-41d4-a716-446655440000");
@@ -1227,7 +1227,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String jwtPayload;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate standard format
   validator.isBase64("SGVsbG8gV29ybGQ=");
@@ -1277,7 +1277,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String birthDate;  // "1990/01/01"
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate minimum age only
   validator.isAge(LocalDate.now().minusYears(25), 18);
@@ -1340,7 +1340,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String apiRequest;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any JSON type
   validator.isJSON("{\"name\":\"John\",\"age\":30}");
@@ -1407,7 +1407,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String companyPhone;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any phone number
   validator.isPhoneNumber("+8613812345678");
@@ -1450,7 +1450,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String token;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isJWT("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U");
   ```
 * Notes:
@@ -1489,12 +1489,12 @@ Click on the annotation name to jump to its detailed documentation.
   private String versionWithPrefix;
 
   // Chain call usage - Standard format
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSemVer("1.0.0");
   validator.isSemVer("2.1.3-beta.1");
 
   // Chain call usage - Allow v prefix
-  ValidaX validator2 = ValidaX.init();
+  ValidX validator2 = ValidX.init();
   validator2.isSemVer("v1.0.0", true);
   validator2.isSemVer("v2.1.3-rc.1", true);
   ```
@@ -1536,12 +1536,12 @@ Click on the annotation name to jump to its detailed documentation.
   private Long createTimeMs;
 
   // Chain call usage - Default ANY mode
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTimestamp("1700000000");
   validator.isTimestamp("1700000000000");
 
   // Chain call usage - Specify unit
-  ValidaX validator2 = ValidaX.init();
+  ValidX validator2 = ValidX.init();
   validator2.isTimestamp("1700000000", Timestamp.TimestampUnit.SECONDS);
   validator2.isTimestamp(1700000000000L, Timestamp.TimestampUnit.MILLISECONDS);
   ```
@@ -1579,7 +1579,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String schedule;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCronExpression("0 0 12 * * ?");
   validator.isCronExpression("0 0/15 * * * ?");
   validator.isCronExpression("0 0 9 ? * MON-FRI");
@@ -1626,7 +1626,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String simpleDuration;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any format
   validator.isDuration("PT2H30M");
@@ -1685,7 +1685,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String mixedNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any supported express company
   validator.isExpressNumber("123456789012");
@@ -1719,7 +1719,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isStartsWith("prefix_string", new String[]{"prefix"});
   ```
 
@@ -1753,7 +1753,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String greeting;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Basic usage (OR logic)
   validator.isContains("hello world", new String[]{"hello"});
@@ -1786,7 +1786,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String code;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isEndsWith("string_suffix", new String[]{"suffix"});
   ```
 
@@ -1816,7 +1816,7 @@ Click on the annotation name to jump to its detailed documentation.
 * When using chain calls, you can also specify enumeration fields:
   ```java
   // Chain call usage - single value validation
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Validate enumeration's name() value (default)
   validator.isEnum("VALUE1", MyEnum.class);
@@ -1862,7 +1862,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String color;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isColor("#FF0000");
   ```
 
@@ -1880,7 +1880,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String idCard;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseIdCard("11010119900307211X");
   ```
 
@@ -1896,7 +1896,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String passportNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePassport("G12345678");
   ```
 
@@ -1912,7 +1912,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseMilitaryOfficer("军字第1234567号");
   ```
 
@@ -1928,7 +1928,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseSoldier("沈字第0100000号");
   ```
 
@@ -1944,7 +1944,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String identityNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isForeignerPermanentResidenceIdentity("911124198108030028");
   ```
 
@@ -1960,7 +1960,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String residenceNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHKMacauResidence("810000000000000001");
   ```
 
@@ -1976,7 +1976,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String passNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isHKMacauPass("H1234567800");
   ```
 
@@ -1992,7 +1992,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String residenceNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTaiwanResidence("830000000000000001");
   ```
 
@@ -2008,7 +2008,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String passNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTaiwanPass("1234567800");
   ```
 
@@ -2024,7 +2024,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String permitNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
 
@@ -2040,7 +2040,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String creditCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUnifiedSocialCreditCode("91350100M000100Y43");
   ```
 
@@ -2056,7 +2056,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String phoneNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePhoneOrLandline("010-12345678");
   ```
 
@@ -2072,7 +2072,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String phoneNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePhone("13812345678");
   ```
 
@@ -2088,7 +2088,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String phoneNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseLandline("010-12345678");
   ```
 
@@ -2110,7 +2110,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String cardNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isBankCard("4012888888881881");
   ```
 
@@ -2126,7 +2126,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String cvv;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCVV("123");
   ```
 
@@ -2142,7 +2142,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String iban;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIBAN("DE44500800000123456789");
   ```
 
@@ -2158,7 +2158,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String swiftCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSWIFT("COBADEFF");
   ```
 
@@ -2194,7 +2194,7 @@ Click on the annotation name to jump to its detailed documentation.
   
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Default supports all exchanges
   validator.isStockCode("600000");
@@ -2228,7 +2228,7 @@ Click on the annotation name to jump to its detailed documentation.
   
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Validate T prefix + 18-digit number format
   validator.isTradeOrderNumber("T123456789012345678");
@@ -2279,7 +2279,7 @@ Click on the annotation name to jump to its detailed documentation.
   
   ```java
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   
   // Default supports all product types
   validator.isFinancialProductCode("500001");
@@ -2310,7 +2310,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDegreeCertificate("1075522008000001");
   ```
 
@@ -2327,7 +2327,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDoctor("20251111014406081973100014");
   ```
 
@@ -2344,7 +2344,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isTeacher("20253412345678901");
   ```
 
@@ -2365,7 +2365,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isLawyer("11101201810123456");
   ```
 
@@ -2382,7 +2382,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPMP("1234567");
   ```
 
@@ -2399,7 +2399,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isConstructor("京111050700001");
   ```
 
@@ -2416,7 +2416,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String certificateNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isAccountant("21010203451");
   ```
 
@@ -2434,7 +2434,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String domain;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDomain("example.com");
   ```
 
@@ -2464,7 +2464,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String ipv6Address;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
 
   // Validate any IP address (default)
   validator.isIp("192.168.1.1");
@@ -2491,7 +2491,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String macAddress;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isMac("00:1A:2B:3C:4D:5E");
   ```
 
@@ -2507,7 +2507,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String url;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isUrl("http://example.com");
   ```
 
@@ -2523,7 +2523,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String email;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isEmail("test@example.com");
   ```
 
@@ -2539,7 +2539,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String subnetMask;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSubnetMask("255.255.255.0");
   ```
 
@@ -2555,7 +2555,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String port;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isPort("8080");
   ```
 
@@ -2573,7 +2573,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String licensePlate;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseLicensePlate("京A12345");
   ```
 
@@ -2589,7 +2589,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String patentNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChinesePatent("ZL2013106997442");
   ```
 
@@ -2605,7 +2605,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String trademarkNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseTrademark("1234567");
   ```
 
@@ -2621,7 +2621,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String copyrightNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isSoftwareCopyright("软著登字第2023001234号");
   ```
 
@@ -2637,7 +2637,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String copyrightNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isWorkCopyright("作登字22-2023-A-0018号");
   ```
 
@@ -2653,7 +2653,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String zipCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isChineseZipCode("100000");
   ```
 
@@ -2669,7 +2669,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String approvalNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDrugApproval("国药准字H20210039");
   ```
 
@@ -2685,7 +2685,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String drugCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDrugCode("69012345678901234563");
   ```
 
@@ -2701,7 +2701,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String registrationNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isMedicalDeviceRegistration("国械注准20243010001");
   ```
 
@@ -2717,7 +2717,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String qqNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isQQ("123456789");
   ```
 
@@ -2737,7 +2737,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String wechatId;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isWeChat("wechat123");
   ```
 
@@ -2755,7 +2755,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String vin;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isVIN("WP0AJ2972LL122844");
   ```
 
@@ -2771,7 +2771,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String engineCode;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isVehicleEngine("123456");
   ```
 
@@ -2789,7 +2789,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String isbn;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isISBN("9780306406157");
   ```
 
@@ -2805,7 +2805,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String issn;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isISSN("0317-8471");
   ```
 
@@ -2821,7 +2821,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String doi;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDOI("10.1000/182");
   ```
 
@@ -2837,7 +2837,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String clcNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isCLC("TP311.138");
   ```
 
@@ -2853,7 +2853,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String ddcNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isDDC("516.3");
   ```
 
@@ -2869,7 +2869,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String orcidId;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isORCID("0000-0002-1825-0097");
   ```
 
@@ -2885,7 +2885,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String ipcNumber;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIPC("A01B1/00");
   ```
 
@@ -2903,7 +2903,7 @@ Click on the annotation name to jump to its detailed documentation.
   private String imei;
 
   // Chain call usage
-  ValidaX validator = ValidaX.init();
+  ValidX validator = ValidX.init();
   validator.isIMEI("123412341234564");
   ```
 

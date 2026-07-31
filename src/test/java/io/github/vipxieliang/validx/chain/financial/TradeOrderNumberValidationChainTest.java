@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.financial;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -30,18 +30,18 @@ public class TradeOrderNumberValidationChainTest {
 
     @Test
     public void testValidTradeOrderNumbers() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的T开头+18位数字格式
         validator.isTradeOrderNumber("T202510171234567890");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试有效的纯18位数字格式
         validator.isTradeOrderNumber("202510171234567890");
         assertTrue(validator.passed());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试有效的UUID格式
         validator.isTradeOrderNumber("550e8400-e29b-41d4-a716-446655440000");
         assertTrue(validator.passed());
@@ -49,14 +49,14 @@ public class TradeOrderNumberValidationChainTest {
 
     @Test
     public void testInvalidTradeOrderNumbers() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的T开头格式（不是18位数字）
         validator.isTradeOrderNumber("T20251017123456789");
         assertFalse(validator.passed());
         assertEquals(1, validator.getErrors().size());
         
-        validator = ValidaX.init();
+        validator = ValidX.init();
         // 测试无效的纯数字格式（不是18位）
         validator.isTradeOrderNumber("20251017123456789");
         assertFalse(validator.passed());
@@ -65,21 +65,21 @@ public class TradeOrderNumberValidationChainTest {
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isTradeOrderNumber(null);
         assertTrue(validator.passed());
 
         // 测试空字符串
-        validator = ValidaX.init();
+        validator = ValidX.init();
         validator.isTradeOrderNumber("");
         assertTrue(validator.passed());
     }
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isTradeOrderNumber("invalid");
@@ -90,7 +90,7 @@ public class TradeOrderNumberValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isTradeOrderNumber("invalid");

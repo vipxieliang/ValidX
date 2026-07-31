@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testValidUUID_StandardFormat() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000");
 
         assertTrue(validator.passed(), "标准UUID格式应该通过验证");
@@ -41,7 +41,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testValidUUID_Lowercase() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000");
 
         assertTrue(validator.passed(), "小写UUID应该通过验证");
@@ -49,7 +49,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testValidUUID_Uppercase() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550E8400-E29B-41D4-A716-446655440000");
 
         assertTrue(validator.passed(), "大写UUID应该通过验证");
@@ -57,7 +57,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testValidUUID_MixedCase() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-E29b-41D4-a716-446655440000");
 
         assertTrue(validator.passed(), "大小写混合UUID应该通过验证");
@@ -65,7 +65,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testInvalidUUID_NoHyphens_DefaultBehavior() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400e29b41d4a716446655440000");
 
         assertFalse(validator.passed(), "不带连字符的UUID在默认情况下应该验证失败");
@@ -74,7 +74,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testInvalidUUID_WrongFormat() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716");
 
         assertFalse(validator.passed(), "错误格式的UUID应该验证失败");
@@ -85,7 +85,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testInvalidUUID_InvalidCharacters() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-44665544000g");
 
         assertFalse(validator.passed(), "包含非十六进制字符的UUID应该验证失败");
@@ -96,7 +96,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testValidUUID_WithoutHyphens_WhenAllowed() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400e29b41d4a716446655440000", true);
 
         assertTrue(validator.passed(), "允许时，不带连字符的UUID应该通过验证");
@@ -105,7 +105,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testValidUUID_WithHyphens_WhenFlexible() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000", true);
 
         assertTrue(validator.passed(), "允许不带连字符时，标准格式也应该通过验证");
@@ -113,7 +113,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testInvalidUUID_WrongLength_WithoutHyphens() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400e29b41d4a716", true);
 
         assertFalse(validator.passed(), "长度错误的UUID应该验证失败");
@@ -124,7 +124,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testNullUUID() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID(null);
 
         assertTrue(validator.passed(), "null值应该通过验证");
@@ -133,7 +133,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testEmptyUUID() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("");
 
         assertTrue(validator.passed(), "空字符串应该通过验证");
@@ -144,7 +144,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testUUID_AllZeros() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("00000000-0000-0000-0000-000000000000");
 
         assertTrue(validator.passed(), "全零UUID应该通过验证");
@@ -152,7 +152,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testUUID_AllFs() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
 
         assertTrue(validator.passed(), "全F UUID应该通过验证");
@@ -162,7 +162,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testChainedValidation_MultiplePassing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000")
                 .isUUID("123e4567-e89b-12d3-a456-426614174000")
                 .isUUID("00000000-0000-0000-0000-000000000000");
@@ -173,7 +173,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testChainedValidation_OneFailing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000")
                 .isUUID("invalid-uuid")
                 .isUUID("123e4567-e89b-12d3-a456-426614174000");
@@ -184,7 +184,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testChainedValidation_MixedFormats() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000", false)
                 .isUUID("123e4567e89b12d3a456426614174000", true)
                 .isUUID("00000000-0000-0000-0000-000000000000", true);
@@ -195,7 +195,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testChainedValidation_AllFailing() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("invalid-uuid-1")
                 .isUUID("invalid-uuid-2")
                 .isUUID("not-a-uuid");
@@ -208,7 +208,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testMixedValidation_UUIDAndEmail() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("550e8400-e29b-41d4-a716-446655440000")
                 .isEmail("test@example.com");
 
@@ -218,7 +218,7 @@ public class UUIDValidationChainTest {
 
     @Test
     public void testMixedValidation_InvalidUUID_ValidEmail() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         validator.isUUID("invalid-uuid")
                 .isEmail("test@example.com");
 

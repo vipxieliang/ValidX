@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -39,7 +39,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[1024]; // 1KB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "2KB");
             assertTrue(chain.passed(), "1KB文件应该通过2KB最大值验证");
         } finally {
@@ -55,7 +55,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[3 * 1024]; // 3KB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "2KB");
             assertFalse(chain.passed(), "3KB文件不应该通过2KB最大值验证");
             assertEquals(1, chain.getErrors().size());
@@ -72,7 +72,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[1024]; // 1KB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "512B", "2KB");
             assertTrue(chain.passed(), "1KB文件应该通过512B-2KB范围验证");
         } finally {
@@ -88,7 +88,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[256]; // 256B
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "512B", "2KB");
             assertFalse(chain.passed(), "256B文件不应该通过512B最小值验证");
             assertEquals(1, chain.getErrors().size());
@@ -105,7 +105,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[3 * 1024]; // 3KB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "512B", "2KB");
             assertFalse(chain.passed(), "3KB文件不应该通过2KB最大值验证");
             assertEquals(1, chain.getErrors().size());
@@ -122,7 +122,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[1024]; // 1KB
             Files.write(tempPath, content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempPath, "2KB");
             assertTrue(chain.passed(), "Path对象应该正确验证");
         } finally {
@@ -135,11 +135,11 @@ public class FileSizeValidationChainTest {
         // 测试byte[]类型
         byte[] data = new byte[1024]; // 1KB
 
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileSize(data, "2KB");
         assertTrue(chain.passed(), "byte[]应该正确验证");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isFileSize(data, "512B");
         assertFalse(chain.passed(), "byte[]超过大小限制应该失败");
     }
@@ -152,7 +152,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[2 * 1024 * 1024]; // 2MB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "1MB", "5MB");
             assertTrue(chain.passed(), "2MB文件应该通过1MB-5MB范围验证");
         } finally {
@@ -168,7 +168,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[(int)(1.5 * 1024 * 1024)]; // 1.5MB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "2MB");
             assertTrue(chain.passed(), "1.5MB文件应该通过2MB最大值验证");
         } finally {
@@ -184,7 +184,7 @@ public class FileSizeValidationChainTest {
             byte[] content = new byte[1024]; // 1KB
             Files.write(tempFile.toPath(), content);
 
-            ValidaX chain = ValidaX.init();
+            ValidX chain = ValidX.init();
             chain = chain.isFileSize(tempFile, "512B", "2KB")
                     .isFileSize(tempFile, "5KB"); // 第二个验证也应该通过
             assertTrue(chain.passed(), "所有验证都应该通过");
@@ -196,7 +196,7 @@ public class FileSizeValidationChainTest {
     @Test
     public void testFileSizeWithNullValue() {
         // 测试null值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isFileSize((Object) null, "10MB");
         assertTrue(chain.passed(), "null值应该通过验证（由@NotNull处理）");
     }

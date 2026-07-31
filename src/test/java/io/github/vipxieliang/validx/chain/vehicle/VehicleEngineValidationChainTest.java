@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.vehicle;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,31 +29,31 @@ public class VehicleEngineValidationChainTest {
     @Test
     public void testValidEngineNumbers() {
         // 测试有效的发动机编号
-        Assertions.assertTrue(ValidaX.init().isVehicleEngine("123456").passed());
-        assertTrue(ValidaX.init().isVehicleEngine("ABC123").passed());
-        assertTrue(ValidaX.init().isVehicleEngine("123ABC456").passed());
-        assertTrue(ValidaX.init().isVehicleEngine("12345678901234567").passed()); // 17位
+        Assertions.assertTrue(ValidX.init().isVehicleEngine("123456").passed());
+        assertTrue(ValidX.init().isVehicleEngine("ABC123").passed());
+        assertTrue(ValidX.init().isVehicleEngine("123ABC456").passed());
+        assertTrue(ValidX.init().isVehicleEngine("12345678901234567").passed()); // 17位
     }
 
     @Test
     public void testInvalidEngineNumbers() {
         // 测试无效的发动机编号
-        assertFalse(ValidaX.init().isVehicleEngine("12345").passed()); // 少于6位
-        assertFalse(ValidaX.init().isVehicleEngine("123456789012345678").passed()); // 超过17位
-        assertFalse(ValidaX.init().isVehicleEngine("12345-").passed()); // 包含特殊字符
-        assertFalse(ValidaX.init().isVehicleEngine("12345_").passed()); // 包含下划线
-        assertFalse(ValidaX.init().isVehicleEngine("12345 ").passed()); // 包含空格
+        assertFalse(ValidX.init().isVehicleEngine("12345").passed()); // 少于6位
+        assertFalse(ValidX.init().isVehicleEngine("123456789012345678").passed()); // 超过17位
+        assertFalse(ValidX.init().isVehicleEngine("12345-").passed()); // 包含特殊字符
+        assertFalse(ValidX.init().isVehicleEngine("12345_").passed()); // 包含下划线
+        assertFalse(ValidX.init().isVehicleEngine("12345 ").passed()); // 包含空格
     }
 
     @Test
     public void testNullAndEmptyVehicleEngine() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isVehicleEngine(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isVehicleEngine("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

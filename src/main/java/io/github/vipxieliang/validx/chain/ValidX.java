@@ -40,7 +40,7 @@ import java.util.Locale;
  * 链式验证器
  * 提供流畅的API用于连续验证多个条件
  * 使用示例:
- * ValidaX validator = ValidaX.init();
+ * ValidX validator = ValidX.init();
  * validator.isEmail("test@example.com")
  *          .isChineseIdCard("11010119900307211X")
  *          .isISBN("9780306406157");
@@ -49,7 +49,7 @@ import java.util.Locale;
  *     // 处理错误信息
  * }
  */
-public class ValidaX {
+public class ValidX {
 
     private final List<String> errors = new ArrayList<>();
     private Locale locale = null; // 修改为可以为null，表示使用当前线程或系统默认语言环境
@@ -71,19 +71,19 @@ public class ValidaX {
     private final PhoneValidation phoneValidation = new PhoneValidation();
     private final CertificationValidation certificationValidation = new CertificationValidation();
 
-    private ValidaX() {
+    private ValidX() {
     }
 
-    public static ValidaX init() {
-        return new ValidaX();
+    public static ValidX init() {
+        return new ValidX();
     }
 
     /**
      * 设置全局配置
      * @param config 验证配置
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX config(ValidXConfig config) {
+    public ValidX config(ValidXConfig config) {
         this.config = config;
         return this;
     }
@@ -91,45 +91,45 @@ public class ValidaX {
     /**
      * 设置字段标识（可选）
      * @param fieldLabel 字段标识
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX field(String fieldLabel) {
+    public ValidX field(String fieldLabel) {
         this.currentFieldLabel = fieldLabel;
         return this;
     }
 
     /**
      * 要求非null（局部状态）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX notNull() {
+    public ValidX notNull() {
         this.localRequirement = LocalRequirement.NOT_NULL;
         return this;
     }
 
     /**
      * 要求非null且非空字符串（局部状态）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX notEmpty() {
+    public ValidX notEmpty() {
         this.localRequirement = LocalRequirement.NOT_EMPTY;
         return this;
     }
 
     /**
      * 允许null和空字符串（局部覆盖）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX allowNull() {
+    public ValidX allowNull() {
         this.localRequirement = LocalRequirement.ALLOW_NULL;
         return this;
     }
 
     /**
      * 允许空字符串但不允许null（局部覆盖）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX allowEmpty() {
+    public ValidX allowEmpty() {
         this.localRequirement = LocalRequirement.ALLOW_EMPTY;
         return this;
     }
@@ -137,9 +137,9 @@ public class ValidaX {
     /**
      * 设置语言环境
      * @param locale 语言环境
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX withLocale(Locale locale) {
+    public ValidX withLocale(Locale locale) {
         this.locale = locale;
         return this;
     }
@@ -156,7 +156,7 @@ public class ValidaX {
     }
 
     // China Validation Methods
-    public ValidaX isChineseIdCard(Object value) {
+    public ValidX isChineseIdCard(Object value) {
         if (checkRequirement(value, "Chinese ID Card", errors, getLocale())) {
             return this;
         }
@@ -164,7 +164,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseLicensePlate(Object value) {
+    public ValidX isChineseLicensePlate(Object value) {
         if (checkRequirement(value, "License Plate", errors, getLocale())) {
             return this;
         }
@@ -172,7 +172,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isQQ(Object value) {
+    public ValidX isQQ(Object value) {
         if (checkRequirement(value, "QQ", errors, getLocale())) {
             return this;
         }
@@ -180,7 +180,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseMilitaryOfficer(Object value) {
+    public ValidX isChineseMilitaryOfficer(Object value) {
         if (checkRequirement(value, "Chinese Military Officer", errors, getLocale())) {
             return this;
         }
@@ -188,7 +188,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChinesePassport(Object value) {
+    public ValidX isChinesePassport(Object value) {
         if (checkRequirement(value, "Chinese Passport", errors, getLocale())) {
             return this;
         }
@@ -196,7 +196,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseSoldier(Object value) {
+    public ValidX isChineseSoldier(Object value) {
         if (checkRequirement(value, "Chinese Soldier", errors, getLocale())) {
             return this;
         }
@@ -204,7 +204,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isForeignerPermanentResidenceIdentity(Object value) {
+    public ValidX isForeignerPermanentResidenceIdentity(Object value) {
         if (checkRequirement(value, "Foreigner Permanent Residence Identity", errors, getLocale())) {
             return this;
         }
@@ -212,7 +212,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isHKMacauPass(Object value) {
+    public ValidX isHKMacauPass(Object value) {
         if (checkRequirement(value, "HK Macau Pass", errors, getLocale())) {
             return this;
         }
@@ -220,7 +220,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isHKMacauResidence(Object value) {
+    public ValidX isHKMacauResidence(Object value) {
         if (checkRequirement(value, "HK Macau Residence", errors, getLocale())) {
             return this;
         }
@@ -228,7 +228,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isTaiwanPass(Object value) {
+    public ValidX isTaiwanPass(Object value) {
         if (checkRequirement(value, "Taiwan Pass", errors, getLocale())) {
             return this;
         }
@@ -236,7 +236,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isTaiwanResidence(Object value) {
+    public ValidX isTaiwanResidence(Object value) {
         if (checkRequirement(value, "Taiwan Residence", errors, getLocale())) {
             return this;
         }
@@ -244,7 +244,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isUnifiedSocialCreditCode(Object value) {
+    public ValidX isUnifiedSocialCreditCode(Object value) {
         if (checkRequirement(value, "Unified Social Credit Code", errors, getLocale())) {
             return this;
         }
@@ -252,7 +252,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseZipCode(Object value) {
+    public ValidX isChineseZipCode(Object value) {
         if (checkRequirement(value, "Chinese Zip Code", errors, getLocale())) {
             return this;
         }
@@ -260,7 +260,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChinesePatent(Object value) {
+    public ValidX isChinesePatent(Object value) {
         if (checkRequirement(value, "Chinese Patent", errors, getLocale())) {
             return this;
         }
@@ -268,7 +268,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseTrademark(Object value) {
+    public ValidX isChineseTrademark(Object value) {
         if (checkRequirement(value, "Chinese Trademark", errors, getLocale())) {
             return this;
         }
@@ -276,7 +276,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isSoftwareCopyright(Object value) {
+    public ValidX isSoftwareCopyright(Object value) {
         if (checkRequirement(value, "Software Copyright", errors, getLocale())) {
             return this;
         }
@@ -284,7 +284,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isWorkCopyright(Object value) {
+    public ValidX isWorkCopyright(Object value) {
         if (checkRequirement(value, "Work Copyright", errors, getLocale())) {
             return this;
         }
@@ -292,7 +292,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isLawyer(Object value) {
+    public ValidX isLawyer(Object value) {
         if (checkRequirement(value, "Lawyer", errors, getLocale())) {
             return this;
         }
@@ -300,7 +300,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChinesePhone(Object value) {
+    public ValidX isChinesePhone(Object value) {
         if (checkRequirement(value, "Chinese Phone", errors, getLocale())) {
             return this;
         }
@@ -308,7 +308,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChinesePhoneOrLandline(Object value) {
+    public ValidX isChinesePhoneOrLandline(Object value) {
         if (checkRequirement(value, "Chinese Phone Or Landline", errors, getLocale())) {
             return this;
         }
@@ -316,7 +316,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseLandline(Object value) {
+    public ValidX isChineseLandline(Object value) {
         if (checkRequirement(value, "Chinese Landline", errors, getLocale())) {
             return this;
         }
@@ -324,7 +324,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isDrugApproval(Object value) {
+    public ValidX isDrugApproval(Object value) {
         if (checkRequirement(value, "Drug Approval", errors, getLocale())) {
             return this;
         }
@@ -332,7 +332,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isDrugCode(Object value) {
+    public ValidX isDrugCode(Object value) {
         if (checkRequirement(value, "Drug Code", errors, getLocale())) {
             return this;
         }
@@ -340,7 +340,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isMedicalDeviceRegistration(Object value) {
+    public ValidX isMedicalDeviceRegistration(Object value) {
         if (checkRequirement(value, "Medical Device Registration", errors, getLocale())) {
             return this;
         }
@@ -349,7 +349,7 @@ public class ValidaX {
     }
 
     // Network Validation Methods
-    public ValidaX isMacAddress(Object value) {
+    public ValidX isMacAddress(Object value) {
         if (checkRequirement(value, "MAC Address", errors, getLocale())) {
             return this;
         }
@@ -357,7 +357,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isEmail(Object value) {
+    public ValidX isEmail(Object value) {
         if (checkRequirement(value, "Email", errors, getLocale())) {
             return this;
         }
@@ -365,7 +365,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isIp(Object value) {
+    public ValidX isIp(Object value) {
         if (checkRequirement(value, "Ip", errors, getLocale())) {
             return this;
         }
@@ -377,9 +377,9 @@ public class ValidaX {
      * 验证IP地址（指定版本）
      * @param value 待验证的IP地址
      * @param version IP版本（Ip.IpVersion.V4/Ip.IpVersion.V6/Ip.IpVersion.ANY）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isIp(Object value, Ip.IpVersion version) {
+    public ValidX isIp(Object value, Ip.IpVersion version) {
         if (checkRequirement(value, "Ip", errors, getLocale())) {
             return this;
         }
@@ -387,7 +387,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isSubnetMask(Object value) {
+    public ValidX isSubnetMask(Object value) {
         if (checkRequirement(value, "Subnet Mask", errors, getLocale())) {
             return this;
         }
@@ -395,7 +395,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isUrl(Object value) {
+    public ValidX isUrl(Object value) {
         if (checkRequirement(value, "URL", errors, getLocale())) {
             return this;
         }
@@ -403,7 +403,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isDomain(Object value) {
+    public ValidX isDomain(Object value) {
         if (checkRequirement(value, "Domain", errors, getLocale())) {
             return this;
         }
@@ -411,7 +411,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isWeChat(Object value) {
+    public ValidX isWeChat(Object value) {
         if (checkRequirement(value, "WeChat", errors, getLocale())) {
             return this;
         }
@@ -419,7 +419,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isPort(Object value) {
+    public ValidX isPort(Object value) {
         if (checkRequirement(value, "Port", errors, getLocale())) {
             return this;
         }
@@ -428,7 +428,7 @@ public class ValidaX {
     }
 
     // Base Validation Methods
-    public ValidaX isChineseAlpha(Object value) {
+    public ValidX isChineseAlpha(Object value) {
         if (checkRequirement(value, "Chinese Alpha", errors, getLocale())) {
             return this;
         }
@@ -436,7 +436,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseAlphaNum(Object value) {
+    public ValidX isChineseAlphaNum(Object value) {
         if (checkRequirement(value, "Chinese Alpha Num", errors, getLocale())) {
             return this;
         }
@@ -444,7 +444,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isChineseAlphaDash(Object value) {
+    public ValidX isChineseAlphaDash(Object value) {
         if (checkRequirement(value, "Chinese Alpha Dash", errors, getLocale())) {
             return this;
         }
@@ -452,7 +452,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isLower(Object value) {
+    public ValidX isLower(Object value) {
         if (checkRequirement(value, "Lower", errors, getLocale())) {
             return this;
         }
@@ -460,7 +460,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isUpper(Object value) {
+    public ValidX isUpper(Object value) {
         if (checkRequirement(value, "Upper", errors, getLocale())) {
             return this;
         }
@@ -468,7 +468,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isXdigit(Object value) {
+    public ValidX isXdigit(Object value) {
         if (checkRequirement(value, "Xdigit", errors, getLocale())) {
             return this;
         }
@@ -476,7 +476,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isIn(Object value, String[] values) {
+    public ValidX isIn(Object value, String[] values) {
         if (checkRequirement(value, "In", errors, getLocale())) {
             return this;
         }
@@ -484,7 +484,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isNotIn(Object value, String[] values) {
+    public ValidX isNotIn(Object value, String[] values) {
         if (checkRequirement(value, "Not In", errors, getLocale())) {
             return this;
         }
@@ -492,7 +492,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isPastDate(Object value, boolean includeToday) {
+    public ValidX isPastDate(Object value, boolean includeToday) {
         if (checkRequirement(value, "Past Date", errors, getLocale())) {
             return this;
         }
@@ -500,7 +500,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isFutureDate(Object value, boolean includeToday) {
+    public ValidX isFutureDate(Object value, boolean includeToday) {
         if (checkRequirement(value, "Future Date", errors, getLocale())) {
             return this;
         }
@@ -508,7 +508,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isFileExtension(Object value, String[] extensions) {
+    public ValidX isFileExtension(Object value, String[] extensions) {
         if (checkRequirement(value, "File Extension", errors, getLocale())) {
             return this;
         }
@@ -516,7 +516,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isFileExtension(Object value, String[] extensions, boolean ignoreCase) {
+    public ValidX isFileExtension(Object value, String[] extensions, boolean ignoreCase) {
         if (checkRequirement(value, "File Extension", errors, getLocale())) {
             return this;
         }
@@ -524,7 +524,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isHourMinute(Object value) {
+    public ValidX isHourMinute(Object value) {
         if (checkRequirement(value, "Hour Minute", errors, getLocale())) {
             return this;
         }
@@ -532,7 +532,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isHourMinuteSecond(Object value) {
+    public ValidX isHourMinuteSecond(Object value) {
         if (checkRequirement(value, "Hour Minute Second", errors, getLocale())) {
             return this;
         }
@@ -540,7 +540,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isEnum(Object value, Class<? extends java.lang.Enum<?>> target, String field) {
+    public ValidX isEnum(Object value, Class<? extends java.lang.Enum<?>> target, String field) {
         if (checkRequirement(value, "Enum", errors, getLocale())) {
             return this;
         }
@@ -548,14 +548,14 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isEnum(Object value, Class<? extends java.lang.Enum<?>> target) {
+    public ValidX isEnum(Object value, Class<? extends java.lang.Enum<?>> target) {
         if (checkRequirement(value, "Enum", errors, getLocale())) {
             return this;
         }
         return isEnum(value, target, null);
     }
     
-    public ValidaX isAlpha(Object value) {
+    public ValidX isAlpha(Object value) {
         if (checkRequirement(value, "Alpha", errors, getLocale())) {
             return this;
         }
@@ -563,7 +563,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isAlphaNum(Object value) {
+    public ValidX isAlphaNum(Object value) {
         if (checkRequirement(value, "Alpha Num", errors, getLocale())) {
             return this;
         }
@@ -571,7 +571,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isAlphaDash(Object value) {
+    public ValidX isAlphaDash(Object value) {
         if (checkRequirement(value, "Alpha Dash", errors, getLocale())) {
             return this;
         }
@@ -579,7 +579,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isChinese(Object value) {
+    public ValidX isChinese(Object value) {
         if (checkRequirement(value, "Chinese", errors, getLocale())) {
             return this;
         }
@@ -587,7 +587,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isLongitude(Object value) {
+    public ValidX isLongitude(Object value) {
         if (checkRequirement(value, "Longitude", errors, getLocale())) {
             return this;
         }
@@ -595,7 +595,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isLatitude(Object value) {
+    public ValidX isLatitude(Object value) {
         if (checkRequirement(value, "Latitude", errors, getLocale())) {
             return this;
         }
@@ -603,7 +603,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isGeoPoint(Object value) {
+    public ValidX isGeoPoint(Object value) {
         if (checkRequirement(value, "GeoPoint", errors, getLocale())) {
             return this;
         }
@@ -611,7 +611,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isGeoPoint(Object value, boolean latitudeFirst) {
+    public ValidX isGeoPoint(Object value, boolean latitudeFirst) {
         if (checkRequirement(value, "GeoPoint", errors, getLocale())) {
             return this;
         }
@@ -619,7 +619,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isGeoPoint(Object value, boolean latitudeFirst, io.github.vipxieliang.validx.annotations.GeoPoint.SeparatorType separatorType) {
+    public ValidX isGeoPoint(Object value, boolean latitudeFirst, io.github.vipxieliang.validx.annotations.GeoPoint.SeparatorType separatorType) {
         if (checkRequirement(value, "GeoPoint", errors, getLocale())) {
             return this;
         }
@@ -627,7 +627,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isColor(Object value) {
+    public ValidX isColor(Object value) {
         if (checkRequirement(value, "Color", errors, getLocale())) {
             return this;
         }
@@ -635,7 +635,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isEndsWith(Object value, String[] suffixes) {
+    public ValidX isEndsWith(Object value, String[] suffixes) {
         if (checkRequirement(value, "Ends With", errors, getLocale())) {
             return this;
         }
@@ -643,7 +643,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isStartsWith(Object value, String[] prefixes) {
+    public ValidX isStartsWith(Object value, String[] prefixes) {
         if (checkRequirement(value, "Starts With", errors, getLocale())) {
             return this;
         }
@@ -652,7 +652,7 @@ public class ValidaX {
     }
 
     // Base Validation Methods - Contains
-    public ValidaX isContains(Object value, String[] substrings) {
+    public ValidX isContains(Object value, String[] substrings) {
         if (checkRequirement(value, "Contains", errors, getLocale())) {
             return this;
         }
@@ -660,7 +660,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isContains(Object value, String[] substrings, boolean ignoreCase) {
+    public ValidX isContains(Object value, String[] substrings, boolean ignoreCase) {
         if (checkRequirement(value, "Contains", errors, getLocale())) {
             return this;
         }
@@ -668,7 +668,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll) {
+    public ValidX isContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll) {
         if (checkRequirement(value, "Contains", errors, getLocale())) {
             return this;
         }
@@ -677,7 +677,7 @@ public class ValidaX {
     }
 
     // Base Validation Methods - Password
-    public ValidaX isPassword(Object value) {
+    public ValidX isPassword(Object value) {
         if (checkRequirement(value, "Password", errors, getLocale())) {
             return this;
         }
@@ -685,7 +685,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isPassword(Object value, int minLength) {
+    public ValidX isPassword(Object value, int minLength) {
         if (checkRequirement(value, "Password", errors, getLocale())) {
             return this;
         }
@@ -693,8 +693,8 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isPassword(Object value, int minLength, boolean requireUppercase,
-                              boolean requireLowercase, boolean requireDigit, boolean requireSpecialChar) {
+    public ValidX isPassword(Object value, int minLength, boolean requireUppercase,
+                             boolean requireLowercase, boolean requireDigit, boolean requireSpecialChar) {
         if (checkRequirement(value, "Password", errors, getLocale())) {
             return this;
         }
@@ -707,9 +707,9 @@ public class ValidaX {
      * 验证文件大小（只指定最大值）
      * @param value 文件对象（File、Path、byte[]、MultipartFile）
      * @param max 最大大小（如 "10MB"、"5GB"）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isFileSize(Object value, String max) {
+    public ValidX isFileSize(Object value, String max) {
         if (checkRequirement(value, "File Size", errors, getLocale())) {
             return this;
         }
@@ -722,9 +722,9 @@ public class ValidaX {
      * @param value 文件对象（File、Path、byte[]、MultipartFile）
      * @param min 最小大小（如 "1KB"、"100KB"）
      * @param max 最大大小（如 "10MB"、"5GB"）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isFileSize(Object value, String min, String max) {
+    public ValidX isFileSize(Object value, String min, String max) {
         if (checkRequirement(value, "File Size", errors, getLocale())) {
             return this;
         }
@@ -735,9 +735,9 @@ public class ValidaX {
     /**
      * 验证 UUID 格式（只允许标准格式）
      * @param value UUID 字符串
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isUUID(Object value) {
+    public ValidX isUUID(Object value) {
         if (checkRequirement(value, "UUID", errors, getLocale())) {
             return this;
         }
@@ -749,9 +749,9 @@ public class ValidaX {
      * 验证 UUID 格式
      * @param value UUID 字符串
      * @param allowWithoutHyphens 是否允许不带连字符的格式
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isUUID(Object value, boolean allowWithoutHyphens) {
+    public ValidX isUUID(Object value, boolean allowWithoutHyphens) {
         if (checkRequirement(value, "U U I D", errors, getLocale())) {
             return this;
         }
@@ -762,9 +762,9 @@ public class ValidaX {
     /**
      * 验证 Base64 格式（标准格式）
      * @param value Base64 字符串
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isBase64(Object value) {
+    public ValidX isBase64(Object value) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
             return this;
         }
@@ -776,9 +776,9 @@ public class ValidaX {
      * 验证 Base64 格式
      * @param value Base64 字符串
      * @param urlSafe 是否为 URL-safe 格式
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isBase64(Object value, boolean urlSafe) {
+    public ValidX isBase64(Object value, boolean urlSafe) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
             return this;
         }
@@ -791,9 +791,9 @@ public class ValidaX {
      * @param value Base64 字符串
      * @param urlSafe 是否为 URL-safe 格式
      * @param allowNoPadding 是否允许不带填充符
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isBase64(Object value, boolean urlSafe, boolean allowNoPadding) {
+    public ValidX isBase64(Object value, boolean urlSafe, boolean allowNoPadding) {
         if (checkRequirement(value, "Base64", errors, getLocale())) {
             return this;
         }
@@ -805,9 +805,9 @@ public class ValidaX {
      * 验证年龄（只验证最小年龄）
      * @param value 待验证的值（LocalDate、Date或String）
      * @param minAge 最小年龄
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isAge(Object value, int minAge) {
+    public ValidX isAge(Object value, int minAge) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -820,9 +820,9 @@ public class ValidaX {
      * @param value 待验证的值（LocalDate、Date或String）
      * @param minAge 最小年龄
      * @param maxAge 最大年龄
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isAge(Object value, int minAge, int maxAge) {
+    public ValidX isAge(Object value, int minAge, int maxAge) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -836,9 +836,9 @@ public class ValidaX {
      * @param minAge 最小年龄
      * @param maxAge 最大年龄
      * @param fromIdCard 是否从身份证提取
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isAge(Object value, int minAge, int maxAge, boolean fromIdCard) {
+    public ValidX isAge(Object value, int minAge, int maxAge, boolean fromIdCard) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -853,9 +853,9 @@ public class ValidaX {
      * @param maxAge 最大年龄
      * @param fromIdCard 是否从身份证提取
      * @param dateFormat 日期格式
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isAge(Object value, int minAge, int maxAge, boolean fromIdCard, String dateFormat) {
+    public ValidX isAge(Object value, int minAge, int maxAge, boolean fromIdCard, String dateFormat) {
         if (checkRequirement(value, "Age", errors, getLocale())) {
             return this;
         }
@@ -866,9 +866,9 @@ public class ValidaX {
     /**
      * 验证 JSON 格式（任意类型）
      * @param value JSON 字符串
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isJSON(Object value) {
+    public ValidX isJSON(Object value) {
         if (checkRequirement(value, "JSON", errors, getLocale())) {
             return this;
         }
@@ -880,9 +880,9 @@ public class ValidaX {
      * 验证 JSON 格式（指定类型）
      * @param value JSON 字符串
      * @param type JSON类型（ANY/OBJECT/ARRAY）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type) {
+    public ValidX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
             return this;
         }
@@ -895,10 +895,10 @@ public class ValidaX {
      * @param value JSON 字符串
      * @param type JSON类型
      * @param strict 是否严格模式
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
-                          boolean strict) {
+    public ValidX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
+                         boolean strict) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
             return this;
         }
@@ -913,10 +913,10 @@ public class ValidaX {
      * @param strict 是否严格模式
      * @param maxDepth 最大深度
      * @param maxLength 最大长度
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
-                          boolean strict, int maxDepth, int maxLength) {
+    public ValidX isJSON(Object value, io.github.vipxieliang.validx.annotations.JSON.JSONType type,
+                         boolean strict, int maxDepth, int maxLength) {
         if (checkRequirement(value, "J S O N", errors, getLocale())) {
             return this;
         }
@@ -930,7 +930,7 @@ public class ValidaX {
      * @param value 要验证的电话号码
      * @return 当前验证链实例
      */
-    public ValidaX isPhoneNumber(Object value) {
+    public ValidX isPhoneNumber(Object value) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -945,7 +945,7 @@ public class ValidaX {
      * @param countryCode 国家代码（如 "+86", "+1"）
      * @return 当前验证链实例
      */
-    public ValidaX isPhoneNumber(Object value, String countryCode) {
+    public ValidX isPhoneNumber(Object value, String countryCode) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -961,7 +961,7 @@ public class ValidaX {
      * @param allowExtension 是否允许分机号
      * @return 当前验证链实例
      */
-    public ValidaX isPhoneNumber(Object value, String countryCode, boolean allowExtension) {
+    public ValidX isPhoneNumber(Object value, String countryCode, boolean allowExtension) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -978,7 +978,7 @@ public class ValidaX {
      * @param strict         是否严格模式（必须包含国家代码）
      * @return 当前验证链实例
      */
-    public ValidaX isPhoneNumber(Object value, String countryCode, boolean allowExtension, boolean strict) {
+    public ValidX isPhoneNumber(Object value, String countryCode, boolean allowExtension, boolean strict) {
         if (checkRequirement(value, "Phone Number", errors, getLocale())) {
             return this;
         }
@@ -989,9 +989,9 @@ public class ValidaX {
     /**
      * 验证JWT Token格式
      * @param value 待验证的JWT Token
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isJWT(Object value) {
+    public ValidX isJWT(Object value) {
         if (checkRequirement(value, "JWT", errors, getLocale())) {
             return this;
         }
@@ -999,7 +999,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isSemVer(Object value) {
+    public ValidX isSemVer(Object value) {
         if (checkRequirement(value, "Sem Ver", errors, getLocale())) {
             return this;
         }
@@ -1007,7 +1007,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isSemVer(Object value, boolean allowVPrefix) {
+    public ValidX isSemVer(Object value, boolean allowVPrefix) {
         if (checkRequirement(value, "Sem Ver", errors, getLocale())) {
             return this;
         }
@@ -1018,9 +1018,9 @@ public class ValidaX {
     /**
      * 验证Unix时间戳格式（秒或毫秒均可）
      * @param value 待验证的值
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isTimestamp(Object value) {
+    public ValidX isTimestamp(Object value) {
         if (checkRequirement(value, "Timestamp", errors, getLocale())) {
             return this;
         }
@@ -1032,9 +1032,9 @@ public class ValidaX {
      * 验证Unix时间戳格式（指定单位）
      * @param value 待验证的值
      * @param unit 时间戳单位（SECONDS/MILLISECONDS/ANY）
-     * @return ValidaX实例
+     * @return ValidX实例
      */
-    public ValidaX isTimestamp(Object value, Timestamp.TimestampUnit unit) {
+    public ValidX isTimestamp(Object value, Timestamp.TimestampUnit unit) {
         if (checkRequirement(value, "Timestamp", errors, getLocale())) {
             return this;
         }
@@ -1048,7 +1048,7 @@ public class ValidaX {
      * @param value 待验证的值（String）
      * @return 当前验证链实例
      */
-    public ValidaX isCronExpression(Object value) {
+    public ValidX isCronExpression(Object value) {
         if (checkRequirement(value, "CronExpression", errors, getLocale())) {
             return this;
         }
@@ -1062,7 +1062,7 @@ public class ValidaX {
      * @param value 待验证的值（String）
      * @return 当前验证链实例
      */
-    public ValidaX isDuration(Object value) {
+    public ValidX isDuration(Object value) {
         if (checkRequirement(value, "Duration", errors, getLocale())) {
             return this;
         }
@@ -1077,7 +1077,7 @@ public class ValidaX {
      * @param format 时间段格式类型
      * @return 当前验证链实例
      */
-    public ValidaX isDuration(Object value, io.github.vipxieliang.validx.annotations.Duration.DurationFormat format) {
+    public ValidX isDuration(Object value, io.github.vipxieliang.validx.annotations.Duration.DurationFormat format) {
         if (checkRequirement(value, "Duration", errors, getLocale())) {
             return this;
         }
@@ -1091,7 +1091,7 @@ public class ValidaX {
      * @param value 待验证的值（String）
      * @return 当前验证链实例
      */
-    public ValidaX isExpressNumber(Object value) {
+    public ValidX isExpressNumber(Object value) {
         if (checkRequirement(value, "ExpressNumber", errors, getLocale())) {
             return this;
         }
@@ -1106,7 +1106,7 @@ public class ValidaX {
      * @param companies 快递公司类型
      * @return 当前验证链实例
      */
-    public ValidaX isExpressNumber(Object value, io.github.vipxieliang.validx.annotations.ExpressNumber.ExpressCompany... companies) {
+    public ValidX isExpressNumber(Object value, io.github.vipxieliang.validx.annotations.ExpressNumber.ExpressCompany... companies) {
         if (checkRequirement(value, "ExpressNumber", errors, getLocale())) {
             return this;
         }
@@ -1115,7 +1115,7 @@ public class ValidaX {
     }
 
     // Financial Validation Methods
-    public ValidaX isBankCard(Object value) {
+    public ValidX isBankCard(Object value) {
         if (checkRequirement(value, "Bank Card", errors, getLocale())) {
             return this;
         }
@@ -1123,7 +1123,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isCVV(Object value) {
+    public ValidX isCVV(Object value) {
         if (checkRequirement(value, "CVV", errors, getLocale())) {
             return this;
         }
@@ -1131,7 +1131,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isIBAN(Object value) {
+    public ValidX isIBAN(Object value) {
         if (checkRequirement(value, "IBAN", errors, getLocale())) {
             return this;
         }
@@ -1139,7 +1139,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isSWIFT(Object value) {
+    public ValidX isSWIFT(Object value) {
         if (checkRequirement(value, "SWIFT", errors, getLocale())) {
             return this;
         }
@@ -1147,7 +1147,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isStockCode(Object value) {
+    public ValidX isStockCode(Object value) {
         if (checkRequirement(value, "Stock Code", errors, getLocale())) {
             return this;
         }
@@ -1156,7 +1156,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isStockCode(Object value, StockCode.Exchange... exchanges) {
+    public ValidX isStockCode(Object value, StockCode.Exchange... exchanges) {
         if (checkRequirement(value, "Stock Code", errors, getLocale())) {
             return this;
         }
@@ -1164,7 +1164,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isFinancialProductCode(Object value) {
+    public ValidX isFinancialProductCode(Object value) {
         if (checkRequirement(value, "Financial Product Code", errors, getLocale())) {
             return this;
         }
@@ -1173,7 +1173,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isFinancialProductCode(Object value, FinancialProductCode.ProductType... productTypes) {
+    public ValidX isFinancialProductCode(Object value, FinancialProductCode.ProductType... productTypes) {
         if (checkRequirement(value, "Financial Product Code", errors, getLocale())) {
             return this;
         }
@@ -1181,7 +1181,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isTradeOrderNumber(Object value) {
+    public ValidX isTradeOrderNumber(Object value) {
         if (checkRequirement(value, "Trade Order Number", errors, getLocale())) {
             return this;
         }
@@ -1190,7 +1190,7 @@ public class ValidaX {
     }
 
     // Vehicle Validation Methods
-    public ValidaX isVIN(Object value) {
+    public ValidX isVIN(Object value) {
         if (checkRequirement(value, "VIN", errors, getLocale())) {
             return this;
         }
@@ -1198,7 +1198,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isVehicleEngine(Object value) {
+    public ValidX isVehicleEngine(Object value) {
         if (checkRequirement(value, "Vehicle Engine", errors, getLocale())) {
             return this;
         }
@@ -1207,7 +1207,7 @@ public class ValidaX {
     }
 
     // Book Validation Methods
-    public ValidaX isISBN(Object value) {
+    public ValidX isISBN(Object value) {
         if (checkRequirement(value, "ISBN", errors, getLocale())) {
             return this;
         }
@@ -1215,7 +1215,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isISSN(Object value) {
+    public ValidX isISSN(Object value) {
         if (checkRequirement(value, "ISSN", errors, getLocale())) {
             return this;
         }
@@ -1223,7 +1223,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isDOI(Object value) {
+    public ValidX isDOI(Object value) {
         if (checkRequirement(value, "DOI", errors, getLocale())) {
             return this;
         }
@@ -1231,7 +1231,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isCLC(Object value) {
+    public ValidX isCLC(Object value) {
         if (checkRequirement(value, "CLC", errors, getLocale())) {
             return this;
         }
@@ -1239,7 +1239,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isDDC(Object value) {
+    public ValidX isDDC(Object value) {
         if (checkRequirement(value, "DDC", errors, getLocale())) {
             return this;
         }
@@ -1247,7 +1247,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isORCID(Object value) {
+    public ValidX isORCID(Object value) {
         if (checkRequirement(value, "ORCID", errors, getLocale())) {
             return this;
         }
@@ -1255,7 +1255,7 @@ public class ValidaX {
         return this;
     }
 
-    public ValidaX isIPC(Object value) {
+    public ValidX isIPC(Object value) {
         if (checkRequirement(value, "IPC", errors, getLocale())) {
             return this;
         }
@@ -1264,7 +1264,7 @@ public class ValidaX {
     }
 
     // Education Validation Methods
-    public ValidaX isDegreeCertificate(Object value) {
+    public ValidX isDegreeCertificate(Object value) {
         if (checkRequirement(value, "Degree Certificate", errors, getLocale())) {
             return this;
         }
@@ -1272,7 +1272,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isTeacher(Object value) {
+    public ValidX isTeacher(Object value) {
         if (checkRequirement(value, "Teacher", errors, getLocale())) {
             return this;
         }
@@ -1280,7 +1280,7 @@ public class ValidaX {
         return this;
     }
     
-    public ValidaX isDoctor(Object value) {
+    public ValidX isDoctor(Object value) {
         if (checkRequirement(value, "Doctor", errors, getLocale())) {
             return this;
         }
@@ -1289,7 +1289,7 @@ public class ValidaX {
     }
 
     // Foreign Validation Methods
-    public ValidaX isForeignerWorkPermit(Object value) {
+    public ValidX isForeignerWorkPermit(Object value) {
         if (checkRequirement(value, "Foreigner Work Permit", errors, getLocale())) {
             return this;
         }
@@ -1298,7 +1298,7 @@ public class ValidaX {
     }
 
     // Phone Validation Methods
-    public ValidaX isIMEI(Object value) {
+    public ValidX isIMEI(Object value) {
         if (checkRequirement(value, "IMEI", errors, getLocale())) {
             return this;
         }
@@ -1310,9 +1310,9 @@ public class ValidaX {
      * 验证PMP证书编号
      * 
      * @param value PMP证书编号
-     * @return ValidaX实例，支持链式调用
+     * @return ValidX实例，支持链式调用
      */
-    public ValidaX isPMP(Object value) {
+    public ValidX isPMP(Object value) {
         if (checkRequirement(value, "PMP", errors, getLocale())) {
             return this;
         }
@@ -1324,9 +1324,9 @@ public class ValidaX {
      * 验证建造师证书编号
      * 
      * @param value 建造师证书编号
-     * @return ValidaX实例，支持链式调用
+     * @return ValidX实例，支持链式调用
      */
-    public ValidaX isConstructor(Object value) {
+    public ValidX isConstructor(Object value) {
         if (checkRequirement(value, "Constructor", errors, getLocale())) {
             return this;
         }
@@ -1338,9 +1338,9 @@ public class ValidaX {
      * 验证会计资格证书编号
      * 
      * @param value 会计资格证书编号
-     * @return ValidaX实例，支持链式调用
+     * @return ValidX实例，支持链式调用
      */
-    public ValidaX isAccountant(Object value) {
+    public ValidX isAccountant(Object value) {
         if (checkRequirement(value, "Accountant", errors, getLocale())) {
             return this;
         }

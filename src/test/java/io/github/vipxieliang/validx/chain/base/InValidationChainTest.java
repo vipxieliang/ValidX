@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,7 @@ public class InValidationChainTest {
     @Test
     public void testNullValue() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIn(null, new String[]{"apple", "banana", "orange"});
         assertTrue(chain.passed(), "null值应该通过验证");
     }
@@ -35,7 +35,7 @@ public class InValidationChainTest {
     public void testEmptyStringNotInArray() {
         // 测试空字符串（不在数组中）
         // 新行为：默认情况下，空字符串会跳过格式校验，验证通过
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIn((Object)"", new String[]{"apple", "banana", "orange"});
         assertTrue(chain.passed(), "空字符串默认跳过校验，应该通过");
     }
@@ -43,21 +43,21 @@ public class InValidationChainTest {
     @Test
     public void testEmptyStringInArray() {
         // 测试空字符串（在数组中）
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIn((Object)"", new String[]{"apple", "banana", ""});
         assertTrue(chain.passed(), "空字符串在数组中应该验证通过");
     }
 
     @Test
     public void testValidInWithDirectValue() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIn((Object)"apple", new String[]{"apple", "banana", "orange"});
         assertTrue(chain.passed(), "有效的值应该通过验证");
     }
 
     @Test
     public void testInvalidInWithDirectValue() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isIn((Object)"grape", new String[]{"apple", "banana", "orange"});
         assertFalse(chain.passed(), "无效的值不应该通过验证");
         assertEquals(1, chain.getErrors().size());

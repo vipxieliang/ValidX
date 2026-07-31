@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.base;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -45,7 +45,7 @@ public class EnumCollectionValidationChainTest {
 
     @Test
     public void testValidEnumListWithNameField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         List<String> validValues = Arrays.asList("VALUE1", "VALUE2");
         chain = chain.isEnum(validValues, TestEnum.class);
         assertTrue(chain.passed(), "有效的枚举值列表应该通过验证");
@@ -53,7 +53,7 @@ public class EnumCollectionValidationChainTest {
 
     @Test
     public void testInvalidEnumListWithNameField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         List<String> invalidValues = Arrays.asList("VALUE1", "INVALID_VALUE");
         chain = chain.isEnum(invalidValues, TestEnum.class);
         assertFalse(chain.passed(), "包含无效枚举值的列表不应该通过验证");
@@ -63,7 +63,7 @@ public class EnumCollectionValidationChainTest {
 
     @Test
     public void testValidEnumArrayWithCustomField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         String[] validValues = {"code1", "code2"};
         chain = chain.isEnum(validValues, TestEnum.class, "code");
         assertTrue(chain.passed(), "有效的枚举值数组应该通过验证");
@@ -71,7 +71,7 @@ public class EnumCollectionValidationChainTest {
 
     @Test
     public void testInvalidEnumArrayWithCustomField() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         String[] invalidValues = {"code1", "invalid_code"};
         chain = chain.isEnum(invalidValues, TestEnum.class, "code");
         assertFalse(chain.passed(), "包含无效枚举值的数组不应该通过验证");
@@ -81,7 +81,7 @@ public class EnumCollectionValidationChainTest {
 
     @Test
     public void testEmptyList() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         List<String> emptyValues = Arrays.asList();
         chain = chain.isEnum(emptyValues, TestEnum.class);
         assertTrue(chain.passed(), "空列表应该通过验证");
@@ -89,7 +89,7 @@ public class EnumCollectionValidationChainTest {
 
     @Test
     public void testEmptyArray() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         String[] emptyValues = {};
         chain = chain.isEnum(emptyValues, TestEnum.class);
         assertTrue(chain.passed(), "空数组应该通过验证");

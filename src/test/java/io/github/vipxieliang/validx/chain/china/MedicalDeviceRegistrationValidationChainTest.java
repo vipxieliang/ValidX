@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.china;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,22 +24,22 @@ public class MedicalDeviceRegistrationValidationChainTest {
 
     @Test
     public void testValidMedicalDeviceRegistration() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isMedicalDeviceRegistration("国械注准20243010001");
         assertTrue(chain.passed(), "有效的医疗器械注册证号应该通过验证");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isMedicalDeviceRegistration("粤械注准20242020002");
         assertTrue(chain.passed(), "有效的医疗器械注册证号应该通过验证");
     }
 
     @Test
     public void testInvalidMedicalDeviceRegistration() {
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isMedicalDeviceRegistration("国械注准20244010001"); // 错误的管理类别
         assertFalse(chain.passed(), "无效的医疗器械注册证号应该验证失败");
 
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isMedicalDeviceRegistration("国械注出20243010001"); // 错误的注册形式
         assertFalse(chain.passed(), "无效的医疗器械注册证号应该验证失败");
     }
@@ -47,12 +47,12 @@ public class MedicalDeviceRegistrationValidationChainTest {
     @Test
     public void testNullAndEmptyMedicalDeviceRegistration() {
         // 测试 null 值
-        ValidaX chain = ValidaX.init();
+        ValidX chain = ValidX.init();
         chain = chain.isMedicalDeviceRegistration(null);
         assertTrue(chain.passed(), "null 应该通过验证");
 
         // 测试空字符串
-        chain = ValidaX.init();
+        chain = ValidX.init();
         chain = chain.isMedicalDeviceRegistration("");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }

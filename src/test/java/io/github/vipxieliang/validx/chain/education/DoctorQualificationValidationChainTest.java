@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.chain.education;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -30,7 +30,7 @@ public class DoctorQualificationValidationChainTest {
 
     @Test
     public void testValidDoctorQualification() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的医师资格证编号
         validator.isDoctor("202511110440608197310039910");
@@ -39,7 +39,7 @@ public class DoctorQualificationValidationChainTest {
 
     @Test
     public void testInvalidDoctorQualification() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的医师资格证编号
         validator.isDoctor("20251111012345678901234"); // 23位
@@ -49,7 +49,7 @@ public class DoctorQualificationValidationChainTest {
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isDoctor(null);
@@ -58,7 +58,7 @@ public class DoctorQualificationValidationChainTest {
 
     @Test
     public void testEmptyValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试空字符串
         validator.isDoctor("");
@@ -67,7 +67,7 @@ public class DoctorQualificationValidationChainTest {
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isDoctor("invalid");
@@ -78,7 +78,7 @@ public class DoctorQualificationValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isDoctor("invalid");

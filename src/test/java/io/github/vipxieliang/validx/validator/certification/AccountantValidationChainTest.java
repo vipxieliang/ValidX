@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.validator.certification;
 
-import io.github.vipxieliang.validx.chain.ValidaX;
+import io.github.vipxieliang.validx.chain.ValidX;
 import org.junit.jupiter.api.Test;
 
 import java.util.Locale;
@@ -30,7 +30,7 @@ public class AccountantValidationChainTest {
 
     @Test
     public void testValidAccountant() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试有效的会计资格证书编号 (使用有效的省级代码)
         validator.isAccountant("21110203451");
@@ -39,7 +39,7 @@ public class AccountantValidationChainTest {
 
     @Test
     public void testInvalidAccountant() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
         
         // 测试无效的会计资格证书编号
         validator.isAccountant("2101020345"); // 10位数字
@@ -49,7 +49,7 @@ public class AccountantValidationChainTest {
 
     @Test
     public void testNullValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试null值
         validator.isAccountant(null);
@@ -58,7 +58,7 @@ public class AccountantValidationChainTest {
 
     @Test
     public void testEmptyValue() {
-        ValidaX validator = ValidaX.init();
+        ValidX validator = ValidX.init();
 
         // 测试空字符串
         validator.isAccountant("");
@@ -67,7 +67,7 @@ public class AccountantValidationChainTest {
 
     @Test
     public void testEnglishErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.ENGLISH);
+        ValidX validator = ValidX.init().withLocale(Locale.ENGLISH);
         
         // 测试英文错误消息
         validator.isAccountant("invalid");
@@ -78,7 +78,7 @@ public class AccountantValidationChainTest {
 
     @Test
     public void testChineseErrorMessage() {
-        ValidaX validator = ValidaX.init().withLocale(Locale.CHINESE);
+        ValidX validator = ValidX.init().withLocale(Locale.CHINESE);
         
         // 测试中文错误消息
         validator.isAccountant("invalid");
