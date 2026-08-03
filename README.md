@@ -636,6 +636,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@FileSize](#filesize) | File size range validation | 1.0.0   |
 | **Basic Validation** | [@Age](#age) | Age validation from birth date or ID | 1.0.0   |
 | **Basic Validation** | [@Port](#port) | Port number validation (0-65535) | 1.0.0   |
+| **Identity Validation** | [@ChineseName](#chinesename) | Chinese name validation | 1.0.2   |
 | **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation | 1.0.0   |
 | **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation | 1.0.0   |
 | **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate | 1.0.0   |
@@ -1869,6 +1870,31 @@ Click on the annotation name to jump to its detailed documentation.
 [↑ Back to Quick Reference](#quick-reference-table)
 
 ### Identity Verification Related
+
+#### @ChineseName
+* Validation Rule: Chinese name validation, verifies if a string conforms to Chinese naming conventions.
+* Validation Requirements:
+  - Only Chinese characters allowed
+  - Length between 2-50 characters (covers all Chinese names including very long minority names)
+  - Supports middle dot "·" in minority names
+  - No numbers, letters, or special characters allowed
+* Example Formats:
+  - Han Chinese names: `张三`, `李四`, `欧阳修`, `诸葛亮`
+  - Minority names: `买买提·吐尔逊`, `迪丽热巴·迪力木拉提`
+  - Historical names: `爱新觉罗·玄烨`
+* Usage Examples:
+  ```java
+  // Annotation-based usage
+  @ChineseName
+  private String realName;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  validator.isChineseName("张三");
+  validator.isChineseName("买买提·吐尔逊");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
 
 #### @ChineseIdCard
 * Validation Rule: Mainland China ID card number validation, supporting 18-digit and 15-digit ID card numbers.

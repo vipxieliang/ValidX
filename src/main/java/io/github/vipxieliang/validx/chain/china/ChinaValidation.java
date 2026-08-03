@@ -190,4 +190,11 @@ public class ChinaValidation {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.medical.device.registration", locale));
         }
     }
+
+    public void validateChineseName(Object value, List<String> errors, Locale locale) {
+        ChineseNameValidator validator = new ChineseNameValidator();
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.chinese.name", locale));
+        }
+    }
 }

@@ -164,6 +164,14 @@ public class ValidX {
         return this;
     }
 
+    public ValidX isChineseName(Object value) {
+        if (checkRequirement(value, "Chinese Name", errors, getLocale())) {
+            return this;
+        }
+        chinaValidation.validateChineseName(value, errors, getLocale());
+        return this;
+    }
+
     public ValidX isChineseLicensePlate(Object value) {
         if (checkRequirement(value, "License Plate", errors, getLocale())) {
             return this;
