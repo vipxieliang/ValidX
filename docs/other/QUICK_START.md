@@ -33,20 +33,6 @@
 implementation 'io.github.vipxieliang:validx:1.0.1'
 ```
 
-### Spring Boot
-
-ValidX 基于 JSR-380 Bean Validation 标准，与 Spring Boot 无缝集成。
-
-**只需添加 ValidX 依赖即可：**
-
-```xml
-<dependency>
-    <groupId>io.github.vipxieliang</groupId>
-    <artifactId>validx</artifactId>
-    <version>1.0.1</version>
-</dependency>
-```
-
 **说明：**
 - ValidX 已经包含了 `hibernate-validator` 和 `validation-api` 依赖
 - 如果你的 Spring Boot 项目中已有 `spring-boot-starter-web` 或 `spring-boot-starter-validation`，Maven 会自动处理版本冲突
