@@ -1363,4 +1363,21 @@ public class BaseValidation {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.express.number", locale));
         }
     }
+
+    /**
+     * 验证日期格式
+     *
+     * @param value 待验证的值
+     * @param pattern 日期格式模式
+     * @param errors 错误消息列表
+     * @param locale 语言环境
+     */
+    public void validateDateFormat(Object value, String pattern, List<String> errors, Locale locale) {
+        if (!DateFormatValidator.isValidDateFormat((String) value, pattern)) {
+            errors.add(MessageManager.getMessage(
+                "io.github.vipxieliang.validx.annotation.date.format",
+                locale
+            ));
+        }
+    }
 }

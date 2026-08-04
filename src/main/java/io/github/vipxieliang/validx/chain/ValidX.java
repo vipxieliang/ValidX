@@ -516,6 +516,18 @@ public class ValidX {
         return this;
     }
 
+    public ValidX isDateFormat(Object value) {
+        return isDateFormat(value, "yyyy-MM-dd");
+    }
+
+    public ValidX isDateFormat(Object value, String pattern) {
+        if (checkRequirement(value, "Date Format", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateDateFormat(value, pattern, errors, getLocale());
+        return this;
+    }
+
     public ValidX isFileExtension(Object value, String[] extensions) {
         if (checkRequirement(value, "File Extension", errors, getLocale())) {
             return this;
