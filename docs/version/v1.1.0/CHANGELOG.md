@@ -7,6 +7,10 @@ This document records the changes from v1.0.1 to v1.1.0.
 ## Change Overview
 
 - ✨ Added @ChineseName validation annotation
+- ✨ Added @Date date format validation annotation
+- ✨ Added @DateTime date-time format validation annotation
+- ✨ Added @PastDateTime past date-time validation annotation
+- ✨ Added @FutureDateTime future date-time validation annotation
 - 🔧 Enhanced date/datetime validators with custom pattern support
 - 📖 Added comprehensive internationalization tests
 - 🎯 Improved error messages for date validation
@@ -91,6 +95,176 @@ public class UserController {
     @PostMapping("/verify")
     public Result verify(@Valid @RequestBody UserVerifyDTO dto) {
         return verifyService.verify(dto);
+    }
+}
+```
+
+---
+
+### @Date Date Format Validation Annotation
+
+Added pure date format validation annotation to verify if a string conforms to a specified date format (without time component), regardless of whether the date is in the past or future.
+
+**Features:**
+- Validates if a string is a valid pure date format (no time component)
+- Default format: `yyyy-MM-dd`
+- Supports custom patterns (pattern parameter)
+- Uses strict validation mode (ResolverStyle.STRICT)
+- Automatically rejects invalid dates (e.g., 2024-02-30, 2023-02-29)
+- Pattern must NOT contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
+- Full internationalization support (9 languages)
+
+**Annotation Examples:**
+
+```java
+public class EventDTO {
+    // Example 1: Default format (yyyy-MM-dd)
+    @Date
+    private String eventDate;
+
+    // Example 2: Custom date format
+    @Date(pattern = "dd/MM/yyyy")
+    private String europeanDate;
+
+    // Example 3: Compact format
+    @Date(pattern = "yyyyMMdd")
+    private String compactDate;
+
+    // Example 4: US format
+    @Date(pattern = "MM/dd/yyyy")
+    private String usDate;
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// Default format (yyyy-MM-dd)
+validator.field("Date").isDate("2024-01-15");
+
+// Custom formats
+validator.field("Date").isDate("15/01/2024", "dd/MM/yyyy");
+validator.field("Compact Date").isDate("20240115", "yyyyMMdd");
+
+// Check validation result
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-World Use Cases:**
+
+```java
+// Use Case 1: API parameter validation
+@RestController
+public class OrderController {
+    @PostMapping("/orders")
+    public Result createOrder(@Valid @RequestBody OrderDTO dto) {
+        return orderService.create(dto);
+    }
+}
+
+public class OrderDTO {
+    @Date(pattern = "yyyy-MM-dd")
+    private String deliveryDate;  // Validates date format only, no past/future restriction
+}
+
+// Use Case 2: Bulk data import validation
+ValidX validator = ValidX.init();
+for (String date : importedDates) {
+    validator.field("Import Date").isDate(date, userDefinedPattern);
+}
+
+// Use Case 3: Configuration file date validation
+@Configuration
+public class AppConfig {
+    @Date(pattern = "yyyy-MM-dd")
+    private String systemStartDate;
+}
+```
+
+---
+
+### @DateTime Date-Time Format Validation Annotation
+
+Added date-time format validation annotation to verify if a string conforms to a specified date-time format (must include time component), regardless of whether the date-time is in the past or future.
+
+**Features:**
+- Validates if a string is a valid date-time format (must include time)
+- Default format: `yyyy-MM-dd HH:mm:ss`
+- Supports custom patterns (pattern parameter)
+- Uses strict validation mode (ResolverStyle.STRICT)
+- Automatically rejects invalid dates and times (e.g., 2024-02-30 13:00:00, 2024-01-15 25:00:00)
+- Pattern must contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
+- Full internationalization support (9 languages)
+
+**Annotation Examples:**
+
+```java
+public class LogDTO {
+    // Example 1: Default format (yyyy-MM-dd HH:mm:ss)
+    @DateTime
+    private String timestamp;
+
+    // Example 2: ISO 8601 format
+    @DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private String isoDateTime;
+
+    // Example 3: With milliseconds
+    @DateTime(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private String preciseTime;
+
+    // Example 4: 12-hour format
+    @DateTime(pattern = "yyyy-MM-dd hh:mm:ss a")
+    private String amPmTime;
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// Default format (yyyy-MM-dd HH:mm:ss)
+validator.field("Timestamp").isDateTime("2024-01-15 13:30:00");
+
+// Custom formats
+validator.field("ISO Time").isDateTime("2024-01-15T13:30:00", "yyyy-MM-dd'T'HH:mm:ss");
+validator.field("Precise Time").isDateTime("2024-01-15 13:30:00.123", "yyyy-MM-dd HH:mm:ss.SSS");
+
+// Check validation result
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-World Use Cases:**
+
+```java
+// Use Case 1: Log recording
+@RestController
+public class LogController {
+    @PostMapping("/logs")
+    public Result saveLog(@Valid @RequestBody LogDTO dto) {
+        return logService.save(dto);
+    }
+}
+
+public class LogDTO {
+    @DateTime
+    private String occurredAt;  // Validates timestamp format
+}
+
+// Use Case 2: Event tracking
+ValidX validator = ValidX.init();
+validator.field("Event Time").isDateTime(eventTime, "yyyy-MM-dd HH:mm:ss");
+
+// Use Case 3: Database import
+for (String timestamp : timestamps) {
+    if (!validator.isDateTime(timestamp).passed()) {
+        // Handle format error
     }
 }
 ```
