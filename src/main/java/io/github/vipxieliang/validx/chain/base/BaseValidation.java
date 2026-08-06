@@ -1319,9 +1319,26 @@ public class BaseValidation {
      * @param locale 语言环境
      */
     public void validateDateFormat(Object value, String pattern, List<String> errors, Locale locale) {
-        if (!DateFormatValidator.isValidDateFormat((String) value, pattern)) {
+        if (!DateValidator.isValidDateFormat((String) value, pattern)) {
             errors.add(MessageManager.getMessage(
                 "io.github.vipxieliang.validx.annotation.date.format",
+                locale
+            ));
+        }
+    }
+
+    /**
+     * 验证日期时间格式
+     *
+     * @param value 待验证的值
+     * @param pattern 日期时间格式模式
+     * @param errors 错误消息列表
+     * @param locale 语言环境
+     */
+    public void validateDateTimeFormat(Object value, String pattern, List<String> errors, Locale locale) {
+        if (!DateTimeValidator.isValidDateTimeFormat((String) value, pattern)) {
+            errors.add(MessageManager.getMessage(
+                "io.github.vipxieliang.validx.annotation.datetime.format",
                 locale
             ));
         }

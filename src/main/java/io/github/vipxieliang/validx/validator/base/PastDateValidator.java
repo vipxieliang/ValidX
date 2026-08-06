@@ -3,6 +3,7 @@ package io.github.vipxieliang.validx.validator.base;
 import io.github.vipxieliang.validx.annotations.PastDate;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 
+import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -13,6 +14,9 @@ import java.time.format.DateTimeParseException;
  * 支持自定义日期格式
  */
 public class PastDateValidator extends BaseDateValidator<PastDate> {
+
+    private boolean patternInvalid = false;
+    private String patternErrorMessage = null;
 
     @Override
     public void initialize(PastDate constraintAnnotation) {
@@ -30,15 +34,31 @@ public class PastDateValidator extends BaseDateValidator<PastDate> {
 
         // 检查：pattern 不能包含时间符号
         if (containsTimePattern(pattern)) {
-            throw new IllegalArgumentException(
-                MessageManager.getMessage("io.github.vipxieliang.validx.validator.date.pattern.contains.time")
-            );
+            this.patternInvalid = true;
+            this.patternErrorMessage = MessageManager.getMessage("io.github.vipxieliang.validx.validator.date.pattern.contains.time");
+            return;
         }
 
         // 将 yyyy 替换为 uuuu 以支持严格模式
         String strictPattern = pattern.replace("yyyy", "uuuu")
                                      .replace("yy", "uu");
         this.formatter = DateTimeFormatter.ofPattern(strictPattern);
+    }
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        // 如果 pattern 配置错误，返回验证失败
+        if (patternInvalid) {
+            if (context != null) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(patternErrorMessage)
+                       .addConstraintViolation();
+            }
+            return false;
+        }
+
+        // 调用父类的验证逻辑
+        return super.isValid(value, context);
     }
 
     @Override

@@ -52,10 +52,20 @@ public class PastDateTimeValidatorTest {
         when(mockAnnotation.includeToday()).thenReturn(false);
         when(mockAnnotation.pattern()).thenReturn("yyyy-MM-dd");
 
-        // 应该抛出异常：pattern 没有时间符号
-        assertThrows(IllegalArgumentException.class, () -> {
+        // 不应该抛出异常，而是在验证时返回 false
+        assertDoesNotThrow(() -> {
             validator.initialize(mockAnnotation);
-        }, "pattern 不含时间符号应该抛出异常");
+        }, "初始化时不应该抛出异常");
+
+        // 验证时应该返回 false（pattern 配置错误）
+        javax.validation.ConstraintValidatorContext mockContext = mock(javax.validation.ConstraintValidatorContext.class);
+        javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder mockBuilder =
+            mock(javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.class);
+        when(mockContext.buildConstraintViolationWithTemplate(anyString())).thenReturn(mockBuilder);
+        when(mockBuilder.addConstraintViolation()).thenReturn(mockContext);
+
+        assertFalse(validator.isValid("2020-01-01", mockContext),
+            "pattern 不含时间符号应该验证失败");
     }
 
     @Test

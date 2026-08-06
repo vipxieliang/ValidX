@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.validator.base;
 
-import io.github.vipxieliang.validx.annotations.DateFormat;
+import io.github.vipxieliang.validx.annotations.Date;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -47,7 +47,7 @@ import java.util.Locale;
  * @author vipxieliang
  * @since 1.1.0
  */
-public class DateFormatValidator implements ConstraintValidator<DateFormat, String> {
+public class DateValidator implements ConstraintValidator<Date, String> {
 
     /**
      * 日期时间格式化器（严格模式）
@@ -55,7 +55,7 @@ public class DateFormatValidator implements ConstraintValidator<DateFormat, Stri
     private DateTimeFormatter formatter;
 
     @Override
-    public void initialize(DateFormat annotation) {
+    public void initialize(Date annotation) {
         this.formatter = createStrictFormatter(annotation.pattern());
     }
 

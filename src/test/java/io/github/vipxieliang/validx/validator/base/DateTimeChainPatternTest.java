@@ -98,37 +98,33 @@ public class DateTimeChainPatternTest {
     @Test
     public void testPastDateCannotContainTimePattern() {
         ValidX validator = ValidX.init();
-        // 日期验证器不能包含时间符号
-        assertThrows(IllegalArgumentException.class, () -> {
-            validator.isPastDate("2020-01-01 12:30:45", false, "yyyy-MM-dd HH:mm:ss");
-        }, "日期验证器的pattern包含时间符号应该抛出异常");
+        // 日期验证器pattern包含时间符号应该导致验证失败
+        validator.isPastDate("2020-01-01 12:30:45", false, "yyyy-MM-dd HH:mm:ss");
+        assertFalse(validator.passed(), "日期验证器的pattern包含时间符号应该验证失败");
     }
 
     @Test
     public void testFutureDateCannotContainTimePattern() {
         ValidX validator = ValidX.init();
-        // 日期验证器不能包含时间符号
-        assertThrows(IllegalArgumentException.class, () -> {
-            validator.isFutureDate("2099-12-31 23:59:59", false, "yyyy-MM-dd HH:mm:ss");
-        }, "日期验证器的pattern包含时间符号应该抛出异常");
+        // 日期验证器pattern包含时间符号应该导致验证失败
+        validator.isFutureDate("2099-12-31 23:59:59", false, "yyyy-MM-dd HH:mm:ss");
+        assertFalse(validator.passed(), "日期验证器的pattern包含时间符号应该验证失败");
     }
 
     @Test
     public void testPastDateTimeMustContainTimePattern() {
         ValidX validator = ValidX.init();
-        // 日期时间验证器必须包含时间符号
-        assertThrows(IllegalArgumentException.class, () -> {
-            validator.isPastDateTime("2020-01-01", false, "yyyy-MM-dd");
-        }, "日期时间验证器的pattern不包含时间符号应该抛出异常");
+        // 日期时间验证器pattern不包含时间符号应该导致验证失败
+        validator.isPastDateTime("2020-01-01", false, "yyyy-MM-dd");
+        assertFalse(validator.passed(), "日期时间验证器的pattern不包含时间符号应该验证失败");
     }
 
     @Test
     public void testFutureDateTimeMustContainTimePattern() {
         ValidX validator = ValidX.init();
-        // 日期时间验证器必须包含时间符号
-        assertThrows(IllegalArgumentException.class, () -> {
-            validator.isFutureDateTime("2099-12-31", false, "yyyy-MM-dd");
-        }, "日期时间验证器的pattern不包含时间符号应该抛出异常");
+        // 日期时间验证器pattern不包含时间符号应该导致验证失败
+        validator.isFutureDateTime("2099-12-31", false, "yyyy-MM-dd");
+        assertFalse(validator.passed(), "日期时间验证器的pattern不包含时间符号应该验证失败");
     }
 
     @Test

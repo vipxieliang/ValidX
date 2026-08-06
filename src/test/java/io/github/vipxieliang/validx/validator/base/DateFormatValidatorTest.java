@@ -16,7 +16,7 @@
 
 package io.github.vipxieliang.validx.validator.base;
 
-import io.github.vipxieliang.validx.annotations.DateFormat;
+import io.github.vipxieliang.validx.annotations.Date;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +30,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * DateFormatValidator 单元测试 - 注解方式
+ * DateValidator 单元测试 - 注解方式
  * 使用 JSR-380 Bean Validation 注解进行测试
  *
  * @author vipxieliang
@@ -49,22 +49,22 @@ class DateFormatValidatorTest {
     // ==================== 测试用的实体类 ====================
 
     static class TestEntity {
-        @DateFormat(pattern = "yyyy-MM-dd")
+        @Date(pattern = "yyyy-MM-dd")
         private String standardDate;
 
-        @DateFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        @Date(pattern = "yyyy-MM-dd HH:mm:ss")
         private String dateTime;
 
-        @DateFormat(pattern = "yyyy-MM")
+        @Date(pattern = "yyyy-MM")
         private String yearMonth;
 
-        @DateFormat(pattern = "HH:mm:ss")
+        @Date(pattern = "HH:mm:ss")
         private String time;
 
-        @DateFormat(pattern = "yyyy-MM-dd hh:mm:ss a")
+        @Date(pattern = "yyyy-MM-dd hh:mm:ss a")
         private String time12Hour;
 
-        @DateFormat(pattern = "MM/dd/yyyy")
+        @Date(pattern = "MM/dd/yyyy")
         private String usFormat;
 
         public TestEntity() {}

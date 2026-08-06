@@ -573,6 +573,18 @@ public class ValidX {
         return this;
     }
 
+    public ValidX isDateTimeFormat(Object value) {
+        return isDateTimeFormat(value, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public ValidX isDateTimeFormat(Object value, String pattern) {
+        if (checkRequirement(value, "DateTime Format", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateDateTimeFormat(value, pattern, errors, getLocale());
+        return this;
+    }
+
     public ValidX isFileExtension(Object value, String[] extensions) {
         if (checkRequirement(value, "File Extension", errors, getLocale())) {
             return this;

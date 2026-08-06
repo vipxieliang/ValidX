@@ -625,7 +625,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） | 1.0.0 | - |
 | **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） | 1.0.0 | - |
 | **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 | 1.0.0 | - |
-| **基础验证** | [@DateFormat](#dateformat) | 日期格式验证（支持自定义格式） | 1.1.0 | - |
+| **基础验证** | [@Date](#date) | 日期格式验证（支持自定义格式） | 1.1.0 | - |
 | **基础验证** | [@FutureDate](#futuredate) | 未来日期验证 | 1.0.0 | 1.1.0 |
 | **基础验证** | [@PastDate](#pastdate) | 过去日期验证 | 1.0.0 | 1.1.0 |
 | **基础验证** | [@PastDateTime](#pastdatetime) | 过去日期时间验证 | 1.1.0 | - |
@@ -895,7 +895,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 
 [↑ 返回快速查询表](#快速查询表)
 
-#### @DateFormat
+#### @Date
 * 校验规则：日期格式验证，验证字符串是否符合指定的日期格式，采用严格验证模式。
 * 核心特性：
   - **严格验证**：拒绝无效日期（如 2024-02-30、2024-13-01）
@@ -955,17 +955,17 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 使用示例：
   ```java
   // 注解方式使用 - 默认格式（yyyy-MM-dd）
-  @DateFormat
+  @Date
   private String birthDate;
 
   // 自定义格式
-  @DateFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Date(pattern = "yyyy-MM-dd HH:mm:ss")
   private String createTime;
 
-  @DateFormat(pattern = "MM/dd/yyyy")
+  @Date(pattern = "MM/dd/yyyy")
   private String usDate;
 
-  @DateFormat(pattern = "yyyy年MM月dd日")
+  @Date(pattern = "yyyy年MM月dd日")
   private String chineseDate;
 
   // 链式调用方式使用 - 默认格式

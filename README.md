@@ -625,7 +625,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   | - |
 | **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
 | **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
-| **Basic Validation** | [@DateFormat](#dateformat) | Date format validation (custom formats) | 1.1.0   | - |
+| **Basic Validation** | [@Date](#date) | Date format validation (custom formats) | 1.1.0   | - |
 | **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   | 1.1.0 |
 | **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   | 1.1.0 |
 | **Basic Validation** | [@PastDateTime](#pastdatetime) | Past date-time validation | 1.1.0   | - |
@@ -895,7 +895,7 @@ Click on the annotation name to jump to its detailed documentation.
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
-#### @DateFormat
+#### @Date
 * Validation Rule: Date format validation, validates whether a string conforms to the specified date format using strict validation mode.
 * Core Features:
   - **Strict Validation**: Rejects invalid dates (e.g., 2024-02-30, 2024-13-01)
@@ -955,27 +955,27 @@ Click on the annotation name to jump to its detailed documentation.
 * Usage Example:
   ```java
   // Annotation-based usage - default format (yyyy-MM-dd)
-  @DateFormat
+  @Date
   private String birthDate;
 
   // Custom format
-  @DateFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+  @Date(pattern = "yyyy-MM-dd HH:mm:ss")
   private String createTime;
 
-  @DateFormat(pattern = "MM/dd/yyyy")
+  @Date(pattern = "MM/dd/yyyy")
   private String usDate;
 
-  @DateFormat(pattern = "yyyy年MM月dd日")
+  @Date(pattern = "yyyy年MM月dd日")
   private String chineseDate;
 
   // Chain call usage - default format
   ValidX validator = ValidX.init();
-  validator.isDateFormat("2024-01-15");
+  validator.isDate("2024-01-15");
 
   // Custom format
-  validator.isDateFormat("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
-  validator.isDateFormat("12/25/2024", "MM/dd/yyyy");
-  validator.isDateFormat("2024年12月25日", "yyyy年MM月dd日");
+  validator.isDate("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
+  validator.isDate("12/25/2024", "MM/dd/yyyy");
+  validator.isDate("2024年12月25日", "yyyy年MM月dd日");
   ```
 * Important Notes:
   - When using formats like `yyyy-MM-dd`, dates must be zero-padded (e.g., `2024-01-05` not `2024-1-5`)

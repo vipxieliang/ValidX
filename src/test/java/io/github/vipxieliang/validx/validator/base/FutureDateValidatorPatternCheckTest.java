@@ -22,16 +22,20 @@ public class FutureDateValidatorPatternCheckTest {
         when(mockAnnotation.includeToday()).thenReturn(false);
         when(mockAnnotation.pattern()).thenReturn("yyyy-MM-dd HH:mm:ss");
 
-        // 应该抛出异常：pattern 包含时间符号
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        // 不应该抛出异常，而是在验证时返回 false
+        assertDoesNotThrow(() -> {
             validator.initialize(mockAnnotation);
-        }, "pattern 包含时间符号应该抛出异常");
+        }, "初始化时不应该抛出异常");
 
-        // 验证消息包含关键信息（pattern 和时间符号列表）
-        String message = exception.getMessage();
-        assertTrue(message.contains("pattern") &&
-                   (message.contains("H, h, K") || message.contains("time format")),
-                   "异常消息应该说明 pattern 的问题，实际消息: " + message);
+        // 验证时应该返回 false（pattern 配置错误）
+        javax.validation.ConstraintValidatorContext mockContext = mock(javax.validation.ConstraintValidatorContext.class);
+        javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder mockBuilder =
+            mock(javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.class);
+        when(mockContext.buildConstraintViolationWithTemplate(anyString())).thenReturn(mockBuilder);
+        when(mockBuilder.addConstraintViolation()).thenReturn(mockContext);
+
+        assertFalse(validator.isValid("2099-12-31", mockContext),
+            "pattern 包含时间符号应该验证失败");
     }
 
     @Test

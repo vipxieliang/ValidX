@@ -3,6 +3,7 @@ package io.github.vipxieliang.validx.validator.base;
 import io.github.vipxieliang.validx.annotations.FutureDateTime;
 import io.github.vipxieliang.validx.i18n.MessageManager;
 
+import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +15,9 @@ import java.time.format.DateTimeParseException;
  * 支持自定义日期时间格式
  */
 public class FutureDateTimeValidator extends BaseDateValidator<FutureDateTime> {
+
+    private boolean patternInvalid = false;
+    private String patternErrorMessage = null;
 
     @Override
     public void initialize(FutureDateTime constraintAnnotation) {
@@ -31,15 +35,31 @@ public class FutureDateTimeValidator extends BaseDateValidator<FutureDateTime> {
 
         // 检查：pattern 必须包含时间符号
         if (!containsTimePattern(pattern)) {
-            throw new IllegalArgumentException(
-                MessageManager.getMessage("io.github.vipxieliang.validx.validator.datetime.pattern.missing.time")
-            );
+            this.patternInvalid = true;
+            this.patternErrorMessage = MessageManager.getMessage("io.github.vipxieliang.validx.validator.datetime.pattern.missing.time");
+            return;
         }
 
         // 将 yyyy 替换为 uuuu 以支持严格模式
         String strictPattern = pattern.replace("yyyy", "uuuu")
                                      .replace("yy", "uu");
         this.formatter = DateTimeFormatter.ofPattern(strictPattern);
+    }
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        // 如果 pattern 配置错误，返回验证失败
+        if (patternInvalid) {
+            if (context != null) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(patternErrorMessage)
+                       .addConstraintViolation();
+            }
+            return false;
+        }
+
+        // 调用父类的验证逻辑
+        return super.isValid(value, context);
     }
 
     @Override
