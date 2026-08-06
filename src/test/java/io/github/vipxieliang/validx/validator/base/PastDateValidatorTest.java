@@ -68,28 +68,27 @@ public class PastDateValidatorTest {
         // 直接测试验证器的逻辑
         PastDateValidator validator = new PastDateValidator();
 
+        // 创建一个模拟的PastDate注解实例
+        PastDate mockAnnotation = mock(PastDate.class);
+        when(mockAnnotation.includeToday()).thenReturn(false);
+        when(mockAnnotation.pattern()).thenReturn("yyyy-MM-dd");
+
+        validator.initialize(mockAnnotation);
+
         // 测试有效的过去日期 (yyyy-MM-dd格式)
         String pastDate1 = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertTrue(validator.isValid(pastDate1, null), "有效的过去日期应该通过验证: " + pastDate1);
-
-        // 测试有效的过去日期时间 (yyyy-MM-dd HH:mm:ss格式)
-        String pastDateTime1 = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        assertTrue(validator.isValid(pastDateTime1, null), "有效的过去日期时间应该通过验证: " + pastDateTime1);
 
         // 测试无效的未来日期 (yyyy-MM-dd格式)
         String futureDate1 = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertFalse(validator.isValid(futureDate1, null), "未来的日期不应该通过验证: " + futureDate1);
 
-        // 测试无效的未来日期时间 (yyyy-MM-dd HH:mm:ss格式)
-        String futureDateTime1 = LocalDateTime.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        assertFalse(validator.isValid(futureDateTime1, null), "未来的日期时间不应该通过验证: " + futureDateTime1);
-
         // 测试今天的日期应该不通过验证 (因为今天不是过去)
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertFalse(validator.isValid(today, null), "今天的日期不应该通过验证: " + today);
 
-        // 测试过去的时间应该不通过验证 (使用过去的时间确保测试通过)
-        String now = LocalDateTime.of(2020, 1, 1, 12, 0, 0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        // 测试过去的时间应该通过验证
+        String now = LocalDateTime.of(2020, 1, 1, 12, 0, 0).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertTrue(validator.isValid(now, null), "过去的时间应该通过验证: " + now);
 
         // 测试null值应该通过验证
@@ -102,7 +101,7 @@ public class PastDateValidatorTest {
         assertFalse(validator.isValid("invalid-date", null), "无效格式的日期不应该通过验证");
 
         // 测试无效格式的日期时间
-        assertFalse(validator.isValid("2023-13-40 25:70:80", null), "无效格式的日期时间不应该通过验证");
+        assertFalse(validator.isValid("2023-13-40", null), "无效格式的日期不应该通过验证");
     }
     
     @Test
@@ -110,18 +109,19 @@ public class PastDateValidatorTest {
         // 创建一个模拟的PastDate注解实例，设置includeToday为true
         PastDate mockAnnotation = mock(PastDate.class);
         when(mockAnnotation.includeToday()).thenReturn(true);
-        
+        when(mockAnnotation.pattern()).thenReturn("yyyy-MM-dd");
+
         PastDateValidator includeTodayValidator = new PastDateValidator();
         includeTodayValidator.initialize(mockAnnotation);
 
         // 测试今天的日期应该通过验证（包含今天）
         String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertTrue(includeTodayValidator.isValid(today, null), "今天的日期应该通过验证（包含今天）: " + today);
-        
+
         // 测试昨天的日期应该通过验证
         String yesterday = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertTrue(includeTodayValidator.isValid(yesterday, null), "昨天的日期应该通过验证: " + yesterday);
-        
+
         // 测试明天的日期不应该通过验证
         String tomorrow = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         assertFalse(includeTodayValidator.isValid(tomorrow, null), "明天的日期不应该通过验证: " + tomorrow);
@@ -134,12 +134,6 @@ public class PastDateValidatorTest {
         TestEntity entity1 = new TestEntity(pastDate);
         Set<ConstraintViolation<TestEntity>> violations1 = validator.validate(entity1);
         assertTrue(violations1.isEmpty(), "有效的过去日期应该通过验证: " + pastDate);
-
-        // 测试有效的过去日期时间
-        String pastDateTime = LocalDateTime.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        TestEntity entity2 = new TestEntity(pastDateTime);
-        Set<ConstraintViolation<TestEntity>> violations2 = validator.validate(entity2);
-        assertTrue(violations2.isEmpty(), "有效的过去日期时间应该通过验证: " + pastDateTime);
     }
 
     @Test
@@ -196,5 +190,77 @@ public class PastDateValidatorTest {
         TestEntity entity2 = new TestEntity("2023-13-40 25:70:80");
         Set<ConstraintViolation<TestEntity>> violations2 = validator.validate(entity2);
         assertFalse(violations2.isEmpty(), "无效格式的日期时间不应该通过验证");
+    }
+
+    @Test
+    public void testCustomPatternSlashFormat() {
+        PastDateValidator customValidator = new PastDateValidator();
+
+        // 创建使用斜杠格式的验证器
+        PastDate mockAnnotation = mock(PastDate.class);
+        when(mockAnnotation.includeToday()).thenReturn(false);
+        when(mockAnnotation.pattern()).thenReturn("yyyy/MM/dd");
+
+        customValidator.initialize(mockAnnotation);
+
+        // 测试有效的过去日期（斜杠格式）
+        String pastDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        assertTrue(customValidator.isValid(pastDate, null), "过去日期应该通过验证: " + pastDate);
+
+        // 测试无效的未来日期（斜杠格式）
+        String futureDate = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        assertFalse(customValidator.isValid(futureDate, null), "未来日期不应该通过验证: " + futureDate);
+
+        // 测试错误的格式不应该通过验证
+        assertFalse(customValidator.isValid("2020-12-31", null), "连字符格式不应该通过斜杠验证器");
+    }
+
+    // 删除此测试 - 日期时间格式应该使用 @PastDateTime
+
+    @Test
+    public void testCustomPatternCompactFormat() {
+        PastDateValidator customValidator = new PastDateValidator();
+
+        // 创建使用紧凑格式的验证器
+        PastDate mockAnnotation = mock(PastDate.class);
+        when(mockAnnotation.includeToday()).thenReturn(false);
+        when(mockAnnotation.pattern()).thenReturn("yyyyMMdd");
+
+        customValidator.initialize(mockAnnotation);
+
+        // 测试有效的过去日期（紧凑格式）
+        String pastDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        assertTrue(customValidator.isValid(pastDate, null), "过去日期应该通过验证: " + pastDate);
+
+        // 测试无效的未来日期（紧凑格式）
+        String futureDate = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        assertFalse(customValidator.isValid(futureDate, null), "未来日期不应该通过验证: " + futureDate);
+
+        // 测试带分隔符的格式不应该通过验证
+        assertFalse(customValidator.isValid("2020-12-31", null), "带分隔符的格式不应该通过紧凑验证器");
+    }
+
+    @Test
+    public void testCustomPatternWithIncludeToday() {
+        PastDateValidator customValidator = new PastDateValidator();
+
+        // 创建使用斜杠格式并包含今天的验证器
+        PastDate mockAnnotation = mock(PastDate.class);
+        when(mockAnnotation.includeToday()).thenReturn(true);
+        when(mockAnnotation.pattern()).thenReturn("yyyy/MM/dd");
+
+        customValidator.initialize(mockAnnotation);
+
+        // 测试今天的日期应该通过验证
+        String today = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        assertTrue(customValidator.isValid(today, null), "今天的日期应该通过验证（包含今天）: " + today);
+
+        // 测试过去日期应该通过验证
+        String pastDate = LocalDate.now().minusDays(1).format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        assertTrue(customValidator.isValid(pastDate, null), "过去日期应该通过验证: " + pastDate);
+
+        // 测试未来日期不应该通过验证
+        String futureDate = LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+        assertFalse(customValidator.isValid(futureDate, null), "未来日期不应该通过验证: " + futureDate);
     }
 }

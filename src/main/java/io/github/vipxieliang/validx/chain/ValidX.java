@@ -500,19 +500,64 @@ public class ValidX {
         return this;
     }
 
+
+    public ValidX isPastDate(Object value) {
+        return isPastDate(value, false, "yyyy-MM-dd");
+    }
     public ValidX isPastDate(Object value, boolean includeToday) {
+        return isPastDate(value, includeToday, "yyyy-MM-dd");
+    }
+
+    public ValidX isPastDate(Object value, boolean includeToday, String pattern) {
         if (checkRequirement(value, "Past Date", errors, getLocale())) {
             return this;
         }
-        baseValidation.validatePastDate(value, includeToday, errors, getLocale());
+        baseValidation.validatePastDate(value, includeToday, pattern, errors, getLocale());
         return this;
     }
 
+    public ValidX isFutureDate(Object value) {
+        return isFutureDate(value, false, "yyyy-MM-dd");
+    }
     public ValidX isFutureDate(Object value, boolean includeToday) {
+        return isFutureDate(value, includeToday, "yyyy-MM-dd");
+    }
+
+    public ValidX isFutureDate(Object value, boolean includeToday, String pattern) {
         if (checkRequirement(value, "Future Date", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateFutureDate(value, includeToday, errors, getLocale());
+        baseValidation.validateFutureDate(value, includeToday, pattern, errors, getLocale());
+        return this;
+    }
+
+    public ValidX isPastDateTime(Object value) {
+        return isPastDateTime(value, false, "yyyy-MM-dd HH:mm:ss");
+    }
+    public ValidX isPastDateTime(Object value, boolean includeToday) {
+        return isPastDateTime(value, includeToday, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public ValidX isPastDateTime(Object value, boolean includeToday, String pattern) {
+        if (checkRequirement(value, "Past DateTime", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validatePastDateTime(value, includeToday, pattern, errors, getLocale());
+        return this;
+    }
+
+    public ValidX isFutureDateTime(Object value) {
+        return isFutureDateTime(value, false, "yyyy-MM-dd HH:mm:ss");
+    }
+    public ValidX isFutureDateTime(Object value, boolean includeToday) {
+        return isFutureDateTime(value, includeToday, "yyyy-MM-dd HH:mm:ss");
+    }
+
+    public ValidX isFutureDateTime(Object value, boolean includeToday, String pattern) {
+        if (checkRequirement(value, "Future DateTime", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateFutureDateTime(value, includeToday, pattern, errors, getLocale());
         return this;
     }
 

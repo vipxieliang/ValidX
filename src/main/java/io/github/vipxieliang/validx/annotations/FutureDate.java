@@ -30,6 +30,25 @@ import java.lang.annotation.*;
  * 验证日期是否为未来日期
  * </p>
  *
+ * <p>使用示例：
+ * <pre>
+ * // 默认格式 yyyy-MM-dd
+ * {@code @FutureDate}
+ * private String appointmentDate;
+ *
+ * // 包含今天
+ * {@code @FutureDate(includeToday = true)}
+ * private String eventDate;
+ *
+ * // 自定义格式
+ * {@code @FutureDate(pattern = "yyyy/MM/dd")}
+ * private String customDate;
+ *
+ * // 日期时间格式
+ * {@code @FutureDate(pattern = "yyyy-MM-dd HH:mm:ss")}
+ * private String dateTime;
+ * </pre>
+ *
  * @author vipxieliang
  * @since 2025/10/01
  */
@@ -38,8 +57,31 @@ import java.lang.annotation.*;
 @Documented
 @Constraint(validatedBy = FutureDateValidator.class)
 public @interface FutureDate {
+
+    /**
+     * 是否包含今天
+     * @return true 表示今天及之后的日期都有效，false 表示只有今天之后的日期有效
+     */
     boolean includeToday() default false;
+
+    /**
+     * 日期格式模式
+     * <p>
+     * 默认格式为 yyyy-MM-dd，支持自定义格式：
+     * <ul>
+     *   <li>yyyy-MM-dd - 标准日期格式（默认）</li>
+     *   <li>yyyy/MM/dd - 斜杠分隔</li>
+     *   <li>yyyy-MM-dd HH:mm:ss - 日期时间格式</li>
+     *   <li>yyyyMMdd - 紧凑格式</li>
+     * </ul>
+     *
+     * @return 日期格式模式字符串
+     */
+    String pattern() default "yyyy-MM-dd";
+
     String message() default "{io.github.vipxieliang.validx.annotation.future.date}";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

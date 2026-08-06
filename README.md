@@ -117,6 +117,20 @@ We hope ValidX can become the standard tool for every Java application serving C
 - **Small footprint**: ~300KB JAR size
 - **High performance**: Optimized validators with minimal overhead
 
+---
+
+## ⚠️ Important: v1.0.2 Breaking Changes
+
+> **If you're upgrading from v1.0.0 or v1.0.1 to v1.0.2**, please note the breaking changes in `@FutureDate` and `@PastDate`.
+>
+> - **v1.0.0/v1.0.1**: Automatically supported both `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats
+> - **v1.0.2**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
+> - **Migration Solution**: Use the newly added `@FutureDateTime` and `@PastDateTime` annotations instead
+>
+> 📖 **Detailed Migration Guide**: [MIGRATION_v1.0.2.md](docs/version/v1.0.2/MIGRATION_v1.0.2.md)
+
+---
+
 ## 🚀 5-Minute Quick Start
 
 ### Step 1: Add Dependency
@@ -596,104 +610,106 @@ ValidX provides rich validation annotations covering various scenarios. The foll
 
 Click on the annotation name to jump to its detailed documentation.
 
-| Category | Annotation | Description | Version |
-|----------|------------|-------------|---------|
-| **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation | 1.0.0   |
-| **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen | 1.0.0   |
-| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination | 1.0.0   |
-| **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation | 1.0.0   |
-| **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters | 1.0.0   |
-| **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers | 1.0.0   |
-| **Basic Validation** | [@ChineseAlphaDash](#chinesealphadash) | Chinese, letters, numbers, underscore, hyphen | 1.0.0   |
-| **Basic Validation** | [@Lower](#lower) | Lowercase character validation | 1.0.0   |
-| **Basic Validation** | [@Upper](#upper) | Uppercase character validation | 1.0.0   |
-| **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   |
-| **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   |
-| **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   |
-| **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   |
-| **Basic Validation** | [@DateFormat](#dateformat) | Date format validation (custom formats) | 1.0.2   |
-| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   |
-| **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   |
-| **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) | 1.0.0   |
-| **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) | 1.0.0   |
-| **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation | 1.0.0   |
-| **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation | 1.0.0   |
-| **Basic Validation** | [@Duration](#duration) | Duration format validation | 1.0.0   |
-| **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   |
-| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   |
-| **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   |
-| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   |
-| **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   |
-| **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   |
-| **Basic Validation** | [@Enum](#enum) | Enumeration value validation | 1.0.0   |
-| **Basic Validation** | [@Color](#color) | Color format (HEX/RGB/RGBA) | 1.0.0   |
-| **Basic Validation** | [@Password](#password) | Password strength validation | 1.0.0   |
-| **Basic Validation** | [@UUID](#uuid) | UUID format validation | 1.0.0   |
-| **Basic Validation** | [@Base64](#base64) | Base64 encoding validation | 1.0.0   |
-| **Basic Validation** | [@JSON](#json) | JSON format validation | 1.0.0   |
-| **Basic Validation** | [@JWT](#jwt) | JWT token format validation | 1.0.0   |
-| **Basic Validation** | [@SemVer](#semver) | Semantic versioning validation | 1.0.0   |
-| **Basic Validation** | [@FileExtension](#fileextension) | File extension validation | 1.0.0   |
-| **Basic Validation** | [@FileSize](#filesize) | File size range validation | 1.0.0   |
-| **Basic Validation** | [@Age](#age) | Age validation from birth date or ID | 1.0.0   |
-| **Basic Validation** | [@Port](#port) | Port number validation (0-65535) | 1.0.0   |
-| **Identity Validation** | [@ChineseName](#chinesename) | Chinese name validation | 1.0.2   |
-| **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation | 1.0.0   |
-| **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation | 1.0.0   |
-| **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate | 1.0.0   |
-| **Identity Validation** | [@ChineseSoldier](#chinesesoldier) | Soldier certificate validation | 1.0.0   |
-| **Identity Validation** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | Foreigner permanent residence ID | 1.0.0   |
-| **Identity Validation** | [@HKMacauResidence](#hkmacauresidence) | HK/Macau residence permit | 1.0.0   |
-| **Identity Validation** | [@HKMacauPass](#hkmacaupass) | HK/Macau travel permit | 1.0.0   |
-| **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit | 1.0.0   |
-| **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit | 1.0.0   |
-| **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit | 1.0.0   |
-| **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code | 1.0.0   |
-| **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone | 1.0.0   |
-| **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline | 1.0.0   |
-| **Identity Validation** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | Chinese phone or landline | 1.0.0   |
-| **Identity Validation** | [@PhoneNumber](#phonenumber) | International phone number | 1.0.0   |
-| **Identity Validation** | [@Email](#email) | Email address validation | 1.0.0   |
-| **Financial Validation** | [@BankCard](#bankcard) | Bank card number (Luhn) | 1.0.0   |
-| **Financial Validation** | [@CVV](#cvv) | CVV/CVC security code | 1.0.0   |
-| **Financial Validation** | [@IBAN](#iban) | IBAN account number | 1.0.0   |
-| **Financial Validation** | [@SWIFT](#swift) | SWIFT/BIC code | 1.0.0   |
-| **Financial Validation** | [@StockCode](#stockcode) | Stock code validation | 1.0.0   |
-| **Financial Validation** | [@TradeOrderNumber](#tradeordernumber) | Trade order number | 1.0.0   |
-| **Financial Validation** | [@FinancialProductCode](#financialproductcode) | Financial product code | 1.0.0   |
-| **Education/Professional Qualification** | [@DegreeCertificate](#degreecertificate) | Degree certificate number | 1.0.0   |
-| **Education/Professional Qualification** | [@Doctor](#doctor) | Doctor qualification | 1.0.0   |
-| **Education/Professional Qualification** | [@Teacher](#teacher) | Teacher qualification | 1.0.0   |
-| **Education/Professional Qualification** | [@Lawyer](#lawyer) | Legal professional qualification | 1.0.0   |
-| **Education/Professional Qualification** | [@PMP](#pmp) | PMP certificate | 1.0.0   |
-| **Education/Professional Qualification** | [@Constructor](#constructor) | Constructor certificate | 1.0.0   |
-| **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate | 1.0.0   |
-| **Network Validation** | [@Domain](#domain) | Domain name validation | 1.0.0   |
-| **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) | 1.0.0   |
-| **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   |
-| **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   |
-| **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation | 1.0.0   |
-| **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate | 1.0.0   |
-| **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number | 1.0.0   |
-| **China-Specific Validation** | [@ChineseTrademark](#chinesetrademark) | Chinese trademark registration | 1.0.0   |
-| **China-Specific Validation** | [@SoftwareCopyright](#softwarecopyright) | Software copyright registration | 1.0.0   |
-| **China-Specific Validation** | [@WorkCopyright](#workcopyright) | Work copyright registration | 1.0.0   |
-| **China-Specific Validation** | [@ChineseZipCode](#chinesezipcode) | Chinese postal code | 1.0.0   |
-| **China-Specific Validation** | [@DrugApproval](#drugapproval) | Drug approval number | 1.0.0   |
-| **China-Specific Validation** | [@DrugCode](#drugcode) | Drug code validation | 1.0.0   |
-| **China-Specific Validation** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | Medical device registration | 1.0.0   |
-| **China-Specific Validation** | [@QQ](#qq) | QQ number validation | 1.0.0   |
-| **China-Specific Validation** | [@WeChat](#wechat) | WeChat ID validation | 1.0.0   |
-| **Automotive Validation** | [@VIN](#vin) | Vehicle Identification Number | 1.0.0   |
-| **Automotive Validation** | [@VehicleEngine](#vehicleengine) | Vehicle engine number | 1.0.0   |
-| **Book-Related Validation** | [@ISBN](#isbn) | ISBN book number | 1.0.0   |
-| **Book-Related Validation** | [@ISSN](#issn) | ISSN serial number | 1.0.0   |
-| **Book-Related Validation** | [@DOI](#doi) | DOI identifier | 1.0.0   |
-| **Book-Related Validation** | [@CLC](#clc) | Chinese Library Classification | 1.0.0   |
-| **Book-Related Validation** | [@DDC](#ddc) | Dewey Decimal Classification | 1.0.0   |
-| **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID | 1.0.0   |
-| **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification | 1.0.0   |
-| **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number | 1.0.0   |
+| Category | Annotation | Description | Added Version | Modified Version |
+|----------|------------|-------------|---------------|------------------|
+| **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation | 1.0.0   | - |
+| **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen | 1.0.0   | - |
+| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination | 1.0.0   | - |
+| **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation | 1.0.0   | - |
+| **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters | 1.0.0   | - |
+| **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers | 1.0.0   | - |
+| **Basic Validation** | [@ChineseAlphaDash](#chinesealphadash) | Chinese, letters, numbers, underscore, hyphen | 1.0.0   | - |
+| **Basic Validation** | [@Lower](#lower) | Lowercase character validation | 1.0.0   | - |
+| **Basic Validation** | [@Upper](#upper) | Uppercase character validation | 1.0.0   | - |
+| **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   | - |
+| **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   | - |
+| **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
+| **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
+| **Basic Validation** | [@DateFormat](#dateformat) | Date format validation (custom formats) | 1.0.2   | - |
+| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   | 1.0.2 |
+| **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   | 1.0.2 |
+| **Basic Validation** | [@PastDateTime](#pastdatetime) | Past date-time validation | 1.0.2   | - |
+| **Basic Validation** | [@FutureDateTime](#futuredatetime) | Future date-time validation | 1.0.2   | - |
+| **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) | 1.0.0   | - |
+| **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) | 1.0.0   | - |
+| **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation | 1.0.0   | - |
+| **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation | 1.0.0   | - |
+| **Basic Validation** | [@Duration](#duration) | Duration format validation | 1.0.0   | - |
+| **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   | - |
+| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   | - |
+| **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   | - |
+| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   | - |
+| **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   | - |
+| **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   | - |
+| **Basic Validation** | [@Enum](#enum) | Enumeration value validation | 1.0.0   | - |
+| **Basic Validation** | [@Color](#color) | Color format (HEX/RGB/RGBA) | 1.0.0   | - |
+| **Basic Validation** | [@Password](#password) | Password strength validation | 1.0.0   | - |
+| **Basic Validation** | [@UUID](#uuid) | UUID format validation | 1.0.0   | - |
+| **Basic Validation** | [@Base64](#base64) | Base64 encoding validation | 1.0.0   | - |
+| **Basic Validation** | [@JSON](#json) | JSON format validation | 1.0.0   | - |
+| **Basic Validation** | [@JWT](#jwt) | JWT token format validation | 1.0.0   | - |
+| **Basic Validation** | [@SemVer](#semver) | Semantic versioning validation | 1.0.0   | - |
+| **Basic Validation** | [@FileExtension](#fileextension) | File extension validation | 1.0.0   | - |
+| **Basic Validation** | [@FileSize](#filesize) | File size range validation | 1.0.0   | - |
+| **Basic Validation** | [@Age](#age) | Age validation from birth date or ID | 1.0.0   | - |
+| **Basic Validation** | [@Port](#port) | Port number validation (0-65535) | 1.0.0   | - |
+| **Identity Validation** | [@ChineseName](#chinesename) | Chinese name validation | 1.0.2   | - |
+| **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation | 1.0.0   | - |
+| **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation | 1.0.0   | - |
+| **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate | 1.0.0   | - |
+| **Identity Validation** | [@ChineseSoldier](#chinesesoldier) | Soldier certificate validation | 1.0.0   | - |
+| **Identity Validation** | [@ForeignerPermanentResidenceIdentity](#foreignerpermanentresidenceidentity) | Foreigner permanent residence ID | 1.0.0   | - |
+| **Identity Validation** | [@HKMacauResidence](#hkmacauresidence) | HK/Macau residence permit | 1.0.0   | - |
+| **Identity Validation** | [@HKMacauPass](#hkmacaupass) | HK/Macau travel permit | 1.0.0   | - |
+| **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit | 1.0.0   | - |
+| **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit | 1.0.0   | - |
+| **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit | 1.0.0   | - |
+| **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code | 1.0.0   | - |
+| **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone | 1.0.0   | - |
+| **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline | 1.0.0   | - |
+| **Identity Validation** | [@ChinesePhoneOrLandline](#chinesephoneorlandline) | Chinese phone or landline | 1.0.0   | - |
+| **Identity Validation** | [@PhoneNumber](#phonenumber) | International phone number | 1.0.0   | - |
+| **Identity Validation** | [@Email](#email) | Email address validation | 1.0.0   | - |
+| **Financial Validation** | [@BankCard](#bankcard) | Bank card number (Luhn) | 1.0.0   | - |
+| **Financial Validation** | [@CVV](#cvv) | CVV/CVC security code | 1.0.0   | - |
+| **Financial Validation** | [@IBAN](#iban) | IBAN account number | 1.0.0   | - |
+| **Financial Validation** | [@SWIFT](#swift) | SWIFT/BIC code | 1.0.0   | - |
+| **Financial Validation** | [@StockCode](#stockcode) | Stock code validation | 1.0.0   | - |
+| **Financial Validation** | [@TradeOrderNumber](#tradeordernumber) | Trade order number | 1.0.0   | - |
+| **Financial Validation** | [@FinancialProductCode](#financialproductcode) | Financial product code | 1.0.0   | - |
+| **Education/Professional Qualification** | [@DegreeCertificate](#degreecertificate) | Degree certificate number | 1.0.0   | - |
+| **Education/Professional Qualification** | [@Doctor](#doctor) | Doctor qualification | 1.0.0   | - |
+| **Education/Professional Qualification** | [@Teacher](#teacher) | Teacher qualification | 1.0.0   | - |
+| **Education/Professional Qualification** | [@Lawyer](#lawyer) | Legal professional qualification | 1.0.0   | - |
+| **Education/Professional Qualification** | [@PMP](#pmp) | PMP certificate | 1.0.0   | - |
+| **Education/Professional Qualification** | [@Constructor](#constructor) | Constructor certificate | 1.0.0   | - |
+| **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate | 1.0.0   | - |
+| **Network Validation** | [@Domain](#domain) | Domain name validation | 1.0.0   | - |
+| **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) | 1.0.0   | - |
+| **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   | - |
+| **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   | - |
+| **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation | 1.0.0   | - |
+| **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate | 1.0.0   | - |
+| **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number | 1.0.0   | - |
+| **China-Specific Validation** | [@ChineseTrademark](#chinesetrademark) | Chinese trademark registration | 1.0.0   | - |
+| **China-Specific Validation** | [@SoftwareCopyright](#softwarecopyright) | Software copyright registration | 1.0.0   | - |
+| **China-Specific Validation** | [@WorkCopyright](#workcopyright) | Work copyright registration | 1.0.0   | - |
+| **China-Specific Validation** | [@ChineseZipCode](#chinesezipcode) | Chinese postal code | 1.0.0   | - |
+| **China-Specific Validation** | [@DrugApproval](#drugapproval) | Drug approval number | 1.0.0   | - |
+| **China-Specific Validation** | [@DrugCode](#drugcode) | Drug code validation | 1.0.0   | - |
+| **China-Specific Validation** | [@MedicalDeviceRegistration](#medicaldeviceregistration) | Medical device registration | 1.0.0   | - |
+| **China-Specific Validation** | [@QQ](#qq) | QQ number validation | 1.0.0   | - |
+| **China-Specific Validation** | [@WeChat](#wechat) | WeChat ID validation | 1.0.0   | - |
+| **Automotive Validation** | [@VIN](#vin) | Vehicle Identification Number | 1.0.0   | - |
+| **Automotive Validation** | [@VehicleEngine](#vehicleengine) | Vehicle engine number | 1.0.0   | - |
+| **Book-Related Validation** | [@ISBN](#isbn) | ISBN book number | 1.0.0   | - |
+| **Book-Related Validation** | [@ISSN](#issn) | ISSN serial number | 1.0.0   | - |
+| **Book-Related Validation** | [@DOI](#doi) | DOI identifier | 1.0.0   | - |
+| **Book-Related Validation** | [@CLC](#clc) | Chinese Library Classification | 1.0.0   | - |
+| **Book-Related Validation** | [@DDC](#ddc) | Dewey Decimal Classification | 1.0.0   | - |
+| **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID | 1.0.0   | - |
+| **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification | 1.0.0   | - |
+| **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number | 1.0.0   | - |
 
 ---
 
@@ -970,7 +986,25 @@ Click on the annotation name to jump to its detailed documentation.
 
 #### @FutureDate
 * Validation Rule: Future date validation, validating whether the date is a future date.
-* Example Format: `2025-12-31`, `2025-12-31 12:00:00`
+* Example Format: `2025-12-31` (pure date format)
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.0.2 (Added `pattern` parameter for custom date format support)
+  - Compatibility: ⚠️ **Not fully backward compatible**
+* **Important Breaking Changes (v1.0.0 → v1.0.2)**:
+  - **v1.0.0 Behavior**: Automatically supports two formats
+    - First attempts to parse as `yyyy-MM-dd` format
+    - If fails, attempts to parse as `yyyy-MM-dd HH:mm:ss` format
+    - **Supports date strings with time** (e.g., `2025-12-31 12:00:00`)
+  - **v1.0.2 Behavior**: Only supports pure date format
+    - Default format is `yyyy-MM-dd`
+    - Custom date formats can be specified via `pattern` parameter (e.g., `MM/dd/yyyy`)
+    - **No longer supports formats with time**, pattern cannot contain HH, mm, ss or other time symbols
+    - Throws `IllegalArgumentException` if pattern contains time symbols
+  - **Migration Recommendation**: For validating future dates with time, use the new @FutureDateTime annotation
+* Parameters:
+  - `includeToday`: Whether to include today, defaults to `false`
+  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (added in v1.0.2). **Note: Cannot contain time symbols**
 * Usage Example:
   ```java
   // Annotation-based usage
@@ -979,19 +1013,43 @@ Click on the annotation name to jump to its detailed documentation.
   // Or include today
   @FutureDate(includeToday = true)
   private String deadline;
+  // Custom date format
+  @FutureDate(pattern = "MM/dd/yyyy")
+  private String usDate;
 
   // Chain call usage
   ValidX validator = ValidX.init();
+  // Default format (yyyy-MM-dd), exclude today
   validator.isFutureDate("2025-12-31");
-  // Or include today
+  // Include today
   validator.isFutureDate("2025-12-31", true);
+  // Custom format
+  validator.isFutureDate("12/31/2025", false, "MM/dd/yyyy");
   ```
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
 #### @PastDate
 * Validation Rule: Past date validation, validating whether the date is a past date.
-* Example Format: `2020-01-01`, `2020-01-01 12:00:00`
+* Example Format: `2020-01-01` (pure date format)
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.0.2 (Added `pattern` parameter for custom date format support)
+  - Compatibility: ⚠️ **Not fully backward compatible**
+* **Important Breaking Changes (v1.0.0 → v1.0.2)**:
+  - **v1.0.0 Behavior**: Automatically supports two formats
+    - First attempts to parse as `yyyy-MM-dd` format
+    - If fails, attempts to parse as `yyyy-MM-dd HH:mm:ss` format
+    - **Supports date strings with time** (e.g., `2020-01-01 12:00:00`)
+  - **v1.0.2 Behavior**: Only supports pure date format
+    - Default format is `yyyy-MM-dd`
+    - Custom date formats can be specified via `pattern` parameter (e.g., `MM/dd/yyyy`)
+    - **No longer supports formats with time**, pattern cannot contain HH, mm, ss or other time symbols
+    - Throws `IllegalArgumentException` if pattern contains time symbols
+  - **Migration Recommendation**: For validating past dates with time, use the new @PastDateTime annotation
+* Parameters:
+  - `includeToday`: Whether to include today, defaults to `false`
+  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (added in v1.0.2). **Note: Cannot contain time symbols**
 * Usage Example:
   ```java
   // Annotation-based usage
@@ -1000,12 +1058,78 @@ Click on the annotation name to jump to its detailed documentation.
   // Or include today
   @PastDate(includeToday = true)
   private String birthDate;
+  // Custom date format
+  @PastDate(pattern = "yyyy/MM/dd")
+  private String jpDate;
 
   // Chain call usage
   ValidX validator = ValidX.init();
+  // Default format (yyyy-MM-dd), exclude today
   validator.isPastDate("2020-01-01");
-  // Or include today
+  // Include today
   validator.isPastDate("2020-01-01", true);
+  // Custom format
+  validator.isPastDate("01/01/2020", false, "MM/dd/yyyy");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @PastDateTime
+* Validation Rule: Past date-time validation, validating whether the date-time is in the past (must include time component).
+* Example Format: `2020-01-01 12:30:45`, `2020/01/01 12:30:45`
+* Parameters:
+  - `includeToday`: Whether to include today, defaults to `false`
+  - `pattern`: Date-time format pattern, defaults to `"yyyy-MM-dd HH:mm:ss"` (must include time component)
+* Usage Example:
+  ```java
+  // Annotation-based usage
+  @PastDateTime
+  private String timestamp;
+  // Or include today
+  @PastDateTime(includeToday = true)
+  private String createdAt;
+  // Custom date-time format
+  @PastDateTime(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private String isoDateTime;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  // Default format (yyyy-MM-dd HH:mm:ss), exclude today
+  validator.isPastDateTime("2020-01-01 12:30:45");
+  // Include today
+  validator.isPastDateTime("2020-01-01 12:30:45", true);
+  // Custom format
+  validator.isPastDateTime("2020-01-01T12:30:45", false, "yyyy-MM-dd'T'HH:mm:ss");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @FutureDateTime
+* Validation Rule: Future date-time validation, validating whether the date-time is in the future (must include time component).
+* Example Format: `2025-12-31 23:59:59`, `2025/12/31 23:59:59`
+* Parameters:
+  - `includeToday`: Whether to include today, defaults to `false`
+  - `pattern`: Date-time format pattern, defaults to `"yyyy-MM-dd HH:mm:ss"` (must include time component)
+* Usage Example:
+  ```java
+  // Annotation-based usage
+  @FutureDateTime
+  private String scheduledTime;
+  // Or include today
+  @FutureDateTime(includeToday = true)
+  private String deadline;
+  // Custom date-time format
+  @FutureDateTime(pattern = "MM/dd/yyyy HH:mm:ss")
+  private String usDateTime;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  // Default format (yyyy-MM-dd HH:mm:ss), exclude today
+  validator.isFutureDateTime("2025-12-31 23:59:59");
+  // Include today
+  validator.isFutureDateTime("2025-12-31 23:59:59", true);
+  // Custom format
+  validator.isFutureDateTime("12/31/2025 23:59:59", false, "MM/dd/yyyy HH:mm:ss");
   ```
 
 [↑ Back to Quick Reference](#quick-reference-table)

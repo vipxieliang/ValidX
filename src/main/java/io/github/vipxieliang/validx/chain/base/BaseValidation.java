@@ -21,7 +21,9 @@ import io.github.vipxieliang.validx.annotations.In;
 import io.github.vipxieliang.validx.annotations.NotIn;
 import io.github.vipxieliang.validx.annotations.Port;
 import io.github.vipxieliang.validx.annotations.PastDate;
+import io.github.vipxieliang.validx.annotations.PastDateTime;
 import io.github.vipxieliang.validx.annotations.FutureDate;
+import io.github.vipxieliang.validx.annotations.FutureDateTime;
 import io.github.vipxieliang.validx.annotations.FileExtension;
 import io.github.vipxieliang.validx.annotations.Timestamp;
 import io.github.vipxieliang.validx.i18n.MessageManager;
@@ -184,75 +186,19 @@ public class BaseValidation {
         }
     }
     
-    public void validatePastDate(Object value, boolean includeToday, List<String> errors, Locale locale) {
+    public void validatePastDate(Object value, boolean includeToday, String pattern, List<String> errors, Locale locale) {
         PastDateValidator validator = new PastDateValidator();
-        
-        // 创建一个模拟的PastDate注解实例
-        PastDate pastDateAnnotation = new PastDate() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return PastDate.class;
-            }
-            
-            @Override
-            public boolean includeToday() {
-                return includeToday;
-            }
-            
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.past.date", locale);
-            }
-            
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-            
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-        
-        validator.initialize(pastDateAnnotation);
+        validator.initialize(includeToday, pattern);
+
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.past.date", locale));
         }
     }
 
-    public void validateFutureDate(Object value, boolean includeToday, List<String> errors, Locale locale) {
+    public void validateFutureDate(Object value, boolean includeToday, String pattern, List<String> errors, Locale locale) {
         FutureDateValidator validator = new FutureDateValidator();
-        
-        // 创建一个模拟的FutureDate注解实例
-        FutureDate futureDateAnnotation = new FutureDate() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return FutureDate.class;
-            }
-            
-            @Override
-            public boolean includeToday() {
-                return includeToday;
-            }
-            
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.future.date", locale);
-            }
-            
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-            
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-        
-        validator.initialize(futureDateAnnotation);
+        validator.initialize(includeToday, pattern);
+
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.future.date", locale));
         }
@@ -1378,6 +1324,42 @@ public class BaseValidation {
                 "io.github.vipxieliang.validx.annotation.date.format",
                 locale
             ));
+        }
+    }
+
+    /**
+     * 验证过去的日期时间
+     *
+     * @param value 待验证的值
+     * @param includeToday 是否包含今天
+     * @param pattern 日期时间格式
+     * @param errors 错误消息列表
+     * @param locale 语言环境
+     */
+    public void validatePastDateTime(Object value, boolean includeToday, String pattern, List<String> errors, Locale locale) {
+        PastDateTimeValidator validator = new PastDateTimeValidator();
+        validator.initialize(includeToday, pattern);
+
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.past.datetime", locale));
+        }
+    }
+
+    /**
+     * 验证未来的日期时间
+     *
+     * @param value 待验证的值
+     * @param includeToday 是否包含今天
+     * @param pattern 日期时间格式
+     * @param errors 错误消息列表
+     * @param locale 语言环境
+     */
+    public void validateFutureDateTime(Object value, boolean includeToday, String pattern, List<String> errors, Locale locale) {
+        FutureDateTimeValidator validator = new FutureDateTimeValidator();
+        validator.initialize(includeToday, pattern);
+
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.future.datetime", locale));
         }
     }
 }
