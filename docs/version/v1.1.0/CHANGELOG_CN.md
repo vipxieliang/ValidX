@@ -6,14 +6,18 @@
 
 ## 变更概览
 
-- ⚠️ [破坏性变更](#破坏性变更-️)：`@PastDate` 和 `@FutureDate` 不再自动支持日期时间格式
+- ⚠️ [破坏性变更](#破坏性变更-️)
+  - `@PastDate` 支持自定义格式（破坏性变更）
+  - `@FutureDate` 支持自定义格式（破坏性变更）
 - ✨ [新增功能](#新增功能-)
   - 新增 `@ChineseName` 中国人姓名验证注解
-  - 新增 `@PastDateTime` 和 `@FutureDateTime` 日期时间验证注解
+  - 新增 `@DateFormat` 日期格式验证注解
+  - 新增 `@PastDateTime` 未来日期验证注解
+  - 新增 `@PastDateTime` 过去日期验证注解
 - 🔧 [功能增强](#功能增强-)：日期验证器支持自定义格式（pattern 参数）
 - 📖 [文档更新](#文档更新-)：完善国际化支持，新增 9 种语言的完整测试覆盖
 - 🎨 [代码质量改进](#代码质量改进-)：委托模式优化、基类抽象、严格日期验证
-- 📊 [技术统计](#技术统计-)：新增 3 个注解、60+ 测试用例、1200+ 行代码
+- 📊 [技术统计](#技术统计-)：新增 4 个注解、60+ 测试用例、1200+ 行代码
 
 ---
 
@@ -237,7 +241,93 @@ public class UserController {
 
 ---
 
-### 2. @PastDateTime 过去日期时间验证注解
+### 2. @DateFormat 日期格式验证注解
+
+新增通用的日期格式验证注解，验证字符串是否符合指定的日期格式，不关心日期是过去还是未来。
+
+**功能特性：**
+- 验证字符串是否为有效的日期或日期时间格式
+- 默认格式：`yyyy-MM-dd`
+- 支持自定义格式（pattern 参数）
+- 采用严格验证模式（ResolverStyle.STRICT）
+- 自动拒绝无效日期（如 2024-02-30、2023-02-29）
+- 支持日期和日期时间格式
+- 完整的国际化支持（9 种语言）
+
+**注解方式示例：**
+
+```java
+public class EventDTO {
+    // 示例 1：默认格式（yyyy-MM-dd）
+    @DateFormat
+    private String eventDate;
+
+    // 示例 2：自定义日期格式
+    @DateFormat(pattern = "dd/MM/yyyy")
+    private String europeanDate;
+
+    // 示例 3：日期时间格式
+    @DateFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private String timestamp;
+
+    // 示例 4：ISO 8601 格式
+    @DateFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private String isoDateTime;
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 默认格式（yyyy-MM-dd）
+validator.field("日期").isDateFormat("2024-01-15");
+
+// 自定义格式
+validator.field("日期").isDateFormat("15/01/2024", "dd/MM/yyyy");
+validator.field("时间").isDateFormat("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
+
+// 检查验证结果
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：API 参数验证
+@RestController
+public class OrderController {
+    @PostMapping("/orders")
+    public Result createOrder(@Valid @RequestBody OrderDTO dto) {
+        return orderService.create(dto);
+    }
+}
+
+public class OrderDTO {
+    @DateFormat(pattern = "yyyy-MM-dd")
+    private String deliveryDate;  // 只验证格式，不限制过去/未来
+}
+
+// 场景 2：批量数据导入验证
+ValidX validator = ValidX.init();
+for (String date : importedDates) {
+    validator.field("导入日期").isDateFormat(date, userDefinedPattern);
+}
+
+// 场景 3：配置文件日期验证
+@Configuration
+public class AppConfig {
+    @DateFormat(pattern = "yyyy-MM-dd")
+    private String systemStartDate;
+}
+```
+
+---
+
+### 3. @PastDateTime 过去日期时间验证注解
 
 新增专用的过去日期时间验证注解，用于验证包含时间部分的过去日期时间字符串。
 
@@ -295,7 +385,7 @@ validator.field("最后修改").isPastDateTime(
 
 ---
 
-### 3. @FutureDateTime 未来日期时间验证注解
+### 4. @FutureDateTime 未来日期时间验证注解
 
 新增专用的未来日期时间验证注解，用于验证包含时间部分的未来日期时间字符串。
 
@@ -511,7 +601,7 @@ validator.field("会议时间").isFutureDateTime(
 ## 技术统计 📊
 
 ### 代码变更
-- **新增注解：** 3 个（`@ChineseName`, `@PastDateTime`, `@FutureDateTime`）
+- **新增注解：** 4 个（`@ChineseName`, `@DateFormat`, `@PastDateTime`, `@FutureDateTime`）
 - **增强注解：** 2 个（`@PastDate`, `@FutureDate` 新增 pattern 参数）
 - **新增验证器类：** 5 个
 - **新增链式方法：** 8 个
