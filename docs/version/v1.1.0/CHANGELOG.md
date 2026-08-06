@@ -1,8 +1,8 @@
-# ValidX v1.0.2 Changelog
+# ValidX v1.1.0 Changelog
 
 **Release Date:** August 4, 2026
 
-This document records the changes from v1.0.1 to v1.0.2.
+This document records the changes from v1.0.1 to v1.1.0.
 
 ## Change Overview
 
@@ -235,7 +235,7 @@ Updated both English and Chinese README files with:
    - Common pattern examples
 
 3. **Version Tracking**
-   - Added version 1.0.2 tag for new features
+   - Added version 1.1.0 tag for new features
    - Updated quick reference table
 
 ### Comprehensive Test Coverage
@@ -268,7 +268,7 @@ Added extensive test suites for new functionality:
 All existing code will continue to work without any modifications:
 
 ```java
-// ✅ All v1.0.1 code works in v1.0.2
+// ✅ All v1.0.1 code works in v1.1.0
 ValidX validator = ValidX.init()
     .config(ValidXConfig.GLOBAL_NOT_NULL)
     .field("Email").isEmail(email)
@@ -304,7 +304,7 @@ Chain API maintains full backward compatibility through method overloading:
 // ✅ v1.0.1 code - still works
 validator.isFutureDate(date, false);
 
-// ✅ v1.0.2 enhancement - new functionality
+// ✅ v1.1.0 enhancement - new functionality
 validator.isFutureDate(date, false, "MM/dd/yyyy");
 ```
 
@@ -323,7 +323,7 @@ This release contains **zero breaking changes**:
 
 ### No Migration Required ✅
 
-If you're using v1.0.1, you can upgrade to v1.0.2 without any code changes.
+If you're using v1.0.1, you can upgrade to v1.1.0 without any code changes.
 
 ### Upgrade Steps
 
@@ -333,7 +333,7 @@ If you're using v1.0.1, you can upgrade to v1.0.2 without any code changes.
 <dependency>
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.0.2</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -416,7 +416,7 @@ Simplified BaseValidation.java by removing overloaded methods and handling defau
 
 ## Related Links 🔗
 
-- 📦 [Maven Central](https://central.sonatype.com/artifact/io.github.vipxieliang/validx/1.0.2)
+- 📦 [Maven Central](https://central.sonatype.com/artifact/io.github.vipxieliang/validx/1.1.0)
 - 📖 [Full Documentation](../../../README.md)
 - 🐛 [Report Issues](https://github.com/vipxieliang/ValidX/issues)
 - 💡 [Feature Requests](https://github.com/vipxieliang/ValidX/issues/new)

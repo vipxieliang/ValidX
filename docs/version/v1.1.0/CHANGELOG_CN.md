@@ -1,8 +1,8 @@
-# ValidX v1.0.2 更新日志
+# ValidX v1.1.0 更新日志
 
 **发布日期：** 2026年8月6日
 
-本文档记录从 v1.0.1 到 v1.0.2 的变更内容。
+本文档记录从 v1.0.1 到 v1.1.0 的变更内容。
 
 ## 变更概览
 
@@ -17,7 +17,7 @@
 
 ## 破坏性变更 ⚠️
 
-v1.0.2 包含以下破坏性变更，升级前请仔细阅读并参考 [迁移指南](MIGRATION_v1.0.2.cn.md)。
+v1.1.0 包含以下破坏性变更，升级前请仔细阅读并参考 [迁移指南](MIGRATION_v1.1.0.cn.md)。
 
 ---
 
@@ -74,7 +74,7 @@ validator.isPastDate("01-01-2020", false, "dd-MM-yyyy");
 **向后兼容性：**
 
 ```java
-// ✅ v1.0.1 代码在 v1.0.2 中无需修改，完全兼容
+// ✅ v1.0.1 代码在 v1.1.0 中无需修改，完全兼容
 @PastDate  // 仍然默认使用 "yyyy-MM-dd"
 private String birthDate;
 
@@ -139,7 +139,7 @@ validator.isFutureDate("31-12-2025", false, "dd-MM-yyyy");
 **向后兼容性：**
 
 ```java
-// ✅ v1.0.1 代码在 v1.0.2 中无需修改，完全兼容
+// ✅ v1.0.1 代码在 v1.1.0 中无需修改，完全兼容
 @FutureDate  // 仍然默认使用 "yyyy-MM-dd"
 private String eventDate;
 
@@ -462,7 +462,7 @@ validator.field("会议时间").isFutureDateTime(
    - 常用日期格式示例集合
 
 3. **版本标识**
-   - 为新功能添加 `v1.0.2` 版本标签
+   - 为新功能添加 `v1.1.0` 版本标签
    - 更新快速参考表
 
 ### 完整的测试覆盖
@@ -640,7 +640,7 @@ if (!pattern.matches(".*[HhKkmsaSAnN].*")) {
 
 ## 相关链接 🔗
 
-- 📦 [Maven Central](https://central.sonatype.com/artifact/io.github.vipxieliang/validx/1.0.2)
+- 📦 [Maven Central](https://central.sonatype.com/artifact/io.github.vipxieliang/validx/1.1.0)
 - 📖 [完整文档](../../../README.cn.md)
 - 🐛 [问题反馈](https://github.com/vipxieliang/ValidX/issues)
 - 💡 [功能建议](https://github.com/vipxieliang/ValidX/issues/new)

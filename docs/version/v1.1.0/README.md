@@ -119,15 +119,15 @@ We hope ValidX can become the standard tool for every Java application serving C
 
 ---
 
-## ⚠️ Important: v1.0.2 Breaking Changes
+## ⚠️ Important: v1.1.0 Breaking Changes
 
-> **If you're upgrading from v1.0.0 or v1.0.1 to v1.0.2**, please note the breaking changes in `@FutureDate` and `@PastDate`.
+> **If you're upgrading from v1.0.0 or v1.0.1 to v1.1.0**, please note the breaking changes in `@FutureDate` and `@PastDate`.
 >
 > - **v1.0.0/v1.0.1**: Automatically supported both `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats
-> - **v1.0.2**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
+> - **v1.1.0**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
 > - **Migration Solution**: Use the newly added `@FutureDateTime` and `@PastDateTime` annotations instead
 >
-> 📖 **Detailed Migration Guide**: [MIGRATION_v1.0.2.md](docs/version/v1.0.2/MIGRATION_v1.0.2.md)
+> 📖 **Detailed Migration Guide**: [MIGRATION_v1.1.0.md](MIGRATION_v1.1.0.md)
 
 ---
 
@@ -625,11 +625,11 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   | - |
 | **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
 | **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
-| **Basic Validation** | [@DateFormat](#dateformat) | Date format validation (custom formats) | 1.0.2   | - |
-| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   | 1.0.2 |
-| **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   | 1.0.2 |
-| **Basic Validation** | [@PastDateTime](#pastdatetime) | Past date-time validation | 1.0.2   | - |
-| **Basic Validation** | [@FutureDateTime](#futuredatetime) | Future date-time validation | 1.0.2   | - |
+| **Basic Validation** | [@DateFormat](#dateformat) | Date format validation (custom formats) | 1.1.0   | - |
+| **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   | 1.1.0 |
+| **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   | 1.1.0 |
+| **Basic Validation** | [@PastDateTime](#pastdatetime) | Past date-time validation | 1.1.0   | - |
+| **Basic Validation** | [@FutureDateTime](#futuredatetime) | Future date-time validation | 1.1.0   | - |
 | **Basic Validation** | [@HourMinute](#hourminute) | Hour:minute format (HH:mm) | 1.0.0   | - |
 | **Basic Validation** | [@HourMinuteSecond](#hourminutesecond) | Hour:minute:second format (HH:mm:ss) | 1.0.0   | - |
 | **Basic Validation** | [@Timestamp](#timestamp) | Unix timestamp validation | 1.0.0   | - |
@@ -653,7 +653,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@FileSize](#filesize) | File size range validation | 1.0.0   | - |
 | **Basic Validation** | [@Age](#age) | Age validation from birth date or ID | 1.0.0   | - |
 | **Basic Validation** | [@Port](#port) | Port number validation (0-65535) | 1.0.0   | - |
-| **Identity Validation** | [@ChineseName](#chinesename) | Chinese name validation | 1.0.2   | - |
+| **Identity Validation** | [@ChineseName](#chinesename) | Chinese name validation | 1.1.0   | - |
 | **Identity Validation** | [@ChineseIdCard](#chineseidcard) | Chinese ID card validation | 1.0.0   | - |
 | **Identity Validation** | [@ChinesePassport](#chinesepassport) | Chinese passport validation | 1.0.0   | - |
 | **Identity Validation** | [@ChineseMilitaryOfficer](#chinesemilitaryofficer) | Military officer certificate | 1.0.0   | - |
@@ -989,14 +989,14 @@ Click on the annotation name to jump to its detailed documentation.
 * Example Format: `2025-12-31` (pure date format)
 * Version Information:
   - Added Version: 1.0.0
-  - Modified Version: 1.0.2 (Added `pattern` parameter for custom date format support)
+  - Modified Version: 1.1.0 (Added `pattern` parameter for custom date format support)
   - Compatibility: ⚠️ **Not fully backward compatible**
-* **Important Breaking Changes (v1.0.0 → v1.0.2)**:
+* **Important Breaking Changes (v1.0.0 → v1.1.0)**:
   - **v1.0.0 Behavior**: Automatically supports two formats
     - First attempts to parse as `yyyy-MM-dd` format
     - If fails, attempts to parse as `yyyy-MM-dd HH:mm:ss` format
     - **Supports date strings with time** (e.g., `2025-12-31 12:00:00`)
-  - **v1.0.2 Behavior**: Only supports pure date format
+  - **v1.1.0 Behavior**: Only supports pure date format
     - Default format is `yyyy-MM-dd`
     - Custom date formats can be specified via `pattern` parameter (e.g., `MM/dd/yyyy`)
     - **No longer supports formats with time**, pattern cannot contain HH, mm, ss or other time symbols
@@ -1004,7 +1004,7 @@ Click on the annotation name to jump to its detailed documentation.
   - **Migration Recommendation**: For validating future dates with time, use the new @FutureDateTime annotation
 * Parameters:
   - `includeToday`: Whether to include today, defaults to `false`
-  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (added in v1.0.2). **Note: Cannot contain time symbols**
+  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (added in v1.1.0). **Note: Cannot contain time symbols**
 * Usage Example:
   ```java
   // Annotation-based usage
@@ -1034,14 +1034,14 @@ Click on the annotation name to jump to its detailed documentation.
 * Example Format: `2020-01-01` (pure date format)
 * Version Information:
   - Added Version: 1.0.0
-  - Modified Version: 1.0.2 (Added `pattern` parameter for custom date format support)
+  - Modified Version: 1.1.0 (Added `pattern` parameter for custom date format support)
   - Compatibility: ⚠️ **Not fully backward compatible**
-* **Important Breaking Changes (v1.0.0 → v1.0.2)**:
+* **Important Breaking Changes (v1.0.0 → v1.1.0)**:
   - **v1.0.0 Behavior**: Automatically supports two formats
     - First attempts to parse as `yyyy-MM-dd` format
     - If fails, attempts to parse as `yyyy-MM-dd HH:mm:ss` format
     - **Supports date strings with time** (e.g., `2020-01-01 12:00:00`)
-  - **v1.0.2 Behavior**: Only supports pure date format
+  - **v1.1.0 Behavior**: Only supports pure date format
     - Default format is `yyyy-MM-dd`
     - Custom date formats can be specified via `pattern` parameter (e.g., `MM/dd/yyyy`)
     - **No longer supports formats with time**, pattern cannot contain HH, mm, ss or other time symbols
@@ -1049,7 +1049,7 @@ Click on the annotation name to jump to its detailed documentation.
   - **Migration Recommendation**: For validating past dates with time, use the new @PastDateTime annotation
 * Parameters:
   - `includeToday`: Whether to include today, defaults to `false`
-  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (added in v1.0.2). **Note: Cannot contain time symbols**
+  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (added in v1.1.0). **Note: Cannot contain time symbols**
 * Usage Example:
   ```java
   // Annotation-based usage

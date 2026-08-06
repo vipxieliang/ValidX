@@ -1,12 +1,12 @@
-# Migration Guide: v1.0.0/v1.0.1 → v1.0.2
+# Migration Guide: v1.0.0/v1.0.1 → v1.1.0
 
-This document describes breaking changes and migration steps when upgrading from v1.0.0 or v1.0.1 to v1.0.2.
+This document describes breaking changes and migration steps when upgrading from v1.0.0 or v1.0.1 to v1.1.0.
 
 ---
 
 ## Overview
 
-Version 1.0.2 introduces **breaking changes** to `@FutureDate` and `@PastDate` annotations regarding date-time format support.
+Version 1.1.0 introduces **breaking changes** to `@FutureDate` and `@PastDate` annotations regarding date-time format support.
 
 **Impact Level**: 🔴 **HIGH** - Applications using date-time strings (e.g., `"2025-12-31 12:00:00"`) with `@FutureDate` or `@PastDate` will break.
 
@@ -31,7 +31,7 @@ date = "2025-12-31 12:00:00";  // Parsed as LocalDateTime, then converted to Loc
 2. If failed, attempted to parse as `yyyy-MM-dd HH:mm:ss` format
 3. Automatically supported both pure date and date-time strings
 
-#### v1.0.2 Behavior
+#### v1.1.0 Behavior
 ```java
 @FutureDate
 private String date;
@@ -63,7 +63,7 @@ date = "2020-01-01";           // Parsed as LocalDate
 date = "2020-01-01 12:00:00";  // Parsed as LocalDateTime, then converted to LocalDate
 ```
 
-#### v1.0.2 Behavior
+#### v1.1.0 Behavior
 ```java
 @PastDate
 private String date;
@@ -103,7 +103,7 @@ For each affected usage, choose one of the following strategies:
 
 #### **Strategy A: Switch to @FutureDateTime / @PastDateTime** ⭐ **Recommended**
 
-Use the new dedicated date-time annotations (added in v1.0.2):
+Use the new dedicated date-time annotations (added in v1.1.0):
 
 **Before (v1.0.0/v1.0.1):**
 ```java
@@ -113,7 +113,7 @@ public class EventDTO {
 }
 ```
 
-**After (v1.0.2):**
+**After (v1.1.0):**
 ```java
 public class EventDTO {
     @FutureDateTime  // ← Use the new annotation
@@ -139,7 +139,7 @@ If you only need the date portion, strip the time before validation:
 private String eventDate;  // "2025-12-31 12:00:00"
 ```
 
-**After (v1.0.2):**
+**After (v1.1.0):**
 ```java
 @FutureDate
 private String eventDate;  // "2025-12-31" (time removed)
@@ -165,7 +165,7 @@ If you must keep using `@FutureDate` with date-only strings and custom patterns:
 
 **Example:**
 ```java
-// v1.0.2 - Only for pure date formats
+// v1.1.0 - Only for pure date formats
 @FutureDate(pattern = "MM/dd/yyyy")
 private String usDate;  // "12/31/2025" - OK
 
@@ -189,7 +189,7 @@ ValidX validator = ValidX.init();
 validator.isFutureDate("2025-12-31 12:00:00");  // Worked in v1.0.0
 ```
 
-**After (v1.0.2):**
+**After (v1.1.0):**
 ```java
 ValidX validator = ValidX.init();
 
@@ -218,7 +218,7 @@ void testFutureDate() {
 }
 ```
 
-**After (v1.0.2):**
+**After (v1.1.0):**
 ```java
 @Test
 void testFutureDateTime() {
@@ -237,7 +237,7 @@ void testFutureDateWithTimeFormat_ShouldFail() {
 
     // If still using @FutureDate, this will now FAIL
     Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
-    assertFalse(violations.isEmpty());  // Fails in v1.0.2
+    assertFalse(violations.isEmpty());  // Fails in v1.1.0
 }
 ```
 
@@ -245,7 +245,7 @@ void testFutureDateWithTimeFormat_ShouldFail() {
 
 ## Quick Reference: Annotation Mapping
 
-| Use Case | v1.0.0/v1.0.1 | v1.0.2 | Notes |
+| Use Case | v1.0.0/v1.0.1 | v1.1.0 | Notes |
 |----------|---------------|--------|-------|
 | Pure date, future | `@FutureDate` | `@FutureDate` | ✅ No change needed |
 | Pure date, past | `@PastDate` | `@PastDate` | ✅ No change needed |
@@ -285,7 +285,7 @@ public class EventService {
 }
 ```
 
-### After (v1.0.2)
+### After (v1.1.0)
 
 ```java
 public class EventDTO {
@@ -327,7 +327,7 @@ public class EventService {
 
 This separation makes the intent explicit and prevents ambiguity.
 
-### Q2: Will v1.0.2 validate my existing date-only strings?
+### Q2: Will v1.1.0 validate my existing date-only strings?
 
 **A:** ✅ Yes! If you're using pure date strings (e.g., `"2025-12-31"`), no changes are needed.
 
@@ -352,7 +352,7 @@ If your code passes date-time strings to `@FutureDate` or `@PastDate`:
 
 ### Q5: Is there a deprecation period?
 
-**No.** This is an immediate breaking change in v1.0.2. We recommend:
+**No.** This is an immediate breaking change in v1.1.0. We recommend:
 1. Review your codebase before upgrading
 2. Run comprehensive tests after upgrading
 3. Use the migration strategies above
@@ -374,7 +374,7 @@ If you encounter issues during migration:
 
 ## Summary Checklist
 
-Before deploying v1.0.2 to production:
+Before deploying v1.1.0 to production:
 
 - [ ] Searched codebase for `@FutureDate` and `@PastDate` usages
 - [ ] Identified all fields/validations using date-time strings
@@ -388,4 +388,4 @@ Before deploying v1.0.2 to production:
 ---
 
 **Last Updated:** 2026-08-04
-**Applies To:** ValidX v1.0.2+
+**Applies To:** ValidX v1.1.0+

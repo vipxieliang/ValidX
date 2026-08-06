@@ -1,12 +1,12 @@
-# 迁移指南：v1.0.0/v1.0.1 → v1.0.2
+# 迁移指南：v1.0.0/v1.0.1 → v1.1.0
 
-本文档描述从 v1.0.0 或 v1.0.1 升级到 v1.0.2 时的破坏性变更和迁移步骤。
+本文档描述从 v1.0.0 或 v1.0.1 升级到 v1.1.0 时的破坏性变更和迁移步骤。
 
 ---
 
 ## 概述
 
-版本 1.0.2 对 `@FutureDate` 和 `@PastDate` 注解的日期时间格式支持引入了**破坏性变更**。
+版本 1.1.0 对 `@FutureDate` 和 `@PastDate` 注解的日期时间格式支持引入了**破坏性变更**。
 
 **影响级别**：🔴 **高** - 使用日期时间字符串（如 `"2025-12-31 12:00:00"`）与 `@FutureDate` 或 `@PastDate` 的应用会受到影响。
 
@@ -31,7 +31,7 @@ date = "2025-12-31 12:00:00";  // 解析为 LocalDateTime，然后转换为 Loca
 2. 如果失败，再尝试解析为 `yyyy-MM-dd HH:mm:ss` 格式
 3. 自动支持纯日期和日期时间字符串
 
-#### v1.0.2 行为
+#### v1.1.0 行为
 ```java
 @FutureDate
 private String date;
@@ -63,7 +63,7 @@ date = "2020-01-01";           // 解析为 LocalDate
 date = "2020-01-01 12:00:00";  // 解析为 LocalDateTime，然后转换为 LocalDate
 ```
 
-#### v1.0.2 行为
+#### v1.1.0 行为
 ```java
 @PastDate
 private String date;
@@ -103,7 +103,7 @@ grep -r "FutureDate\|PastDate" --include="*.java" your-project/
 
 #### **策略 A：切换到 @FutureDateTime / @PastDateTime** ⭐ **推荐**
 
-使用 v1.0.2 新增的专用日期时间注解：
+使用 v1.1.0 新增的专用日期时间注解：
 
 **迁移前（v1.0.0/v1.0.1）：**
 ```java
@@ -113,7 +113,7 @@ public class EventDTO {
 }
 ```
 
-**迁移后（v1.0.2）：**
+**迁移后（v1.1.0）：**
 ```java
 public class EventDTO {
     @FutureDateTime  // ← 使用新注解
@@ -139,7 +139,7 @@ public class EventDTO {
 private String eventDate;  // "2025-12-31 12:00:00"
 ```
 
-**迁移后（v1.0.2）：**
+**迁移后（v1.1.0）：**
 ```java
 @FutureDate
 private String eventDate;  // "2025-12-31"（已移除时间）
@@ -165,7 +165,7 @@ String dateOnly = dateTime.substring(0, 10);  // 提取 "2025-12-31"
 
 **示例：**
 ```java
-// v1.0.2 - 仅用于纯日期格式
+// v1.1.0 - 仅用于纯日期格式
 @FutureDate(pattern = "MM/dd/yyyy")
 private String usDate;  // "12/31/2025" - 可以
 
@@ -189,7 +189,7 @@ ValidX validator = ValidX.init();
 validator.isFutureDate("2025-12-31 12:00:00");  // v1.0.0 中有效
 ```
 
-**迁移后（v1.0.2）：**
+**迁移后（v1.1.0）：**
 ```java
 ValidX validator = ValidX.init();
 
@@ -218,7 +218,7 @@ void testFutureDate() {
 }
 ```
 
-**迁移后（v1.0.2）：**
+**迁移后（v1.1.0）：**
 ```java
 @Test
 void testFutureDateTime() {
@@ -237,7 +237,7 @@ void testFutureDateWithTimeFormat_ShouldFail() {
 
     // 如果仍使用 @FutureDate，现在会失败
     Set<ConstraintViolation<UserDTO>> violations = validator.validate(dto);
-    assertFalse(violations.isEmpty());  // v1.0.2 中失败
+    assertFalse(violations.isEmpty());  // v1.1.0 中失败
 }
 ```
 
@@ -245,7 +245,7 @@ void testFutureDateWithTimeFormat_ShouldFail() {
 
 ## 快速参考：注解映射
 
-| 使用场景 | v1.0.0/v1.0.1 | v1.0.2 | 说明 |
+| 使用场景 | v1.0.0/v1.0.1 | v1.1.0 | 说明 |
 |----------|---------------|--------|------|
 | 纯日期，未来 | `@FutureDate` | `@FutureDate` | ✅ 无需更改 |
 | 纯日期，过去 | `@PastDate` | `@PastDate` | ✅ 无需更改 |
@@ -285,7 +285,7 @@ public class EventService {
 }
 ```
 
-### 迁移后（v1.0.2）
+### 迁移后（v1.1.0）
 
 ```java
 public class EventDTO {
@@ -327,7 +327,7 @@ public class EventService {
 
 这种分离使意图明确，避免歧义。
 
-### Q2：v1.0.2 会验证我现有的纯日期字符串吗？
+### Q2：v1.1.0 会验证我现有的纯日期字符串吗？
 
 **A：** ✅ 会！如果你使用的是纯日期字符串（如 `"2025-12-31"`），无需更改。
 
@@ -352,7 +352,7 @@ private String usDateTime;
 
 ### Q5：有过渡期吗？
 
-**没有。** 这是 v1.0.2 中的即时破坏性变更。我们建议：
+**没有。** 这是 v1.1.0 中的即时破坏性变更。我们建议：
 1. 升级前检查你的代码库
 2. 升级后运行全面测试
 3. 使用上述迁移策略
@@ -374,7 +374,7 @@ private String usDateTime;
 
 ## 总结检查清单
 
-在将 v1.0.2 部署到生产环境之前：
+在将 v1.1.0 部署到生产环境之前：
 
 - [ ] 在代码库中搜索 `@FutureDate` 和 `@PastDate` 的使用
 - [ ] 识别所有使用日期时间字符串的字段/验证
@@ -387,5 +387,5 @@ private String usDateTime;
 
 ---
 
-**最后更新：** 2026-08-04
-**适用于：** ValidX v1.0.2+
+**最后更新：** 2026-08-06
+**适用于：** ValidX v1.1.0+

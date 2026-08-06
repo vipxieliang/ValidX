@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 使用 JSR-380 Bean Validation 注解进行测试
  *
  * @author vipxieliang
- * @since 1.0.2
+ * @since 1.1.0
  */
 class DateFormatValidatorTest {
 

@@ -66,7 +66,7 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author vipxieliang
- * @since 1.0.2
+ * @since 1.1.0
  */
 @Target({ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

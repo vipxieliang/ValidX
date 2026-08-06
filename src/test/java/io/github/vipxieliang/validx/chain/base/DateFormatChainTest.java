@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * 使用 ValidX 链式API进行测试
  *
  * @author vipxieliang
- * @since 1.0.2
+ * @since 1.1.0
  */
 class DateFormatChainTest {
 
