@@ -40,14 +40,16 @@ import java.lang.annotation.*;
  * {@code @PastDate(includeToday = true)}
  * private String eventDate;
  *
- * // 自定义格式
+ * // 自定义日期格式
  * {@code @PastDate(pattern = "yyyy/MM/dd")}
  * private String customDate;
  *
- * // 日期时间格式
- * {@code @PastDate(pattern = "yyyy-MM-dd HH:mm:ss")}
- * private String dateTime;
+ * // 紧凑格式
+ * {@code @PastDate(pattern = "yyyyMMdd")}
+ * private String compactDate;
  * </pre>
+ * <p>注意：此注解仅用于纯日期格式验证，pattern 不能包含时间部分。
+ * 如需验证过去的日期时间，请使用 {@link PastDateTime} 注解。
  *
  * @author vipxieliang
  * @since 2025/10/01
@@ -71,9 +73,12 @@ public @interface PastDate {
      * <ul>
      *   <li>yyyy-MM-dd - 标准日期格式（默认）</li>
      *   <li>yyyy/MM/dd - 斜杠分隔</li>
-     *   <li>yyyy-MM-dd HH:mm:ss - 日期时间格式</li>
+     *   <li>dd-MM-yyyy - 欧洲格式</li>
+     *   <li>MM/dd/yyyy - 美国格式</li>
      *   <li>yyyyMMdd - 紧凑格式</li>
      * </ul>
+     * <p>
+     * 注意：pattern 不能包含时间符号（H, h, K, k, m, s, S, a, A, n, N）
      *
      * @return 日期格式模式字符串
      */
