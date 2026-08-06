@@ -970,12 +970,12 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 
   // 链式调用方式使用 - 默认格式
   ValidX validator = ValidX.init();
-  validator.isDateFormat("2024-01-15");
+  validator.isDate("2024-01-15");
 
   // 自定义格式
-  validator.isDateFormat("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
-  validator.isDateFormat("12/25/2024", "MM/dd/yyyy");
-  validator.isDateFormat("2024年12月25日", "yyyy年MM月dd日");
+  validator.isDate("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
+  validator.isDate("12/25/2024", "MM/dd/yyyy");
+  validator.isDate("2024年12月25日", "yyyy年MM月dd日");
   ```
 * 注意事项：
   - 使用 `yyyy-MM-dd` 等格式时，日期必须补零（如 `2024-01-05` 而非 `2024-1-5`）

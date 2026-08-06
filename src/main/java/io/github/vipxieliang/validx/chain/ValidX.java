@@ -561,11 +561,11 @@ public class ValidX {
         return this;
     }
 
-    public ValidX isDateFormat(Object value) {
-        return isDateFormat(value, "yyyy-MM-dd");
+    public ValidX isDate(Object value) {
+        return isDate(value, "yyyy-MM-dd");
     }
 
-    public ValidX isDateFormat(Object value, String pattern) {
+    public ValidX isDate(Object value, String pattern) {
         if (checkRequirement(value, "Date Format", errors, getLocale())) {
             return this;
         }
@@ -573,11 +573,11 @@ public class ValidX {
         return this;
     }
 
-    public ValidX isDateTimeFormat(Object value) {
-        return isDateTimeFormat(value, "yyyy-MM-dd HH:mm:ss");
+    public ValidX isDateTime(Object value) {
+        return isDateTime(value, "yyyy-MM-dd HH:mm:ss");
     }
 
-    public ValidX isDateTimeFormat(Object value, String pattern) {
+    public ValidX isDateTime(Object value, String pattern) {
         if (checkRequirement(value, "DateTime Format", errors, getLocale())) {
             return this;
         }

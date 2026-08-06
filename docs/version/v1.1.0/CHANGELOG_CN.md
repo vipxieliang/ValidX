@@ -283,11 +283,11 @@ public class EventDTO {
 ValidX validator = ValidX.init();
 
 // 默认格式（yyyy-MM-dd）
-validator.field("日期").isDateFormat("2024-01-15");
+validator.field("日期").isDate("2024-01-15");
 
 // 自定义格式
-validator.field("日期").isDateFormat("15/01/2024", "dd/MM/yyyy");
-validator.field("紧凑日期").isDateFormat("20240115", "yyyyMMdd");
+validator.field("日期").isDate("15/01/2024", "dd/MM/yyyy");
+validator.field("紧凑日期").isDate("20240115", "yyyyMMdd");
 
 // 检查验证结果
 if (!validator.passed()) {
@@ -315,7 +315,7 @@ public class OrderDTO {
 // 场景 2：批量数据导入验证
 ValidX validator = ValidX.init();
 for (String date : importedDates) {
-    validator.field("导入日期").isDateFormat(date, userDefinedPattern);
+    validator.field("导入日期").isDate(date, userDefinedPattern);
 }
 
 // 场景 3：配置文件日期验证
@@ -369,11 +369,11 @@ public class LogDTO {
 ValidX validator = ValidX.init();
 
 // 默认格式（yyyy-MM-dd HH:mm:ss）
-validator.field("时间戳").isDateTimeFormat("2024-01-15 13:30:00");
+validator.field("时间戳").isDateTime("2024-01-15 13:30:00");
 
 // 自定义格式
-validator.field("ISO时间").isDateTimeFormat("2024-01-15T13:30:00", "yyyy-MM-dd'T'HH:mm:ss");
-validator.field("精确时间").isDateTimeFormat("2024-01-15 13:30:00.123", "yyyy-MM-dd HH:mm:ss.SSS");
+validator.field("ISO时间").isDateTime("2024-01-15T13:30:00", "yyyy-MM-dd'T'HH:mm:ss");
+validator.field("精确时间").isDateTime("2024-01-15 13:30:00.123", "yyyy-MM-dd HH:mm:ss.SSS");
 
 // 检查验证结果
 if (!validator.passed()) {
@@ -400,11 +400,11 @@ public class LogDTO {
 
 // 场景 2：事件追踪
 ValidX validator = ValidX.init();
-validator.field("事件时间").isDateTimeFormat(eventTime, "yyyy-MM-dd HH:mm:ss");
+validator.field("事件时间").isDateTime(eventTime, "yyyy-MM-dd HH:mm:ss");
 
 // 场景 3：数据库导入
 for (String timestamp : timestamps) {
-    if (!validator.isDateTimeFormat(timestamp).passed()) {
+    if (!validator.isDateTime(timestamp).passed()) {
         // 处理格式错误
     }
 }

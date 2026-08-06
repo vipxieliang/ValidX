@@ -970,12 +970,12 @@ Click on the annotation name to jump to its detailed documentation.
 
   // Chain call usage - default format
   ValidX validator = ValidX.init();
-  validator.isDateFormat("2024-01-15");
+  validator.isDate("2024-01-15");
 
   // Custom format
-  validator.isDateFormat("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
-  validator.isDateFormat("12/25/2024", "MM/dd/yyyy");
-  validator.isDateFormat("2024年12月25日", "yyyy年MM月dd日");
+  validator.isDate("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
+  validator.isDate("12/25/2024", "MM/dd/yyyy");
+  validator.isDate("2024年12月25日", "yyyy年MM月dd日");
   ```
 * Important Notes:
   - When using formats like `yyyy-MM-dd`, dates must be zero-padded (e.g., `2024-01-05` not `2024-1-5`)
