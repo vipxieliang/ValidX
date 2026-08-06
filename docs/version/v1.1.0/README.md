@@ -127,7 +127,7 @@ We hope ValidX can become the standard tool for every Java application serving C
 > - **v1.1.0**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
 > - **Migration Solution**: Use the newly added `@FutureDateTime` and `@PastDateTime` annotations instead
 >
-> 📖 **Detailed Migration Guide**: [MIGRATION_v1.1.0.md](MIGRATION_v1.1.0.md)
+> 📖 **Detailed Migration Guide**: [MIGRATION_v1.1.0.md](docs/version/v1.1.0/MIGRATION_v1.1.0.md)
 
 ---
 
@@ -139,7 +139,7 @@ We hope ValidX can become the standard tool for every Java application serving C
 <dependency>
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
 </dependency>
 ```
 
@@ -626,6 +626,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
 | **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
 | **Basic Validation** | [@Date](#date) | Date format validation (custom formats) | 1.1.0   | - |
+| **Basic Validation** | [@DateTime](#datetime) | Date-time format validation (with time) | 1.1.0   | - |
 | **Basic Validation** | [@FutureDate](#futuredate) | Future date validation | 1.0.0   | 1.1.0 |
 | **Basic Validation** | [@PastDate](#pastdate) | Past date validation | 1.0.0   | 1.1.0 |
 | **Basic Validation** | [@PastDateTime](#pastdatetime) | Past date-time validation | 1.1.0   | - |
@@ -896,12 +897,13 @@ Click on the annotation name to jump to its detailed documentation.
 [↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Date
-* Validation Rule: Date format validation, validates whether a string conforms to the specified date format using strict validation mode.
+* Validation Rule: Date format validation, validates whether a string conforms to the specified date format (pure date, no time component) using strict validation mode.
 * Core Features:
   - **Strict Validation**: Rejects invalid dates (e.g., 2024-02-30, 2024-13-01)
   - **Leap Year Recognition**: Correctly handles leap years (2024-02-29 ✓, 1900-02-29 ✗)
-  - **Flexible Formats**: Supports all Java DateTimeFormatter formats
+  - **Flexible Formats**: Supports all Java DateTimeFormatter date formats
   - **Multi-language Support**: Error messages in 9 languages
+  - **Pattern Restriction**: Pattern must NOT contain time symbols (use @DateTime for date-time formats)
 * Format Symbol Reference:
 
   **Date Symbols:**
@@ -915,6 +917,64 @@ Click on the annotation name to jump to its detailed documentation.
   | `dd` | Day (zero-padded) | `05`, `25` | Must be 2 digits |
   | `d` | Day (no padding) | `5`, `25` | 1-31 |
   | `DDD` | Day of year | `365` | 1-366 |
+
+* Supported Format Examples:
+  - Standard date: `yyyy-MM-dd` → `2024-01-15`
+  - Year-month: `yyyy-MM` → `2024-01`
+  - Compact format: `yyyyMMdd` → `20240115`
+  - US format: `MM/dd/yyyy` → `12/25/2024`
+  - European format: `dd/MM/yyyy` → `25/12/2024`
+  - Chinese format: `yyyy年MM月dd日` → `2024年12月25日`
+* Configuration Options:
+  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"` (must not contain time symbols)
+* Validation Examples:
+  - ✅ Valid: `2024-02-29` (leap year)
+  - ✅ Valid: `2024-01-31` (January has 31 days)
+  - ✅ Valid: `2024-04-30` (April has 30 days)
+  - ❌ Invalid: `2024-02-30` (February doesn't have 30 days)
+  - ❌ Invalid: `2023-02-29` (not a leap year)
+  - ❌ Invalid: `2024-13-01` (month range is 1-12)
+  - ❌ Invalid: `2024-04-31` (April doesn't have 31 days)
+* Usage Example:
+  ```java
+  // Annotation-based usage - default format (yyyy-MM-dd)
+  @Date
+  private String birthDate;
+
+  // Custom format
+  @Date(pattern = "MM/dd/yyyy")
+  private String usDate;
+
+  @Date(pattern = "yyyy年MM月dd日")
+  private String chineseDate;
+
+  // Chain call usage - default format
+  ValidX validator = ValidX.init();
+  validator.isDate("2024-01-15");
+
+  // Custom format
+  validator.isDate("12/25/2024", "MM/dd/yyyy");
+  validator.isDate("2024年12月25日", "yyyy年MM月dd日");
+  ```
+* Important Notes:
+  - Pattern must NOT contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
+  - For date-time formats, use @DateTime annotation instead
+  - When using formats like `yyyy-MM-dd`, dates must be zero-padded (e.g., `2024-01-05` not `2024-1-5`)
+  - Separators must exactly match the format (e.g., `2024/01/15` will fail with format `yyyy-MM-dd`)
+  - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @DateTime
+* Validation Rule: Date-time format validation, validates whether a string conforms to the specified date-time format (must include time component) using strict validation mode.
+* Core Features:
+  - **Strict Validation**: Rejects invalid date-times (e.g., 2024-02-30 13:30:00, 2024-01-15 25:00:00)
+  - **Leap Year Recognition**: Correctly handles leap years
+  - **Time Validation**: Validates hours (0-23), minutes (0-59), seconds (0-59)
+  - **Flexible Formats**: Supports all Java DateTimeFormatter date-time formats
+  - **Multi-language Support**: Error messages in 9 languages
+  - **Pattern Requirement**: Pattern must contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
+* Format Symbol Reference:
 
   **Time Symbols:**
 
@@ -931,55 +991,54 @@ Click on the annotation name to jump to its detailed documentation.
   | `SSS` | Millisecond | `000`, `999` | Milliseconds |
   | `a` | AM/PM marker | `AM`, `PM` | Use with 12-hour format |
 
+  **Date Symbols:** See [@Date](#date) for complete date symbol reference.
+
 * Supported Format Examples:
-  - Standard date: `yyyy-MM-dd` → `2024-01-15`
-  - Date with time: `yyyy-MM-dd HH:mm:ss` → `2024-01-15 13:30:00`
-  - Year-month: `yyyy-MM` → `2024-01`
-  - Time only: `HH:mm:ss` → `14:30:00`
-  - 12-hour format: `yyyy-MM-dd hh:mm:ss a` → `2024-01-15 02:30:00 PM`
-  - Compact format: `yyyyMMdd` → `20240115`
-  - US format: `MM/dd/yyyy` → `12/25/2024`
-  - European format: `dd/MM/yyyy` → `25/12/2024`
-  - Chinese format: `yyyy年MM月dd日` → `2024年12月25日`
+  - Standard: `yyyy-MM-dd HH:mm:ss` → `2024-01-15 13:30:00`
   - ISO 8601: `yyyy-MM-dd'T'HH:mm:ss` → `2024-01-15T13:30:00`
+  - With milliseconds: `yyyy-MM-dd HH:mm:ss.SSS` → `2024-01-15 13:30:00.123`
+  - 12-hour format: `yyyy-MM-dd hh:mm:ss a` → `2024-01-15 02:30:00 PM`
+  - Compact format: `yyyyMMddHHmmss` → `20240115133000`
+  - Chinese format: `yyyy年MM月dd日 HH时mm分ss秒` → `2024年12月25日 14时30分00秒`
 * Configuration Options:
-  - `pattern`: Date format pattern, defaults to `"yyyy-MM-dd"`
+  - `pattern`: Date-time format pattern, defaults to `"yyyy-MM-dd HH:mm:ss"` (must contain time symbols)
 * Validation Examples:
-  - ✅ Valid: `2024-02-29` (leap year)
-  - ✅ Valid: `2024-01-31` (January has 31 days)
-  - ✅ Valid: `2024-04-30` (April has 30 days)
-  - ❌ Invalid: `2024-02-30` (February doesn't have 30 days)
-  - ❌ Invalid: `2023-02-29` (not a leap year)
-  - ❌ Invalid: `2024-13-01` (month range is 1-12)
-  - ❌ Invalid: `2024-04-31` (April doesn't have 31 days)
+  - ✅ Valid: `2024-01-15 13:30:00`
+  - ✅ Valid: `2024-02-29 23:59:59` (leap year)
+  - ✅ Valid: `2024-01-15 00:00:00` (midnight)
+  - ❌ Invalid: `2024-02-30 13:30:00` (invalid date)
+  - ❌ Invalid: `2024-01-15 24:00:00` (hour must be 0-23)
+  - ❌ Invalid: `2024-01-15 12:60:00` (minute must be 0-59)
+  - ❌ Invalid: `2024-01-15 12:30:60` (second must be 0-59)
 * Usage Example:
   ```java
-  // Annotation-based usage - default format (yyyy-MM-dd)
-  @Date
-  private String birthDate;
+  // Annotation-based usage - default format (yyyy-MM-dd HH:mm:ss)
+  @DateTime
+  private String createdAt;
 
   // Custom format
-  @Date(pattern = "yyyy-MM-dd HH:mm:ss")
-  private String createTime;
+  @DateTime(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+  private String isoTimestamp;
 
-  @Date(pattern = "MM/dd/yyyy")
-  private String usDate;
+  @DateTime(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+  private String preciseTime;
 
-  @Date(pattern = "yyyy年MM月dd日")
-  private String chineseDate;
+  @DateTime(pattern = "yyyy-MM-dd hh:mm:ss a")
+  private String appointmentTime;
 
   // Chain call usage - default format
   ValidX validator = ValidX.init();
-  validator.isDate("2024-01-15");
+  validator.isDateTime("2024-01-15 13:30:00");
 
   // Custom format
-  validator.isDate("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss");
-  validator.isDate("12/25/2024", "MM/dd/yyyy");
-  validator.isDate("2024年12月25日", "yyyy年MM月dd日");
+  validator.isDateTime("2024-01-15T13:30:00", "yyyy-MM-dd'T'HH:mm:ss");
+  validator.isDateTime("2024-01-15 13:30:00.123", "yyyy-MM-dd HH:mm:ss.SSS");
   ```
 * Important Notes:
-  - When using formats like `yyyy-MM-dd`, dates must be zero-padded (e.g., `2024-01-05` not `2024-1-5`)
-  - Separators must exactly match the format (e.g., `2024/01/15` will fail with format `yyyy-MM-dd`)
+  - Pattern must contain at least one time symbol (H, h, K, k, m, s, S, a, A, n, N)
+  - For pure date formats (no time), use @Date annotation instead
+  - Time must be valid: hour 0-23, minute 0-59, second 0-59
+  - When using zero-padded formats, values must match exactly
   - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
 
 [↑ Back to Quick Reference](#quick-reference-table)
