@@ -659,6 +659,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   | - |
 | **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   | - |
 | **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   | - |
+| **Basic Validation** | [@NotContains](#notcontains) | String does not contain substring validation | 1.1.0   | - |
 | **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   | - |
 | **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   | - |
 | **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   | - |
@@ -2106,6 +2107,57 @@ Click on the annotation name to jump to its detailed documentation.
   - Substring can appear at any position (beginning, middle, or end)
   - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
   - Common use cases: email validation (`@`), strict email validation (`@` and `.`), URL checking (`http://`), password strength (must contain multiple character types), content filtering
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @NotContains
+* Validation Rule: Not contains validation, validating whether the string does NOT contain the specified substring(s). Useful for security validation, content filtering, and preventing sensitive keywords.
+* Example Format: `"user123"` does not contain `"admin"`, `"https://example.com"` does not contain `"javascript:"`
+* Configuration Options:
+  - `value`: Array of forbidden substrings
+  - `ignoreCase`: Whether to ignore case, default is `false`
+  - `matchAll`: Matching mode, default is `true`
+    - `true` (default): AND logic - passes only if ALL forbidden substrings are absent
+    - `false`: OR logic - passes if ANY forbidden substring is absent
+* Usage Example:
+  ```java
+  // Annotation-based usage - security validation
+  @NotContains(value = {"admin", "root", "system"}, ignoreCase = true)
+  private String username;
+
+  // Content filtering
+  @NotContains(value = {"spam", "offensive"}, ignoreCase = true)
+  private String comment;
+
+  // XSS prevention
+  @NotContains(value = {"<script", "javascript:", "onerror="}, ignoreCase = true)
+  private String userInput;
+
+  // URL security validation (AND logic - must not contain any)
+  @NotContains(value = {"javascript:", "data:", "vbscript:"}, matchAll = true)
+  private String url;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+
+  // Basic usage (AND logic - default)
+  validator.isNotContains("user123", new String[]{"admin", "root"});
+
+  // Case-insensitive
+  validator.isNotContains("normaluser", new String[]{"ADMIN", "ROOT"}, true);
+
+  // OR logic - passes if at least one is absent
+  validator.isNotContains("hello world", new String[]{"script", "alert"}, false, false);
+
+  // AND logic - must not contain all
+  validator.isNotContains("https://example.com", new String[]{"javascript:", "data:"}, false, true);
+  ```
+* Notes:
+  - **AND logic** (default): Passes only if the string does NOT contain ALL of the specified substrings
+  - **OR logic** (`matchAll = false`): Passes if the string does NOT contain AT LEAST ONE of the specified substrings
+  - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
+  - Common use cases: username validation (block reserved keywords), XSS prevention, content moderation, URL security validation
+  - Complements `@Contains` for comprehensive string validation
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

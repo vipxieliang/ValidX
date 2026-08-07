@@ -730,19 +730,11 @@ public class ValidX {
 
     // Base Validation Methods - Contains
     public ValidX isContains(Object value, String[] substrings) {
-        if (checkRequirement(value, "Contains", errors, getLocale())) {
-            return this;
-        }
-        baseValidation.validateContains(value, substrings, errors, getLocale());
-        return this;
+        return isContains(value, substrings, false, false);
     }
 
     public ValidX isContains(Object value, String[] substrings, boolean ignoreCase) {
-        if (checkRequirement(value, "Contains", errors, getLocale())) {
-            return this;
-        }
-        baseValidation.validateContains(value, substrings, ignoreCase, errors, getLocale());
-        return this;
+        return isContains(value, substrings, ignoreCase, false);
     }
 
     public ValidX isContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll) {
@@ -750,6 +742,23 @@ public class ValidX {
             return this;
         }
         baseValidation.validateContains(value, substrings, ignoreCase, matchAll, errors, getLocale());
+        return this;
+    }
+
+    // Base Validation Methods - NotContains
+    public ValidX isNotContains(Object value, String[] substrings) {
+        return isNotContains(value, substrings, false, true);
+    }
+
+    public ValidX isNotContains(Object value, String[] substrings, boolean ignoreCase) {
+        return isNotContains(value, substrings, ignoreCase, true);
+    }
+
+    public ValidX isNotContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll) {
+        if (checkRequirement(value, "NotContains", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateNotContains(value, substrings, ignoreCase, matchAll, errors, getLocale());
         return this;
     }
 

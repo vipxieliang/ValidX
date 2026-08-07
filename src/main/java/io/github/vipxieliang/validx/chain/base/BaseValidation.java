@@ -445,52 +445,19 @@ public class BaseValidation {
         }
     }
 
-    public void validateContains(Object value, String[] substrings, List<String> errors, Locale locale) {
-        validateContains(value, substrings, false, false, errors, locale);
-    }
-
-    public void validateContains(Object value, String[] substrings, boolean ignoreCase, List<String> errors, Locale locale) {
-        validateContains(value, substrings, ignoreCase, false, errors, locale);
-    }
-
     public void validateContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll, List<String> errors, Locale locale) {
         io.github.vipxieliang.validx.validator.base.ContainsValidator validator = new io.github.vipxieliang.validx.validator.base.ContainsValidator();
-
-        // 创建一个模拟的Contains注解实例
-        io.github.vipxieliang.validx.annotations.Contains containsAnnotation = new io.github.vipxieliang.validx.annotations.Contains() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.Contains.class;
-            }
-
-            public String[] value() {
-                return substrings != null ? substrings : new String[0];
-            }
-
-            public boolean ignoreCase() {
-                return ignoreCase;
-            }
-
-            public boolean matchAll() {
-                return matchAll;
-            }
-
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.contains", locale);
-            }
-
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
-        validator.initialize(containsAnnotation);
+        validator.initialize(substrings, ignoreCase, matchAll);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.contains", locale));
+        }
+    }
+
+    public void validateNotContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll, List<String> errors, Locale locale) {
+        io.github.vipxieliang.validx.validator.base.NotContainsValidator validator = new io.github.vipxieliang.validx.validator.base.NotContainsValidator();
+        validator.initialize(substrings, ignoreCase, matchAll);
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.not.contains", locale));
         }
     }
     

@@ -17,25 +17,25 @@
 package io.github.vipxieliang.validx.validator.base;
 
 
-import io.github.vipxieliang.validx.annotations.Contains;
+import io.github.vipxieliang.validx.annotations.NotContains;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * Contains验证器
- * 验证字符串是否包含指定的子字符串
+ * NotContains验证器
+ * 验证字符串是否不包含指定的子字符串
  *
  * @author vipxieliang
- * @since 2026/07/31
+ * @since 2026/08/07
  */
-public class ContainsValidator implements ConstraintValidator<Contains, String> {
+public class NotContainsValidator implements ConstraintValidator<NotContains, String> {
     protected String[] substrings;
     protected boolean ignoreCase;
     protected boolean matchAll;
 
     @Override
-    public void initialize(Contains constraintAnnotation) {
+    public void initialize(NotContains constraintAnnotation) {
         initialize(constraintAnnotation.value(), constraintAnnotation.ignoreCase(), constraintAnnotation.matchAll());
     }
 
@@ -59,7 +59,26 @@ public class ContainsValidator implements ConstraintValidator<Contains, String> 
         }
 
         if (matchAll) {
-            // AND 逻辑：必须包含所有子字符串
+            // AND 逻辑：必须全都不包含
+            for (String substring : substrings) {
+                if (substring == null || substring.isEmpty()) {
+                    continue;
+                }
+
+                boolean found;
+                if (ignoreCase) {
+                    found = value.toLowerCase().contains(substring.toLowerCase());
+                } else {
+                    found = value.contains(substring);
+                }
+
+                if (found) {
+                    return false; // 只要有一个包含就返回false
+                }
+            }
+            return true; // 所有都不包含才返回true
+        } else {
+            // OR 逻辑：只要有一个不包含即可
             for (String substring : substrings) {
                 if (substring == null || substring.isEmpty()) {
                     continue;
@@ -73,28 +92,10 @@ public class ContainsValidator implements ConstraintValidator<Contains, String> 
                 }
 
                 if (!found) {
-                    return false; // 只要有一个不包含就返回false
+                    return true; // 只要有一个不包含就返回true
                 }
             }
-            return true; // 所有都包含才返回true
-        } else {
-            // OR 逻辑：包含任意一个即可
-            for (String substring : substrings) {
-                if (substring == null || substring.isEmpty()) {
-                    continue;
-                }
-
-                if (ignoreCase) {
-                    if (value.toLowerCase().contains(substring.toLowerCase())) {
-                        return true;
-                    }
-                } else {
-                    if (value.contains(substring)) {
-                        return true;
-                    }
-                }
-            }
-            return false; // 一个都不包含才返回false
+            return false; // 所有都包含才返回false
         }
     }
 }
