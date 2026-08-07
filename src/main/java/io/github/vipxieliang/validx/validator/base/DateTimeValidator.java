@@ -82,8 +82,9 @@ public class DateTimeValidator implements ConstraintValidator<DateTime, String> 
      * @param pattern 日期时间格式模式
      */
     private void validatePattern(String pattern) {
-        // 时间格式符号：H, h, K, k, m, s, S, a, A, n, N
-        if (!pattern.matches(".*[HhKkmsaSAnN].*")) {
+        // 使用 BaseDateValidator 中的静态方法检查时间格式符号
+        // 该方法会正确处理单引号内的字面量
+        if (!BaseDateValidator.containsTimePatternStatic(pattern)) {
             this.patternInvalid = true;
             this.patternErrorMessage = MessageManager.getMessage("io.github.vipxieliang.validx.validator.datetime.pattern.missing.time");
         }
@@ -152,8 +153,8 @@ public class DateTimeValidator implements ConstraintValidator<DateTime, String> 
      */
     public static boolean isValidDateTimeFormat(String value, String pattern) {
         try {
-            // 验证 pattern 必须包含时间符号
-            if (!pattern.matches(".*[HhKkmsaSAnN].*")) {
+            // 使用 BaseDateValidator 中的静态方法验证 pattern 必须包含时间符号
+            if (!BaseDateValidator.containsTimePatternStatic(pattern)) {
                 throw new IllegalArgumentException(
                     MessageManager.getMessage("io.github.vipxieliang.validx.validator.datetime.pattern.missing.time")
                 );

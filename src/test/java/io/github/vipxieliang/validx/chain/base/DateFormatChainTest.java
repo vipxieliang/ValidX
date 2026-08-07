@@ -119,108 +119,7 @@ class DateFormatChainTest {
         assertFalse(errors.isEmpty());
     }
 
-    // ==================== 日期时间格式测试 ====================
-
-    @Test
-    void testChain_ValidDateTime() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 13:30:00", "yyyy-MM-dd HH:mm:ss")
-                .getErrors();
-
-        assertTrue(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_ValidDateTime_Boundary() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 23:59:59", "yyyy-MM-dd HH:mm:ss")
-                .getErrors();
-
-        assertTrue(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_InvalidTime_Hour24() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 24:00:00", "yyyy-MM-dd HH:mm:ss")
-                .getErrors();
-
-        assertFalse(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_InvalidTime_Minute60() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 12:60:00", "yyyy-MM-dd HH:mm:ss")
-                .getErrors();
-
-        assertFalse(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_InvalidTime_Second60() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 12:30:60", "yyyy-MM-dd HH:mm:ss")
-                .getErrors();
-
-        assertFalse(errors.isEmpty());
-    }
-
     // ==================== 特殊格式测试 ====================
-
-    @Test
-    void testChain_ValidYearMonth() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01", "yyyy-MM")
-                .getErrors();
-
-        assertTrue(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_InvalidYearMonth() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-13", "yyyy-MM")
-                .getErrors();
-
-        assertFalse(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_ValidTimeOnly() {
-        List<String> errors = ValidX.init()
-                .isDate("14:30:00", "HH:mm:ss")
-                .getErrors();
-
-        assertTrue(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_InvalidTime() {
-        List<String> errors = ValidX.init()
-                .isDate("25:00:00", "HH:mm:ss")
-                .getErrors();
-
-        assertFalse(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_Valid12HourFormat() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 02:30:00 PM", "yyyy-MM-dd hh:mm:ss a")
-                .getErrors();
-
-        assertTrue(errors.isEmpty());
-    }
-
-    @Test
-    void testChain_Valid12HourFormat_AM() {
-        List<String> errors = ValidX.init()
-                .isDate("2024-01-15 11:30:00 AM", "yyyy-MM-dd hh:mm:ss a")
-                .getErrors();
-
-        assertTrue(errors.isEmpty());
-    }
 
     @Test
     void testChain_ValidUSFormat() {
@@ -325,7 +224,6 @@ class DateFormatChainTest {
         List<String> errors = ValidX.init()
                 .isDate("2024-01-15", "yyyy-MM-dd")
                 .isDate("12/25/2024", "MM/dd/yyyy")
-                .isDate("14:30:00", "HH:mm:ss")
                 .getErrors();
 
         assertTrue(errors.isEmpty());

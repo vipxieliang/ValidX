@@ -17,32 +17,26 @@
 package io.github.vipxieliang.validx.validator.base;
 
 import io.github.vipxieliang.validx.annotations.Date;
+import io.github.vipxieliang.validx.i18n.MessageManager;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.time.format.ResolverStyle;
 import java.util.Locale;
 
 /**
  * 日期格式验证器
  * <p>
- * 验证字符串是否符合指定的日期格式，采用严格验证模式。
- * 支持所有 DateTimeFormatter 支持的格式，包括：
- * <ul>
- *   <li>纯日期：yyyy-MM-dd, yyyyMMdd</li>
- *   <li>纯时间：HH:mm:ss</li>
- *   <li>日期时间：yyyy-MM-dd HH:mm:ss</li>
- *   <li>年月：yyyy-MM</li>
- *   <li>星期日期：yyyy-'W'ww-e</li>
- *   <li>以及更多自定义格式</li>
- * </ul>
+ * 验证字符串是否符合指定的日期格式（不含时间部分），采用严格验证模式。
  * </p>
+ *
+ * <p><b>与 DateTimeValidator 的区别：</b>
+ * <ul>
+ *   <li>DateValidator - 验证纯日期格式，pattern 不能包含时间符号</li>
+ *   <li>DateTimeValidator - 验证日期时间格式，pattern 必须包含时间符号</li>
+ * </ul>
  *
  * @author vipxieliang
  * @since 1.1.0
@@ -50,17 +44,52 @@ import java.util.Locale;
 public class DateValidator implements ConstraintValidator<Date, String> {
 
     /**
-     * 日期时间格式化器（严格模式）
+     * 日期格式化器（严格模式）
      */
     private DateTimeFormatter formatter;
 
+    /**
+     * 日期格式模式
+     */
+    private String pattern;
+
+    /**
+     * pattern 验证是否失败
+     */
+    private boolean patternInvalid = false;
+
+    /**
+     * pattern 验证失败的错误消息
+     */
+    private String patternErrorMessage = null;
+
     @Override
     public void initialize(Date annotation) {
-        this.formatter = createStrictFormatter(annotation.pattern());
+        this.pattern = annotation.pattern();
+
+        // 验证 pattern 不能包含时间格式符号
+        if (BaseDateValidator.containsTimePatternStatic(pattern)) {
+            this.patternInvalid = true;
+            this.patternErrorMessage = MessageManager.getMessage("io.github.vipxieliang.validx.validator.date.pattern.contains.time");
+            return;
+        }
+
+        // 只有在 pattern 有效时才创建 formatter
+        this.formatter = createStrictFormatter(pattern);
     }
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        // 如果 pattern 配置错误，返回验证失败
+        if (patternInvalid) {
+            if (context != null) {
+                context.disableDefaultConstraintViolation();
+                context.buildConstraintViolationWithTemplate(patternErrorMessage)
+                       .addConstraintViolation();
+            }
+            return false;
+        }
+
         return isValid(value, formatter);
     }
 
@@ -78,30 +107,11 @@ public class DateValidator implements ConstraintValidator<Date, String> {
         }
 
         try {
-            // 尝试解析为 LocalDateTime（包含日期和时间）
-            LocalDateTime.parse(value, formatter);
+            // 只解析为 LocalDate（纯日期）
+            LocalDate.parse(value, formatter);
             return true;
-        } catch (Exception e1) {
-            try {
-                // 尝试解析为 LocalDate（仅日期）
-                LocalDate.parse(value, formatter);
-                return true;
-            } catch (Exception e2) {
-                try {
-                    // 尝试解析为 LocalTime（仅时间）
-                    LocalTime.parse(value, formatter);
-                    return true;
-                } catch (Exception e3) {
-                    try {
-                        // 尝试解析为 YearMonth（年月）
-                        YearMonth.parse(value, formatter);
-                        return true;
-                    } catch (Exception e4) {
-                        // 所有解析方式都失败
-                        return false;
-                    }
-                }
-            }
+        } catch (Exception e) {
+            return false;
         }
     }
 
@@ -131,6 +141,13 @@ public class DateValidator implements ConstraintValidator<Date, String> {
      */
     public static boolean isValidDateFormat(String value, String pattern) {
         try {
+            // 验证 pattern 不能包含时间符号
+            if (BaseDateValidator.containsTimePatternStatic(pattern)) {
+                throw new IllegalArgumentException(
+                    MessageManager.getMessage("io.github.vipxieliang.validx.validator.date.pattern.contains.time")
+                );
+            }
+
             DateTimeFormatter formatter = createStrictFormatter(pattern);
             return isValid(value, formatter);
         } catch (Exception e) {

@@ -86,6 +86,17 @@ public abstract class BaseDateValidator<A extends Annotation> implements Constra
      * @return true 如果包含时间格式符号
      */
     protected boolean containsTimePattern(String pattern) {
+        return containsTimePatternStatic(pattern);
+    }
+
+    /**
+     * 检查 pattern 中是否包含时间相关的格式符号（静态方法）
+     * 排除单引号内的字面量
+     *
+     * @param pattern 日期格式 pattern
+     * @return true 如果包含时间格式符号
+     */
+    public static boolean containsTimePatternStatic(String pattern) {
         boolean inQuote = false;
 
         for (int i = 0; i < pattern.length(); i++) {

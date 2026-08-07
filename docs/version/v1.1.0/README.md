@@ -920,7 +920,6 @@ Click on the annotation name to jump to its detailed documentation.
 
 * Supported Format Examples:
   - Standard date: `yyyy-MM-dd` → `2024-01-15`
-  - Year-month: `yyyy-MM` → `2024-01`
   - Compact format: `yyyyMMdd` → `20240115`
   - US format: `MM/dd/yyyy` → `12/25/2024`
   - European format: `dd/MM/yyyy` → `25/12/2024`

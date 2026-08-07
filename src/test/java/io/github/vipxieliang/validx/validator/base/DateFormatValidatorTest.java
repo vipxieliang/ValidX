@@ -52,18 +52,6 @@ class DateFormatValidatorTest {
         @Date(pattern = "yyyy-MM-dd")
         private String standardDate;
 
-        @Date(pattern = "yyyy-MM-dd HH:mm:ss")
-        private String dateTime;
-
-        @Date(pattern = "yyyy-MM")
-        private String yearMonth;
-
-        @Date(pattern = "HH:mm:ss")
-        private String time;
-
-        @Date(pattern = "yyyy-MM-dd hh:mm:ss a")
-        private String time12Hour;
-
         @Date(pattern = "MM/dd/yyyy")
         private String usFormat;
 
@@ -71,22 +59,6 @@ class DateFormatValidatorTest {
 
         public void setStandardDate(String standardDate) {
             this.standardDate = standardDate;
-        }
-
-        public void setDateTime(String dateTime) {
-            this.dateTime = dateTime;
-        }
-
-        public void setYearMonth(String yearMonth) {
-            this.yearMonth = yearMonth;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public void setTime12Hour(String time12Hour) {
-            this.time12Hour = time12Hour;
         }
 
         public void setUsFormat(String usFormat) {
@@ -179,108 +151,7 @@ class DateFormatValidatorTest {
         assertEquals(1, violations.size());
     }
 
-    // ==================== 日期时间格式测试 ====================
-
-    @Test
-    void testAnnotation_ValidDateTime() {
-        TestEntity entity = new TestEntity();
-        entity.setDateTime("2024-01-15 13:30:00");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void testAnnotation_ValidDateTime_Boundary() {
-        TestEntity entity = new TestEntity();
-        entity.setDateTime("2024-01-15 23:59:59");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void testAnnotation_InvalidTime_Hour24() {
-        TestEntity entity = new TestEntity();
-        entity.setDateTime("2024-01-15 24:00:00");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertEquals(1, violations.size());
-    }
-
-    @Test
-    void testAnnotation_InvalidTime_Minute60() {
-        TestEntity entity = new TestEntity();
-        entity.setDateTime("2024-01-15 12:60:00");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertEquals(1, violations.size());
-    }
-
-    @Test
-    void testAnnotation_InvalidTime_Second60() {
-        TestEntity entity = new TestEntity();
-        entity.setDateTime("2024-01-15 12:30:60");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertEquals(1, violations.size());
-    }
-
     // ==================== 特殊格式测试 ====================
-
-    @Test
-    void testAnnotation_ValidYearMonth() {
-        TestEntity entity = new TestEntity();
-        entity.setYearMonth("2024-01");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void testAnnotation_InvalidYearMonth() {
-        TestEntity entity = new TestEntity();
-        entity.setYearMonth("2024-13");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertEquals(1, violations.size());
-    }
-
-    @Test
-    void testAnnotation_ValidTime() {
-        TestEntity entity = new TestEntity();
-        entity.setTime("14:30:00");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void testAnnotation_InvalidTime() {
-        TestEntity entity = new TestEntity();
-        entity.setTime("25:00:00");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertEquals(1, violations.size());
-    }
-
-    @Test
-    void testAnnotation_Valid12HourFormat() {
-        TestEntity entity = new TestEntity();
-        entity.setTime12Hour("2024-01-15 02:30:00 PM");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertTrue(violations.isEmpty());
-    }
-
-    @Test
-    void testAnnotation_Valid12HourFormat_AM() {
-        TestEntity entity = new TestEntity();
-        entity.setTime12Hour("2024-01-15 11:30:00 AM");
-
-        Set<ConstraintViolation<TestEntity>> violations = validator.validate(entity);
-        assertTrue(violations.isEmpty());
-    }
 
     @Test
     void testAnnotation_ValidUSFormat() {
