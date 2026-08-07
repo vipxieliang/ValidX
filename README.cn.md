@@ -958,6 +958,10 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 注意事项：
   - pattern 不能包含时间符号（H、h、K、k、m、s、S、a、A、n、N）
   - 如需验证日期时间格式，请使用 @DateTime 注解
+  - **严格格式匹配**：输入值必须完全匹配 pattern 的长度和格式
+    - ✅ 有效：`@Date(pattern = "yyyy-MM-dd")` 输入 `"2024-01-15"`
+    - ❌ 无效：`@Date(pattern = "yyyy-MM-dd")` 输入 `"2024-01-15 12:00:00"`（包含时间）
+    - ❌ 无效：`@Date(pattern = "yyyy-MM-dd")` 输入 `"2024-1-5"`（缺少补零）
   - 使用 `yyyy-MM-dd` 等格式时，日期必须补零（如 `2024-01-05` 而非 `2024-1-5`）
   - 分隔符必须与格式完全匹配（如格式为 `yyyy-MM-dd` 时，`2024/01/15` 会验证失败）
   - null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
@@ -1037,6 +1041,10 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - pattern 必须包含至少一个时间符号（H、h、K、k、m、s、S、a、A、n、N）
   - 如需验证纯日期格式（不含时间），请使用 @Date 注解
   - 时间必须有效：小时 0-23、分钟 0-59、秒 0-59
+  - **严格格式匹配**：输入值必须完全匹配 pattern 的长度和格式，包括时间部分
+    - ✅ 有效：`@DateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2024-01-15 13:30:00"`
+    - ❌ 无效：`@DateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2024-01-15"`（缺少时间）
+    - ❌ 无效：`@DateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2024-01-15 13:30"`（时间不完整）
   - 使用补零格式时，值必须完全匹配
   - null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
 
@@ -1088,6 +1096,14 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   @FutureDateTime
   private String futureDateTime;  // 支持 "2025-12-31 23:59:59"
   ```
+* 注意事项：
+  - pattern 不能包含时间符号（H、h、K、k、m、s、S、a、A、n、N）
+  - 如需验证包含时间的未来日期，请使用 @FutureDateTime 注解
+  - **严格格式匹配**：输入值必须完全匹配 pattern 的长度和格式
+    - ✅ 有效：`@FutureDate(pattern = "yyyy-MM-dd")` 输入 `"2025-12-31"`
+    - ❌ 无效：`@FutureDate(pattern = "yyyy-MM-dd")` 输入 `"2025-12-31 12:00:00"`（包含时间）
+    - ❌ 无效：`@FutureDate(pattern = "yyyy-MM-dd")` 输入 `"2025-1-5"`（缺少补零）
+  - null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 [↑ 返回快速查询表](#快速查询表)
 
@@ -1137,6 +1153,14 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   @PastDateTime
   private String pastDateTime;  // 支持 "2020-01-01 12:30:45"
   ```
+* 注意事项：
+  - pattern 不能包含时间符号（H、h、K、k、m、s、S、a、A、n、N）
+  - 如需验证包含时间的过去日期，请使用 @PastDateTime 注解
+  - **严格格式匹配**：输入值必须完全匹配 pattern 的长度和格式
+    - ✅ 有效：`@PastDate(pattern = "yyyy-MM-dd")` 输入 `"2020-01-01"`
+    - ❌ 无效：`@PastDate(pattern = "yyyy-MM-dd")` 输入 `"2020-01-01 12:30:45"`（包含时间）
+    - ❌ 无效：`@PastDate(pattern = "yyyy-MM-dd")` 输入 `"2020-1-1"`（缺少补零）
+  - null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 [↑ 返回快速查询表](#快速查询表)
 
@@ -1167,6 +1191,14 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 自定义格式
   validator.isPastDateTime("2020-01-01T12:30:45", false, "yyyy-MM-dd'T'HH:mm:ss");
   ```
+* 注意事项：
+  - pattern 必须包含至少一个时间符号（H、h、K、k、m、s、S、a、A、n、N）
+  - 如需验证纯日期格式（不含时间），请使用 @PastDate 注解
+  - **严格格式匹配**：输入值必须完全匹配 pattern 的长度和格式，包括时间部分
+    - ✅ 有效：`@PastDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2020-01-01 12:30:45"`
+    - ❌ 无效：`@PastDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2020-01-01"`（缺少时间）
+    - ❌ 无效：`@PastDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2020-01-01 12:30"`（时间不完整）
+  - null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 [↑ 返回快速查询表](#快速查询表)
 
@@ -1197,6 +1229,14 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   // 自定义格式
   validator.isFutureDateTime("12/31/2025 23:59:59", false, "MM/dd/yyyy HH:mm:ss");
   ```
+* 注意事项：
+  - pattern 必须包含至少一个时间符号（H、h、K、k、m、s、S、a、A、n、N）
+  - 如需验证纯日期格式（不含时间），请使用 @FutureDate 注解
+  - **严格格式匹配**：输入值必须完全匹配 pattern 的长度和格式，包括时间部分
+    - ✅ 有效：`@FutureDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2025-12-31 23:59:59"`
+    - ❌ 无效：`@FutureDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2025-12-31"`（缺少时间）
+    - ❌ 无效：`@FutureDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` 输入 `"2025-12-31 23:59"`（时间不完整）
+  - null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 [↑ 返回快速查询表](#快速查询表)
 

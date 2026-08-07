@@ -30,6 +30,8 @@ Added optional `pattern` parameter to existing `@PastDate` annotation to support
 - Supports custom date formats (but does not allow time components)
 - Existing `includeToday` parameter remains unchanged
 - Smart format validation: pattern **cannot** contain time format symbols
+- **Uses strict validation mode (ResolverStyle.STRICT)**: Automatically rejects invalid dates (e.g., 2024-02-30, 2023-02-29)
+- **Strict format matching**: Input must exactly match the pattern length and format (e.g., zero-padding required when using `yyyy-MM-dd`)
 
 **Annotation Examples:**
 
@@ -95,6 +97,8 @@ Added optional `pattern` parameter to existing `@FutureDate` annotation to suppo
 - Supports custom date formats (but does not allow time components)
 - Existing `includeToday` parameter remains unchanged
 - Smart format validation: pattern **cannot** contain time format symbols
+- **Uses strict validation mode (ResolverStyle.STRICT)**: Automatically rejects invalid dates (e.g., 2024-02-30, 2023-02-29)
+- **Strict format matching**: Input must exactly match the pattern length and format (e.g., zero-padding required when using `yyyy-MM-dd`)
 
 **Annotation Examples:**
 
@@ -246,6 +250,7 @@ Added pure date format validation annotation to verify if a string conforms to a
 - Automatically rejects invalid dates (e.g., 2024-02-30, 2023-02-29)
 - Pattern must NOT contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
 - Full internationalization support (9 languages)
+- **Strict format matching**: Input must exactly match the pattern length and format (e.g., zero-padding required when using `yyyy-MM-dd`)
 
 **Annotation Examples:**
 
@@ -332,6 +337,7 @@ Added date-time format validation annotation to verify if a string conforms to a
 - Automatically rejects invalid dates and times (e.g., 2024-02-30 13:00:00, 2024-01-15 25:00:00)
 - Pattern must contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
 - Full internationalization support (9 languages)
+- **Strict format matching**: Input must exactly match the pattern including time components (e.g., missing seconds will fail validation)
 
 **Annotation Examples:**
 
@@ -415,6 +421,8 @@ Added dedicated past date-time validation annotation for validating past date-ti
 - Supports `includeToday` parameter to control whether current time is included
 - Pattern validation ensures pattern must contain time components (H, h, K, k, m, s, S, a, A, n, N)
 - Full internationalization support (9 languages)
+- **Uses strict validation mode (ResolverStyle.STRICT)**: Automatically rejects invalid date-times
+- **Strict format matching**: Input must exactly match the pattern including time components (e.g., missing seconds will fail validation)
 
 **Annotation Examples:**
 
@@ -473,6 +481,8 @@ Added dedicated future date-time validation annotation for validating future dat
 - Supports `includeToday` parameter to control whether current time is included
 - Pattern validation ensures pattern must contain time components (H, h, K, k, m, s, S, a, A, n, N)
 - Full internationalization support (9 languages)
+- **Uses strict validation mode (ResolverStyle.STRICT)**: Automatically rejects invalid date-times
+- **Strict format matching**: Input must exactly match the pattern including time components (e.g., missing seconds will fail validation)
 
 **Annotation Examples:**
 

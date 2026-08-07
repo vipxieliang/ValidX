@@ -958,6 +958,10 @@ Click on the annotation name to jump to its detailed documentation.
 * Important Notes:
   - Pattern must NOT contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
   - For date-time formats, use @DateTime annotation instead
+  - **Strict format matching**: Input must exactly match the pattern length and format
+    - ✅ Valid: `@Date(pattern = "yyyy-MM-dd")` with input `"2024-01-15"`
+    - ❌ Invalid: `@Date(pattern = "yyyy-MM-dd")` with input `"2024-01-15 12:00:00"` (contains time)
+    - ❌ Invalid: `@Date(pattern = "yyyy-MM-dd")` with input `"2024-1-5"` (missing zero-padding)
   - When using formats like `yyyy-MM-dd`, dates must be zero-padded (e.g., `2024-01-05` not `2024-1-5`)
   - Separators must exactly match the format (e.g., `2024/01/15` will fail with format `yyyy-MM-dd`)
   - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
@@ -1036,6 +1040,10 @@ Click on the annotation name to jump to its detailed documentation.
 * Important Notes:
   - Pattern must contain at least one time symbol (H, h, K, k, m, s, S, a, A, n, N)
   - For pure date formats (no time), use @Date annotation instead
+  - **Strict format matching**: Input must exactly match the pattern including time components
+    - ✅ Valid: `@DateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2024-01-15 13:30:00"`
+    - ❌ Invalid: `@DateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2024-01-15"` (missing time)
+    - ❌ Invalid: `@DateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2024-01-15 13:30"` (incomplete time)
   - Time must be valid: hour 0-23, minute 0-59, second 0-59
   - When using zero-padded formats, values must match exactly
   - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
@@ -1084,6 +1092,14 @@ Click on the annotation name to jump to its detailed documentation.
   // Custom format
   validator.isFutureDate("12/31/2025", false, "MM/dd/yyyy");
   ```
+* Important Notes:
+  - Pattern must NOT contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
+  - For validating future dates with time, use @FutureDateTime annotation instead
+  - **Strict format matching**: Input must exactly match the pattern length and format
+    - ✅ Valid: `@FutureDate(pattern = "yyyy-MM-dd")` with input `"2025-12-31"`
+    - ❌ Invalid: `@FutureDate(pattern = "yyyy-MM-dd")` with input `"2025-12-31 12:00:00"` (contains time)
+    - ❌ Invalid: `@FutureDate(pattern = "yyyy-MM-dd")` with input `"2025-1-5"` (missing zero-padding)
+  - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
@@ -1129,6 +1145,14 @@ Click on the annotation name to jump to its detailed documentation.
   // Custom format
   validator.isPastDate("01/01/2020", false, "MM/dd/yyyy");
   ```
+* Important Notes:
+  - Pattern must NOT contain time symbols (H, h, K, k, m, s, S, a, A, n, N)
+  - For validating past dates with time, use @PastDateTime annotation instead
+  - **Strict format matching**: Input must exactly match the pattern length and format
+    - ✅ Valid: `@PastDate(pattern = "yyyy-MM-dd")` with input `"2020-01-01"`
+    - ❌ Invalid: `@PastDate(pattern = "yyyy-MM-dd")` with input `"2020-01-01 12:30:45"` (contains time)
+    - ❌ Invalid: `@PastDate(pattern = "yyyy-MM-dd")` with input `"2020-1-1"` (missing zero-padding)
+  - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
@@ -1159,6 +1183,14 @@ Click on the annotation name to jump to its detailed documentation.
   // Custom format
   validator.isPastDateTime("2020-01-01T12:30:45", false, "yyyy-MM-dd'T'HH:mm:ss");
   ```
+* Important Notes:
+  - Pattern must contain at least one time symbol (H, h, K, k, m, s, S, a, A, n, N)
+  - For pure date formats (no time), use @PastDate annotation instead
+  - **Strict format matching**: Input must exactly match the pattern including time components
+    - ✅ Valid: `@PastDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2020-01-01 12:30:45"`
+    - ❌ Invalid: `@PastDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2020-01-01"` (missing time)
+    - ❌ Invalid: `@PastDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2020-01-01 12:30"` (incomplete time)
+  - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
@@ -1189,6 +1221,14 @@ Click on the annotation name to jump to its detailed documentation.
   // Custom format
   validator.isFutureDateTime("12/31/2025 23:59:59", false, "MM/dd/yyyy HH:mm:ss");
   ```
+* Important Notes:
+  - Pattern must contain at least one time symbol (H, h, K, k, m, s, S, a, A, n, N)
+  - For pure date formats (no time), use @FutureDate annotation instead
+  - **Strict format matching**: Input must exactly match the pattern including time components
+    - ✅ Valid: `@FutureDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2025-12-31 23:59:59"`
+    - ❌ Invalid: `@FutureDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2025-12-31"` (missing time)
+    - ❌ Invalid: `@FutureDateTime(pattern = "yyyy-MM-dd HH:mm:ss")` with input `"2025-12-31 23:59"` (incomplete time)
+  - null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
