@@ -13,7 +13,7 @@
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
 
-**Simple, Elegant, Reliable - 90+ ready-to-use validators for Chinese business scenarios**
+**Simple, Elegant, Reliable - 100+ ready-to-use validators for Chinese business scenarios**
 
 </div>
 
@@ -66,7 +66,7 @@
 
 ## Introduction
 
-ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
+ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 100+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
 
 ## 💡 Why We Created ValidX?
 
@@ -105,7 +105,7 @@ When using standard annotations, error messages are typically in English, or req
 
 Based on these pain points, we created ValidX with the goal: **Make Java validation simple, elegant, and reliable**
 
-1. **90+ Chinese scenario validators** - From ID cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business
+1. **100+ Chinese scenario validators** - From ID cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business
 2. **Two usage styles** - Annotation-based (for DTO object validation) and fluent chain API (for dynamic validation), flexible for different scenarios
 3. **Zero-config multi-language** - Supports 8 languages, automatically adapts to user language environment
 4. **Enterprise-grade reliability** - 1300+ unit tests ensure quality, production-validated
@@ -118,7 +118,7 @@ We hope ValidX can become the standard tool for every Java application serving C
 ## ✨ Why Choose ValidX?
 
 ### 🇨🇳 **Built for China**
-- **90+ Chinese-specific validators**: ID cards, phone numbers, bank cards, social credit codes, license plates, and more
+- **100+ Chinese-specific validators**: ID cards, phone numbers, bank cards, social credit codes, license plates, and more
 - **8 languages supported**: Simplified Chinese, English, Japanese, Korean, French, German, Spanish, Russian
 - **Local business validation**: Express tracking, QQ, WeChat, Alipay order numbers
 
