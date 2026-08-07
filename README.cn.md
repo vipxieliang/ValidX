@@ -21,6 +21,7 @@
 
 ## 📑 目录
 
+- [版本更新通知](#-版本更新通知)
 - [介绍](#介绍)
 - [为什么创作 ValidX？](#-为什么创作-validx)
 - [为什么选择 ValidX？](#-为什么选择-validx)
@@ -41,6 +42,25 @@
   - [手机相关验证](#手机相关的验证)
 - [更多验证注解](#更多的的验证注解)
 - [贡献](#贡献)
+
+---
+
+## 📢 版本更新通知
+
+**当前版本：v1.1.0** (2026年8月6日发布)
+
+**v1.1.0 主要更新：**
+- ✨ 新增验证注解：`@Date`、`@DateTime`、`@FutureDateTime`、`@PastDateTime`、`@ChineseName`、`@Contains` 等
+- ⚠️ **破坏性变更**：`@FutureDate` 和 `@PastDate` 不再支持包含时间的格式
+  - 如需验证包含时间的日期，请使用新增的 `@FutureDateTime` 和 `@PastDateTime` 注解
+- 🔧 改进了日期验证的严格性和准确性（支持闰年、无效日期检测等）
+- 📖 完善了文档和示例代码
+
+**升级指南：** 如果你正在从 v1.0.x 升级，请查看 [v1.1.0 迁移指南](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md)
+
+**历史版本文档：**
+- [v1.0.1 文档](docs/version/v1.0.1/README_CN.md) | [v1.0.1 更新日志](docs/version/v1.0.1/CHANGELOG_CN.md)
+- [v1.0.0 文档](docs/version/v1.0.0/README_CN.md)
 
 ---
 

@@ -21,6 +21,7 @@
 
 ## 📑 Table of Contents
 
+- [Version Update Notice](#-version-update-notice)
 - [Introduction](#introduction)
 - [Why We Created ValidX?](#-why-we-created-validx)
 - [Why Choose ValidX?](#-why-choose-validx)
@@ -41,6 +42,25 @@
   - [Mobile Device Validation](#mobile-phone-related-validation)
 - [More Validation Annotations](#more-validation-annotations)
 - [Contribution](#contribution)
+
+---
+
+## 📢 Version Update Notice
+
+**Current Version: v1.1.0** (Released August 6, 2026)
+
+**v1.1.0 Key Updates:**
+- ✨ New validation annotations: `@Date`, `@DateTime`, `@FutureDateTime`, `@PastDateTime`, `@ChineseName`, `@Contains`, etc.
+- ⚠️ **Breaking Changes**: `@FutureDate` and `@PastDate` no longer support formats with time components
+  - Use the newly added `@FutureDateTime` and `@PastDateTime` annotations for validating dates with time
+- 🔧 Enhanced date validation strictness and accuracy (leap year support, invalid date detection, etc.)
+- 📖 Improved documentation and code examples
+
+**Migration Guide:** If upgrading from v1.0.x, please refer to the [v1.1.0 Migration Guide](docs/version/v1.1.0/MIGRATION_v1.1.0.md)
+
+**Historical Version Documentation:**
+- [v1.0.1 Documentation](docs/version/v1.0.1/README.md) | [v1.0.1 Changelog](docs/version/v1.0.1/CHANGELOG.md)
+- [v1.0.0 Documentation](docs/version/v1.0.0/README.md)
 
 ---
 
