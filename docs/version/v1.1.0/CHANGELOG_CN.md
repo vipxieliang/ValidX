@@ -1,6 +1,6 @@
 # ValidX v1.1.0 更新日志
 
-**发布日期：** 2026年8月6日
+**发布日期：** 2026年8月7日
 
 本文档记录从 v1.0.1 到 v1.1.0 的变更内容。
 
@@ -15,6 +15,7 @@
   - 新增 `@DateTime` 日期时间格式验证注解
   - 新增 `@PastDateTime` 过去日期时间验证注解
   - 新增 `@FutureDateTime` 未来日期时间验证注解
+  - 新增 `@NotContains` 字符串不包含验证注解
 - 🔧 [功能增强](#功能增强-)：日期验证器支持自定义格式（pattern 参数）
 
 ---
@@ -527,6 +528,113 @@ validator.field("会议时间").isFutureDateTime(
     true  // 允许当前时间
 );
 ```
+
+---
+
+### 6. @NotContains 字符串不包含验证注解
+
+新增专用的字符串不包含验证注解，用于验证字符串是否不包含指定的子字符串。适用于安全验证、内容过滤和防止敏感关键词。
+
+**功能特性：**
+- 验证字符串是否不包含禁止的子字符串
+- 支持多个禁止子字符串的验证
+- 支持忽略大小写匹配（`ignoreCase` 参数）
+- 支持两种匹配模式：
+  - **AND 逻辑**（默认，`matchAll = true`）：必须所有禁止的子字符串都不包含
+  - **OR 逻辑**（`matchAll = false`）：至少有一个禁止的子字符串不包含即可
+- 完整的国际化支持（9 种语言）
+- 与 `@Contains` 注解互补，提供全面的字符串验证
+
+**注解方式示例：**
+
+```java
+public class SecurityDTO {
+    // 示例 1：安全验证 - 阻止保留关键字（AND 逻辑，默认）
+    @NotContains(value = {"admin", "root", "system"}, ignoreCase = true)
+    private String username;
+
+    // 示例 2：内容过滤 - 阻止敏感词
+    @NotContains(value = {"垃圾", "广告"}, ignoreCase = true)
+    private String comment;
+
+    // 示例 3：XSS防护 - 阻止脚本注入
+    @NotContains(value = {"<script", "javascript:", "onerror="}, ignoreCase = true)
+    private String userInput;
+
+    // 示例 4：URL安全验证（AND 逻辑 - 必须都不包含）
+    @NotContains(value = {"javascript:", "data:", "vbscript:"}, matchAll = true)
+    private String url;
+
+    // 示例 5：OR 逻辑 - 至少有一个不包含即可
+    @NotContains(value = {"script", "alert"}, matchAll = false)
+    private String description;
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 基本用法（AND 逻辑 - 默认）
+validator.field("用户名").isNotContains("user123", new String[]{"admin", "root"});
+
+// 忽略大小写
+validator.field("用户名").isNotContains("normaluser", new String[]{"ADMIN", "ROOT"}, true);
+
+// OR 逻辑 - 至少有一个不包含即可
+validator.field("内容").isNotContains("hello world", new String[]{"script", "alert"}, false, false);
+
+// AND 逻辑 - 必须全都不包含
+validator.field("URL").isNotContains("https://example.com", new String[]{"javascript:", "data:"}, false, true);
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：用户注册验证
+@RestController
+public class UserController {
+    @PostMapping("/register")
+    public Result register(@Valid @RequestBody UserRegistrationDTO dto) {
+        return userService.register(dto);
+    }
+}
+
+public class UserRegistrationDTO {
+    @NotBlank(message = "用户名不能为空")
+    @NotContains(value = {"admin", "root", "system", "test"}, ignoreCase = true)
+    private String username;
+}
+
+// 场景 2：内容审核
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("评论内容").isNotContains(comment, new String[]{"垃圾", "广告", "spam"}, true);
+
+// 场景 3：XSS防护
+ValidX validator = ValidX.init();
+validator.field("用户输入").isNotContains(
+    userInput,
+    new String[]{"<script", "javascript:", "onerror=", "onclick="},
+    true,  // 忽略大小写
+    true   // AND 逻辑：必须全部不包含
+);
+
+// 场景 4：文件名安全验证
+public class FileUploadDTO {
+    @NotContains(value = {"../", "..\\", "/etc/", "C:\\"}, matchAll = true)
+    private String fileName;
+}
+```
+
+**注意事项：**
+- **AND 逻辑**（默认）：只有字符串不包含所有指定的子字符串时才通过验证
+- **OR 逻辑**（`matchAll = false`）：字符串至少不包含一个指定的子字符串即可通过验证
+- 默认区分大小写；使用 `ignoreCase = true` 可忽略大小写
+- null 和空字符串默认通过验证（配合 `@NotNull` 或 `@NotEmpty` 使用）
+- 常见应用场景：用户名验证（阻止保留关键字）、XSS防护、内容审核、URL安全验证
+- 与 `@Contains` 互补：`@Contains` 验证必须包含，`@NotContains` 验证必须不包含
 
 ---
 

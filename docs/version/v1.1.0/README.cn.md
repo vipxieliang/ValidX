@@ -13,7 +13,7 @@
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
 
-**简单、优雅、可靠 - 90+ 开箱即用的中国业务验证器**
+**简单、优雅、可靠 - 100+ 开箱即用的中国业务验证器**
 
 </div>
 
@@ -66,7 +66,7 @@
 
 ## 介绍
 
-ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证变得简单、优雅、可靠。基于 JSR-380 标准构建，提供 90+ 个专门针对中国场景的验证注解，包括身份证、手机号、银行卡等。
+ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证变得简单、优雅、可靠。基于 JSR-380 标准构建，提供 100+ 个专门针对中国场景的验证注解，包括身份证、手机号、银行卡等。
 
 ## 💡 为什么创作 ValidX？
 
@@ -105,7 +105,7 @@ ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证�
 
 基于这些痛点，我们创建了 ValidX，目标是：**让 Java 验证简单、优雅、可靠**
 
-1. **90+ 中国场景验证器** - 从身份证到快递单号，从 QQ 号到车牌号，覆盖中国业务的方方面面
+1. **100+ 中国场景验证器** - 从身份证到快递单号，从 QQ 号到车牌号，覆盖中国业务的方方面面
 2. **两种使用方式** - 注解式（适合 DTO 对象验证）和链式 API（适合动态验证），灵活应对不同场景
 3. **零配置多语言** - 支持 8 种语言，自动适配用户语言环境
 4. **企业级可靠性** - 1300+ 单元测试保证质量，生产环境验证
@@ -118,7 +118,7 @@ ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证�
 ## ✨ 为什么选择 ValidX？
 
 ### 🇨🇳 **为中国而生**
-- **90+ 中国特色验证器**：身份证、手机号、银行卡、统一社会信用代码、车牌号等
+- **100+ 中国特色验证器**：身份证、手机号、银行卡、统一社会信用代码、车牌号等
 - **支持 8 种语言**：简体中文、英语、日语、韩语、法语、德语、西班牙语、俄语
 - **本土业务验证**：快递单号、QQ、微信、支付宝订单号
 
@@ -659,6 +659,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 | 1.0.0 | - |
 | **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 | 1.0.0 | - |
 | **基础验证** | [@Contains](#contains) | 字符串包含子串验证 | 1.0.1 | - |
+| **基础验证** | [@NotContains](#notcontains) | 字符串不包含子串验证 | 1.1.0 | - |
 | **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 | 1.0.0 | - |
 | **基础验证** | [@In](#in) | 值必须在指定列表中 | 1.0.0 | - |
 | **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 | 1.0.0 | - |
@@ -2114,6 +2115,57 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 子字符串可以出现在任何位置（开头、中间或结尾）
   - 默认区分大小写；使用 `ignoreCase = true` 可忽略大小写
   - 常见应用场景：邮箱验证（`@`）、严格邮箱验证（`@` 和 `.`）、URL检查（`http://`）、密码强度验证（必须包含多种字符类型）、内容过滤
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @NotContains
+* 校验规则：不包含验证，验证字符串是否不包含指定的子字符串。适用于安全验证、内容过滤和防止敏感关键词。
+* 示例格式：`"user123"` 不包含 `"admin"`，`"https://example.com"` 不包含 `"javascript:"`
+* 配置选项：
+  - `value`：禁止的子字符串数组
+  - `ignoreCase`：是否忽略大小写，默认为 `false`
+  - `matchAll`：匹配模式，默认为 `true`
+    - `true`（默认）：AND 逻辑 - 必须所有禁止的子字符串都不包含
+    - `false`：OR 逻辑 - 至少有一个禁止的子字符串不包含即可
+* 使用示例：
+  ```java
+  // 注解方式使用 - 安全验证
+  @NotContains(value = {"admin", "root", "system"}, ignoreCase = true)
+  private String username;
+
+  // 内容过滤
+  @NotContains(value = {"垃圾", "广告"}, ignoreCase = true)
+  private String comment;
+
+  // XSS防护
+  @NotContains(value = {"<script", "javascript:", "onerror="}, ignoreCase = true)
+  private String userInput;
+
+  // URL安全验证（AND 逻辑 - 必须都不包含）
+  @NotContains(value = {"javascript:", "data:", "vbscript:"}, matchAll = true)
+  private String url;
+
+  // 链式调用方式使用
+  ValidX validator = ValidX.init();
+
+  // 基本用法（AND 逻辑 - 默认）
+  validator.isNotContains("user123", new String[]{"admin", "root"});
+
+  // 忽略大小写
+  validator.isNotContains("normaluser", new String[]{"ADMIN", "ROOT"}, true);
+
+  // OR 逻辑 - 至少有一个不包含即可
+  validator.isNotContains("hello world", new String[]{"script", "alert"}, false, false);
+
+  // AND 逻辑 - 必须全都不包含
+  validator.isNotContains("https://example.com", new String[]{"javascript:", "data:"}, false, true);
+  ```
+* 注意事项：
+  - **AND 逻辑**（默认）：只有字符串不包含所有指定的子字符串时才通过验证
+  - **OR 逻辑**（`matchAll = false`）：字符串至少不包含一个指定的子字符串即可通过验证
+  - 默认区分大小写；使用 `ignoreCase = true` 可忽略大小写
+  - 常见应用场景：用户名验证（阻止保留关键字）、XSS防护、内容审核、URL安全验证
+  - 与 `@Contains` 互补，提供全面的字符串验证
 
 [↑ 返回快速查询表](#快速查询表)
 

@@ -13,7 +13,7 @@
 [![Java](https://img.shields.io/badge/Java-8%2B-orange.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/vipxieliang/ValidX/pulls)
 
-**Simple, Elegant, Reliable - 90+ ready-to-use validators for Chinese business scenarios**
+**Simple, Elegant, Reliable - 100+ ready-to-use validators for Chinese business scenarios**
 
 </div>
 
@@ -66,7 +66,7 @@
 
 ## Introduction
 
-ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 90+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
+ValidX is an open-source Java validation library focused on Chinese business scenarios, making validation simple, elegant, and reliable. Built on JSR-380 standards with 100+ specialized annotations for Chinese identity cards, phone numbers, bank cards, and more.
 
 ## 💡 Why We Created ValidX?
 
@@ -105,7 +105,7 @@ When using standard annotations, error messages are typically in English, or req
 
 Based on these pain points, we created ValidX with the goal: **Make Java validation simple, elegant, and reliable**
 
-1. **90+ Chinese scenario validators** - From ID cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business
+1. **100+ Chinese scenario validators** - From ID cards to express tracking numbers, from QQ numbers to license plates, covering all aspects of Chinese business
 2. **Two usage styles** - Annotation-based (for DTO object validation) and fluent chain API (for dynamic validation), flexible for different scenarios
 3. **Zero-config multi-language** - Supports 8 languages, automatically adapts to user language environment
 4. **Enterprise-grade reliability** - 1300+ unit tests ensure quality, production-validated
@@ -118,7 +118,7 @@ We hope ValidX can become the standard tool for every Java application serving C
 ## ✨ Why Choose ValidX?
 
 ### 🇨🇳 **Built for China**
-- **90+ Chinese-specific validators**: ID cards, phone numbers, bank cards, social credit codes, license plates, and more
+- **100+ Chinese-specific validators**: ID cards, phone numbers, bank cards, social credit codes, license plates, and more
 - **8 languages supported**: Simplified Chinese, English, Japanese, Korean, French, German, Spanish, Russian
 - **Local business validation**: Express tracking, QQ, WeChat, Alipay order numbers
 
@@ -659,6 +659,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   | - |
 | **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   | - |
 | **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   | - |
+| **Basic Validation** | [@NotContains](#notcontains) | String does not contain substring validation | 1.1.0   | - |
 | **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   | - |
 | **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   | - |
 | **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   | - |
@@ -2106,6 +2107,57 @@ Click on the annotation name to jump to its detailed documentation.
   - Substring can appear at any position (beginning, middle, or end)
   - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
   - Common use cases: email validation (`@`), strict email validation (`@` and `.`), URL checking (`http://`), password strength (must contain multiple character types), content filtering
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @NotContains
+* Validation Rule: Not contains validation, validating whether the string does NOT contain the specified substring(s). Useful for security validation, content filtering, and preventing sensitive keywords.
+* Example Format: `"user123"` does not contain `"admin"`, `"https://example.com"` does not contain `"javascript:"`
+* Configuration Options:
+  - `value`: Array of forbidden substrings
+  - `ignoreCase`: Whether to ignore case, default is `false`
+  - `matchAll`: Matching mode, default is `true`
+    - `true` (default): AND logic - passes only if ALL forbidden substrings are absent
+    - `false`: OR logic - passes if ANY forbidden substring is absent
+* Usage Example:
+  ```java
+  // Annotation-based usage - security validation
+  @NotContains(value = {"admin", "root", "system"}, ignoreCase = true)
+  private String username;
+
+  // Content filtering
+  @NotContains(value = {"spam", "offensive"}, ignoreCase = true)
+  private String comment;
+
+  // XSS prevention
+  @NotContains(value = {"<script", "javascript:", "onerror="}, ignoreCase = true)
+  private String userInput;
+
+  // URL security validation (AND logic - must not contain any)
+  @NotContains(value = {"javascript:", "data:", "vbscript:"}, matchAll = true)
+  private String url;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+
+  // Basic usage (AND logic - default)
+  validator.isNotContains("user123", new String[]{"admin", "root"});
+
+  // Case-insensitive
+  validator.isNotContains("normaluser", new String[]{"ADMIN", "ROOT"}, true);
+
+  // OR logic - passes if at least one is absent
+  validator.isNotContains("hello world", new String[]{"script", "alert"}, false, false);
+
+  // AND logic - must not contain all
+  validator.isNotContains("https://example.com", new String[]{"javascript:", "data:"}, false, true);
+  ```
+* Notes:
+  - **AND logic** (default): Passes only if the string does NOT contain ALL of the specified substrings
+  - **OR logic** (`matchAll = false`): Passes if the string does NOT contain AT LEAST ONE of the specified substrings
+  - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
+  - Common use cases: username validation (block reserved keywords), XSS prevention, content moderation, URL security validation
+  - Complements `@Contains` for comprehensive string validation
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

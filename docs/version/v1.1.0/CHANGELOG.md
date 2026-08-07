@@ -1,6 +1,6 @@
 # ValidX v1.1.0 Changelog
 
-**Release Date:** August 6, 2026
+**Release Date:** August 7, 2026
 
 This document records the changes from v1.0.1 to v1.1.0.
 
@@ -15,6 +15,7 @@ This document records the changes from v1.0.1 to v1.1.0.
   - New `@DateTime` date-time format validation annotation
   - New `@PastDateTime` past date-time validation annotation
   - New `@FutureDateTime` future date-time validation annotation
+  - New `@NotContains` string not-contains validation annotation
 - 🔧 [Enhancements](#enhancements-): Date validators support custom format (pattern parameter)
 
 ---
@@ -527,6 +528,113 @@ validator.field("Meeting Time").isFutureDateTime(
     true  // Allow current time
 );
 ```
+
+---
+
+### 6. @NotContains String Not-Contains Validation Annotation
+
+Added dedicated string not-contains validation annotation for verifying that strings do not contain specified substrings. Suitable for security validation, content filtering, and preventing sensitive keywords.
+
+**Features:**
+- Validates that strings do not contain forbidden substrings
+- Supports validation of multiple forbidden substrings
+- Supports case-insensitive matching (`ignoreCase` parameter)
+- Supports two matching modes:
+  - **AND logic** (default, `matchAll = true`): All forbidden substrings must be absent
+  - **OR logic** (`matchAll = false`): At least one forbidden substring must be absent
+- Full internationalization support (9 languages)
+- Complements the `@Contains` annotation for comprehensive string validation
+
+**Annotation Examples:**
+
+```java
+public class SecurityDTO {
+    // Example 1: Security validation - block reserved keywords (AND logic, default)
+    @NotContains(value = {"admin", "root", "system"}, ignoreCase = true)
+    private String username;
+
+    // Example 2: Content filtering - block sensitive words
+    @NotContains(value = {"spam", "advertisement"}, ignoreCase = true)
+    private String comment;
+
+    // Example 3: XSS protection - block script injection
+    @NotContains(value = {"<script", "javascript:", "onerror="}, ignoreCase = true)
+    private String userInput;
+
+    // Example 4: URL security validation (AND logic - all must be absent)
+    @NotContains(value = {"javascript:", "data:", "vbscript:"}, matchAll = true)
+    private String url;
+
+    // Example 5: OR logic - at least one must be absent
+    @NotContains(value = {"script", "alert"}, matchAll = false)
+    private String description;
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// Basic usage (AND logic - default)
+validator.field("Username").isNotContains("user123", new String[]{"admin", "root"});
+
+// Ignore case
+validator.field("Username").isNotContains("normaluser", new String[]{"ADMIN", "ROOT"}, true);
+
+// OR logic - at least one must be absent
+validator.field("Content").isNotContains("hello world", new String[]{"script", "alert"}, false, false);
+
+// AND logic - all must be absent
+validator.field("URL").isNotContains("https://example.com", new String[]{"javascript:", "data:"}, false, true);
+```
+
+**Real-World Use Cases:**
+
+```java
+// Use Case 1: User registration validation
+@RestController
+public class UserController {
+    @PostMapping("/register")
+    public Result register(@Valid @RequestBody UserRegistrationDTO dto) {
+        return userService.register(dto);
+    }
+}
+
+public class UserRegistrationDTO {
+    @NotBlank(message = "Username is required")
+    @NotContains(value = {"admin", "root", "system", "test"}, ignoreCase = true)
+    private String username;
+}
+
+// Use Case 2: Content moderation
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("Comment").isNotContains(comment, new String[]{"spam", "advertisement", "scam"}, true);
+
+// Use Case 3: XSS protection
+ValidX validator = ValidX.init();
+validator.field("User Input").isNotContains(
+    userInput,
+    new String[]{"<script", "javascript:", "onerror=", "onclick="},
+    true,  // Ignore case
+    true   // AND logic: all must be absent
+);
+
+// Use Case 4: File name security validation
+public class FileUploadDTO {
+    @NotContains(value = {"../", "..\\", "/etc/", "C:\\"}, matchAll = true)
+    private String fileName;
+}
+```
+
+**Notes:**
+- **AND logic** (default): Only passes validation when the string does not contain all specified substrings
+- **OR logic** (`matchAll = false`): Passes validation when the string does not contain at least one specified substring
+- Case-sensitive by default; use `ignoreCase = true` to ignore case
+- null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty`)
+- Common use cases: username validation (block reserved keywords), XSS protection, content moderation, URL security validation
+- Complements `@Contains`: `@Contains` validates must contain, `@NotContains` validates must not contain
 
 ---
 
