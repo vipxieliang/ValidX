@@ -654,10 +654,12 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@CronExpression](#cronexpression) | Cron expression validation | 1.0.0   | - |
 | **Basic Validation** | [@Duration](#duration) | Duration format validation | 1.0.0   | - |
 | **Basic Validation** | [@ExpressNumber](#expressnumber) | Express tracking number validation | 1.0.0   | - |
-| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   | - |
+| **Basic Validation** | [@StartsWith](#startswith) | String prefix validation | 1.0.0   | 1.2.0 |
+| **Basic Validation** | [@StartsWithAny](#startswithany) | Multiple prefix validation | 1.2.0   | - |
+| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   | 1.2.0 |
+| **Basic Validation** | [@EndsWithAny](#endswithany) | Multiple suffix validation | 1.2.0   | - |
 | **Basic Validation** | [@Contains](#contains) | String contains substring validation | 1.0.1   | - |
 | **Basic Validation** | [@NotContains](#notcontains) | String does not contain substring validation | 1.1.0   | - |
-| **Basic Validation** | [@EndsWith](#endswith) | String suffix validation | 1.0.0   | - |
 | **Basic Validation** | [@In](#in) | Value in specified list | 1.0.0   | - |
 | **Basic Validation** | [@NotIn](#notin) | Value not in specified list | 1.0.0   | - |
 | **Basic Validation** | [@Enum](#enum) | Enumeration value validation | 1.0.0   | - |
@@ -2043,16 +2045,158 @@ Click on the annotation name to jump to its detailed documentation.
 #### @StartsWith
 * Validation Rule: Prefix validation, validating whether the string starts with the specified prefix.
 * Example Format: Starting with specified string
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.2.0 (Chain API parameter changed from `String[]` to `String`)
+* **Important Changes (v1.0.0 → v1.2.0)**:
+  - **Chain API Change**: The `isStartsWith()` method parameter changed from `String[]` to `String`
+  - **v1.0.0 Behavior**: `validator.isStartsWith("text", new String[]{"prefix"})`
+  - **v1.2.0 Behavior**: `validator.isStartsWith("text", "prefix")`
+  - **Annotation Usage**: Unchanged, still uses `@StartsWith(startsWith = "prefix")`
+  - **Migration**: For single prefix validation, remove the array wrapper; for multiple prefixes, use the new `@StartsWithAny` annotation or `isStartsWithAny()` method
 * Usage Example:
   ```java
-  // Annotation-based usage
+  // Annotation-based usage (unchanged)
   @StartsWith(startsWith = "prefix")
   private String code;
 
+  // Chain call usage (v1.2.0 - simplified single value parameter)
+  ValidX validator = ValidX.init();
+  validator.isStartsWith("prefix_string", "prefix");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @StartsWithAny
+* Validation Rule: Multiple prefix validation, validating whether the string starts with any one of the specified prefixes.
+* Example Format: `"http://example.com"` starts with `"http://"` or `"https://"`, `"Mr. Smith"` starts with `"Mr."`, `"Mrs."`, `"Ms."`, or `"Dr."`
+* Configuration Options:
+  - `value`: Array of prefixes to match (at least one must match)
+* Example Formats:
+  - URL protocols: `"http://example.com"` matches `{"http://", "https://"}`
+  - Titles: `"Dr. Smith"` matches `{"Mr.", "Mrs.", "Ms.", "Dr."}`
+  - Chinese surnames: `"张三"` matches `{"张", "王", "李", "赵"}`
+  - File paths: `"/home/user"` matches `{"/home/", "/usr/", "/opt/"}`
+* Usage Example:
+  ```java
+  // Annotation-based usage - URL protocol validation
+  @StartsWithAny({"http://", "https://"})
+  private String url;
+
+  // Title validation
+  @StartsWithAny({"Mr.", "Mrs.", "Ms.", "Dr."})
+  private String title;
+
+  // Chinese surname validation
+  @StartsWithAny({"张", "王", "李", "赵"})
+  private String chineseName;
+
+  // File path validation
+  @StartsWithAny({"/home/", "/usr/", "/opt/"})
+  private String filePath;
+
   // Chain call usage
   ValidX validator = ValidX.init();
-  validator.isStartsWith("prefix_string", new String[]{"prefix"});
+
+  // Basic usage
+  validator.isStartsWithAny("http://example.com", new String[]{"http://", "https://"});
+
+  // Multiple prefix options
+  validator.isStartsWithAny("Mr. Smith", new String[]{"Mr.", "Mrs.", "Ms.", "Dr."});
+
+  // Chinese text validation
+  validator.isStartsWithAny("张三", new String[]{"张", "王", "李", "赵"});
+
+  // Check validation result
+  if (!validator.passed()) {
+      System.out.println(validator.getErrors());
+  }
   ```
+* Notes:
+  - Case-sensitive by default (e.g., "HTTP://" will not match "http://")
+  - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
+  - Empty prefix array will cause validation to fail
+  - Empty string prefix matches all strings (any string starts with empty string)
+  - Common use cases: URL validation, file path validation, title/prefix validation, Chinese surname validation
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @EndsWith
+* Validation Rule: Suffix validation, validating whether the string ends with the specified suffix.
+* Example Format: Ending with specified string
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.2.0 (Chain API parameter changed from `String[]` to `String`)
+* **Important Changes (v1.0.0 → v1.2.0)**:
+  - **Chain API Change**: The `isEndsWith()` method parameter changed from `String[]` to `String`
+  - **v1.0.0 Behavior**: `validator.isEndsWith("text", new String[]{"suffix"})`
+  - **v1.2.0 Behavior**: `validator.isEndsWith("text", "suffix")`
+  - **Annotation Usage**: Unchanged, still uses `@EndsWith(endsWith = "suffix")`
+  - **Migration**: For single suffix validation, remove the array wrapper; for multiple suffixes, use the new `@EndsWithAny` annotation or `isEndsWithAny()` method
+* Usage Example:
+  ```java
+  // Annotation-based usage (unchanged)
+  @EndsWith(endsWith = "suffix")
+  private String code;
+
+  // Chain call usage (v1.2.0 - simplified single value parameter)
+  ValidX validator = ValidX.init();
+  validator.isEndsWith("string_suffix", "suffix");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @EndsWithAny
+* Validation Rule: Multiple suffix validation, validating whether the string ends with any one of the specified suffixes.
+* Example Format: `"photo.jpg"` ends with `".jpg"`, `".jpeg"`, `".png"`, or `".gif"`, `"report.pdf"` ends with `".txt"`, `".doc"`, `".docx"`, or `".pdf"`
+* Configuration Options:
+  - `value`: Array of suffixes to match (at least one must match)
+* Example Formats:
+  - Image files: `"photo.jpg"` matches `{".jpg", ".jpeg", ".png", ".gif"}`
+  - Document files: `"report.pdf"` matches `{".txt", ".doc", ".docx", ".pdf"}`
+  - Chinese name suffixes: `"张先生"` matches `{"先生", "女士", "小姐"}`
+  - Archive files: `"data.tar.gz"` matches `{".zip", ".rar", ".7z", ".tar.gz"}`
+* Usage Example:
+  ```java
+  // Annotation-based usage - Image file validation
+  @EndsWithAny({".jpg", ".jpeg", ".png", ".gif"})
+  private String imageFile;
+
+  // Document file validation
+  @EndsWithAny({".txt", ".doc", ".docx", ".pdf"})
+  private String documentFile;
+
+  // Chinese name suffix validation
+  @EndsWithAny({"先生", "女士", "小姐"})
+  private String chineseName;
+
+  // Archive file validation
+  @EndsWithAny({".zip", ".rar", ".7z", ".tar.gz"})
+  private String archiveFile;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+
+  // Basic usage
+  validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png", ".gif"});
+
+  // Multiple suffix options
+  validator.isEndsWithAny("report.pdf", new String[]{".txt", ".doc", ".docx", ".pdf"});
+
+  // Chinese text validation
+  validator.isEndsWithAny("张先生", new String[]{"先生", "女士", "小姐"});
+
+  // Check validation result
+  if (!validator.passed()) {
+      System.out.println(validator.getErrors());
+  }
+  ```
+* Notes:
+  - Case-sensitive by default (e.g., ".JPG" will not match ".jpg")
+  - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
+  - Empty suffix array will cause validation to fail
+  - Empty string suffix matches all strings (any string ends with empty string)
+  - Common use cases: file extension validation, archive format validation, name suffix validation, Chinese honorific validation
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
@@ -2155,22 +2299,6 @@ Click on the annotation name to jump to its detailed documentation.
   - Default is case-sensitive; use `ignoreCase = true` for case-insensitive matching
   - Common use cases: username validation (block reserved keywords), XSS prevention, content moderation, URL security validation
   - Complements `@Contains` for comprehensive string validation
-
-[↑ Back to Quick Reference](#quick-reference-table)
-
-#### @EndsWith
-* Validation Rule: Suffix validation, validating whether the string ends with the specified suffix.
-* Example Format: Ending with specified string
-* Usage Example:
-  ```java
-  // Annotation-based usage
-  @EndsWith(endsWith = "suffix")
-  private String code;
-
-  // Chain call usage
-  ValidX validator = ValidX.init();
-  validator.isEndsWith("string_suffix", new String[]{"suffix"});
-  ```
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

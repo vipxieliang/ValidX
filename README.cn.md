@@ -654,10 +654,12 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **基础验证** | [@CronExpression](#cronexpression) | Cron表达式验证 | 1.0.0 | - |
 | **基础验证** | [@Duration](#duration) | 时间段格式验证 | 1.0.0 | - |
 | **基础验证** | [@ExpressNumber](#expressnumber) | 快递单号验证 | 1.0.0 | - |
-| **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 | 1.0.0 | - |
+| **基础验证** | [@StartsWith](#startswith) | 字符串前缀验证 | 1.0.0 | 1.2.0 |
+| **基础验证** | [@StartsWithAny](#startswithany) | 多前缀验证 | 1.2.0 | - |
+| **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 | 1.0.0 | 1.2.0 |
+| **基础验证** | [@EndsWithAny](#endswithany) | 多后缀验证 | 1.2.0 | - |
 | **基础验证** | [@Contains](#contains) | 字符串包含子串验证 | 1.0.1 | - |
 | **基础验证** | [@NotContains](#notcontains) | 字符串不包含子串验证 | 1.1.0 | - |
-| **基础验证** | [@EndsWith](#endswith) | 字符串后缀验证 | 1.0.0 | - |
 | **基础验证** | [@In](#in) | 值必须在指定列表中 | 1.0.0 | - |
 | **基础验证** | [@NotIn](#notin) | 值不能在指定列表中 | 1.0.0 | - |
 | **基础验证** | [@Enum](#enum) | 枚举值验证 | 1.0.0 | - |
@@ -2051,16 +2053,158 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 #### @StartsWith
 * 校验规则：前缀验证，验证字符串是否以指定的前缀开头。
 * 示例格式：以指定字符串开头
+* 版本信息：
+  - 新增版本：1.0.0
+  - 修改版本：1.2.0（链式 API 参数从 `String[]` 改为 `String`）
+* **重要变更（v1.0.0 → v1.2.0）**：
+  - **链式 API 变更**：`isStartsWith()` 方法参数从 `String[]` 改为 `String`
+  - **v1.0.0 行为**：`validator.isStartsWith("text", new String[]{"prefix"})`
+  - **v1.2.0 行为**：`validator.isStartsWith("text", "prefix")`
+  - **注解使用**：未变更，仍然使用 `@StartsWith(startsWith = "prefix")`
+  - **迁移指南**：单个前缀验证时移除数组包装；多个前缀验证请使用新的 `@StartsWithAny` 注解或 `isStartsWithAny()` 方法
 * 使用示例：
   ```java
-  // 注解方式使用
+  // 注解方式使用（未变更）
   @StartsWith(startsWith = "prefix")
   private String code;
 
+  // 链式调用方式使用（v1.2.0 - 简化为单值参数）
+  ValidX validator = ValidX.init();
+  validator.isStartsWith("prefix_string", "prefix");
+  ```
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @StartsWithAny
+* 校验规则：多前缀验证，验证字符串是否以指定的任意一个前缀开头。
+* 示例格式：`"http://example.com"` 以 `"http://"` 或 `"https://"` 开头，`"张先生"` 以 `"Mr."`、`"Mrs."`、`"Ms."` 或 `"Dr."` 开头
+* 配置选项：
+  - `value`：要匹配的前缀数组（至少匹配其中一个）
+* 示例格式：
+  - URL 协议：`"http://example.com"` 匹配 `{"http://", "https://"}`
+  - 称谓：`"Dr. Smith"` 匹配 `{"Mr.", "Mrs.", "Ms.", "Dr."}`
+  - 中文姓氏：`"张三"` 匹配 `{"张", "王", "李", "赵"}`
+  - 文件路径：`"/home/user"` 匹配 `{"/home/", "/usr/", "/opt/"}`
+* 使用示例：
+  ```java
+  // 注解方式使用 - URL 协议验证
+  @StartsWithAny({"http://", "https://"})
+  private String url;
+
+  // 称谓验证
+  @StartsWithAny({"Mr.", "Mrs.", "Ms.", "Dr."})
+  private String title;
+
+  // 中文姓氏验证
+  @StartsWithAny({"张", "王", "李", "赵"})
+  private String chineseName;
+
+  // 文件路径验证
+  @StartsWithAny({"/home/", "/usr/", "/opt/"})
+  private String filePath;
+
   // 链式调用方式使用
   ValidX validator = ValidX.init();
-  validator.isStartsWith("prefix_string", new String[]{"prefix"});
+
+  // 基本用法
+  validator.isStartsWithAny("http://example.com", new String[]{"http://", "https://"});
+
+  // 多个前缀选项
+  validator.isStartsWithAny("张先生", new String[]{"Mr.", "Mrs.", "Ms.", "Dr."});
+
+  // 中文文本验证
+  validator.isStartsWithAny("张三", new String[]{"张", "王", "李", "赵"});
+
+  // 检查验证结果
+  if (!validator.passed()) {
+      System.out.println(validator.getErrors());
+  }
   ```
+* 注意事项：
+  - 默认区分大小写（如："HTTP://" 不会匹配 "http://"）
+  - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
+  - 空前缀数组会导致验证失败
+  - 空字符串前缀会匹配所有字符串（任何字符串都以空字符串开头）
+  - 常见应用场景：URL 验证、文件路径验证、称谓/前缀验证、中文姓氏验证
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @EndsWith
+* 校验规则：后缀验证，验证字符串是否以指定的后缀结尾。
+* 示例格式：以指定字符串结尾
+* 版本信息：
+  - 新增版本：1.0.0
+  - 修改版本：1.2.0（链式 API 参数从 `String[]` 改为 `String`）
+* **重要变更（v1.0.0 → v1.2.0）**：
+  - **链式 API 变更**：`isEndsWith()` 方法参数从 `String[]` 改为 `String`
+  - **v1.0.0 行为**：`validator.isEndsWith("text", new String[]{"suffix"})`
+  - **v1.2.0 行为**：`validator.isEndsWith("text", "suffix")`
+  - **注解使用**：未变更，仍然使用 `@EndsWith(endsWith = "suffix")`
+  - **迁移指南**：单个后缀验证时移除数组包装；多个后缀验证请使用新的 `@EndsWithAny` 注解或 `isEndsWithAny()` 方法
+* 使用示例：
+  ```java
+  // 注解方式使用（未变更）
+  @EndsWith(endsWith = "suffix")
+  private String code;
+
+  // 链式调用方式使用（v1.2.0 - 简化为单值参数）
+  ValidX validator = ValidX.init();
+  validator.isEndsWith("string_suffix", "suffix");
+  ```
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @EndsWithAny
+* 校验规则：多后缀验证，验证字符串是否以指定的任意一个后缀结尾。
+* 示例格式：`"photo.jpg"` 以 `".jpg"`、`".jpeg"`、`".png"` 或 `".gif"` 结尾，`"report.pdf"` 以 `".txt"`、`".doc"`、`".docx"` 或 `".pdf"` 结尾
+* 配置选项：
+  - `value`：要匹配的后缀数组（至少匹配其中一个）
+* 示例格式：
+  - 图片文件：`"photo.jpg"` 匹配 `{".jpg", ".jpeg", ".png", ".gif"}`
+  - 文档文件：`"report.pdf"` 匹配 `{".txt", ".doc", ".docx", ".pdf"}`
+  - 中文姓名后缀：`"张先生"` 匹配 `{"先生", "女士", "小姐"}`
+  - 压缩文件：`"data.tar.gz"` 匹配 `{".zip", ".rar", ".7z", ".tar.gz"}`
+* 使用示例：
+  ```java
+  // 注解方式使用 - 图片文件验证
+  @EndsWithAny({".jpg", ".jpeg", ".png", ".gif"})
+  private String imageFile;
+
+  // 文档文件验证
+  @EndsWithAny({".txt", ".doc", ".docx", ".pdf"})
+  private String documentFile;
+
+  // 中文姓名后缀验证
+  @EndsWithAny({"先生", "女士", "小姐"})
+  private String chineseName;
+
+  // 压缩文件验证
+  @EndsWithAny({".zip", ".rar", ".7z", ".tar.gz"})
+  private String archiveFile;
+
+  // 链式调用方式使用
+  ValidX validator = ValidX.init();
+
+  // 基本用法
+  validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png", ".gif"});
+
+  // 多个后缀选项
+  validator.isEndsWithAny("report.pdf", new String[]{".txt", ".doc", ".docx", ".pdf"});
+
+  // 中文文本验证
+  validator.isEndsWithAny("张先生", new String[]{"先生", "女士", "小姐"});
+
+  // 检查验证结果
+  if (!validator.passed()) {
+      System.out.println(validator.getErrors());
+  }
+  ```
+* 注意事项：
+  - 默认区分大小写（如：".JPG" 不会匹配 ".jpg"）
+  - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
+  - 空后缀数组会导致验证失败
+  - 空字符串后缀会匹配所有字符串（任何字符串都以空字符串结尾）
+  - 常见应用场景：文件扩展名验证、压缩格式验证、名称后缀验证、中文称谓验证
 
 [↑ 返回快速查询表](#快速查询表)
 
@@ -2163,22 +2307,6 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   - 默认区分大小写；使用 `ignoreCase = true` 可忽略大小写
   - 常见应用场景：用户名验证（阻止保留关键字）、XSS防护、内容审核、URL安全验证
   - 与 `@Contains` 互补，提供全面的字符串验证
-
-[↑ 返回快速查询表](#快速查询表)
-
-#### @EndsWith
-* 校验规则：后缀验证，验证字符串是否以指定的后缀结尾。
-* 示例格式：以指定字符串结尾
-* 使用示例：
-  ```java
-  // 注解方式使用
-  @EndsWith(endsWith = "suffix")
-  private String code;
-
-  // 链式调用方式使用
-  ValidX validator = ValidX.init();
-  validator.isEndsWith("string_suffix", new String[]{"suffix"});
-  ```
 
 [↑ 返回快速查询表](#快速查询表)
 
