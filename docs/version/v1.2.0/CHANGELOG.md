@@ -1,6 +1,6 @@
 # ValidX v1.2.0 Changelog
 
-**Release Date:** August 10, 2026
+**Release Date:** TBD
 
 This document records the changes from v1.1.0 to v1.2.0.
 

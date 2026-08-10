@@ -47,7 +47,7 @@
 
 ## 📢 版本更新通知
 
-**当前版本：v1.2.0** (2026年8月10日发布)
+**当前版本：v1.2.0** (开发中，待发布)
 
 ### v1.2.0 主要更新
 
@@ -66,7 +66,7 @@
 
 | 版本 | 发布日期 | 主要特性 | 破坏性变更 | 更新日志 | 迁移指南 |
 |------|---------|---------|-----------|---------|---------|
-| **v1.2.0** | 2026-08-10 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String` | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | - |
+| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String` | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | - |
 | **v1.1.0** | 2026-08-10 | 新增 6 个注解：`@Date`、`@DateTime`、`@PastDateTime`、`@FutureDateTime`、`@ChineseName`、`@NotContains`；增强日期验证严格性 | `@PastDate`/`@FutureDate` 不再支持时间格式，需使用 `@PastDateTime`/`@FutureDateTime` | [查看](docs/version/v1.1.0/CHANGELOG_CN.md) | [查看](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md) |
 | **v1.0.1** | 2026-07-31 | 新增 `@Contains` 注解；核心类重命名 ValidaX → ValidX；文档优化；添加开源协议 | 无 | [查看](docs/version/v1.0.1/CHANGELOG_CN.md) | - |
 | **v1.0.0** | 2026-05-01 | 首次发布，提供 100+ 验证注解，支持注解和链式两种使用方式 | 无 | [查看](docs/version/v1.0.0/README_CN.md) | - |
