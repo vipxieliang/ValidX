@@ -29,8 +29,18 @@ public class FileExtensionValidator implements ConstraintValidator<FileExtension
 
     @Override
     public void initialize(FileExtension constraintAnnotation) {
-        extensions = constraintAnnotation.value();
-        ignoreCase = constraintAnnotation.ignoreCase();
+        initialize(constraintAnnotation.value(), constraintAnnotation.ignoreCase());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param extensions 允许的文件扩展名数组
+     * @param ignoreCase 是否忽略大小写
+     */
+    public void initialize(String[] extensions, boolean ignoreCase) {
+        this.extensions = extensions != null ? extensions : new String[0];
+        this.ignoreCase = ignoreCase;
     }
 
     @Override

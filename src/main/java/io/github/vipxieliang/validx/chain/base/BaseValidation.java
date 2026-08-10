@@ -119,44 +119,10 @@ public class BaseValidation {
     public void validateFileExtension(Object value, String[] extensions, List<String> errors, Locale locale) {
         validateFileExtension(value, extensions, true, errors, locale);
     }
-    
+
     public void validateFileExtension(Object value, String[] extensions, boolean ignoreCase, List<String> errors, Locale locale) {
         FileExtensionValidator validator = new FileExtensionValidator();
-
-        // 创建一个模拟的FileExtension注解实例
-        FileExtension fileExtensionAnnotation = new FileExtension() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return FileExtension.class;
-            }
-
-            @Override
-            public String[] value() {
-                return extensions != null ? extensions : new String[0];
-            }
-
-            @Override
-            public boolean ignoreCase() {
-                return ignoreCase;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.extension", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
-        validator.initialize(fileExtensionAnnotation);
+        validator.initialize(extensions, ignoreCase);
         if (!validator.isValid(value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.extension", locale));
         }
