@@ -48,9 +48,20 @@ public class PhoneNumberValidator implements ConstraintValidator<PhoneNumber, St
 
     @Override
     public void initialize(PhoneNumber annotation) {
-        this.countryCode = annotation.countryCode();
-        this.allowExtension = annotation.allowExtension();
-        this.strict = annotation.strict();
+        initialize(annotation.countryCode(), annotation.allowExtension(), annotation.strict());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param countryCode 国家代码
+     * @param allowExtension 是否允许分机号
+     * @param strict 是否严格模式
+     */
+    public void initialize(String countryCode, boolean allowExtension, boolean strict) {
+        this.countryCode = countryCode;
+        this.allowExtension = allowExtension;
+        this.strict = strict;
     }
 
     @Override

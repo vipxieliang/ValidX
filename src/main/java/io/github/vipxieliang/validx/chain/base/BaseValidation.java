@@ -598,53 +598,11 @@ public class BaseValidation {
     public void validatePhoneNumber(Object value, String countryCode, boolean allowExtension,
                                    boolean strict, List<String> errors, Locale locale) {
         PhoneNumberValidator validator = new PhoneNumberValidator();
-        io.github.vipxieliang.validx.annotations.PhoneNumber annotation =
-            createPhoneNumberAnnotation(countryCode, allowExtension, strict, locale);
-        validator.initialize(annotation);
+        validator.initialize(countryCode, allowExtension, strict);
 
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.phonenumber", locale));
         }
-    }
-
-    private io.github.vipxieliang.validx.annotations.PhoneNumber createPhoneNumberAnnotation(
-            String countryCode, boolean allowExtension, boolean strict, Locale locale) {
-        return new io.github.vipxieliang.validx.annotations.PhoneNumber() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.PhoneNumber.class;
-            }
-
-            @Override
-            public String countryCode() {
-                return countryCode;
-            }
-
-            @Override
-            public boolean allowExtension() {
-                return allowExtension;
-            }
-
-            @Override
-            public boolean strict() {
-                return strict;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.phonenumber", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
     }
 
     /**
