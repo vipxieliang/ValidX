@@ -38,11 +38,9 @@ import java.lang.annotation.*;
  *
  * <p>使用示例：</p>
  * <pre>
- * {@code
  * // 基本使用，支持所有中文姓名
  * @ChineseName
  * private String realName;
- * }
  * </pre>
  *
  * <p>支持的姓名示例：</p>
@@ -63,16 +61,22 @@ public @interface ChineseName {
 
     /**
      * 错误消息
+     *
+     * @return 错误消息模板
      */
     String message() default "{io.github.vipxieliang.validx.annotation.chinese.name}";
 
     /**
      * 分组
+     *
+     * @return 验证组
      */
     Class<?>[] groups() default {};
 
     /**
      * 负载
+     *
+     * @return 负载
      */
     Class<? extends Payload>[] payload() default {};
 }

@@ -39,21 +39,38 @@ import java.lang.annotation.*;
 public @interface Contains {
     /**
      * 要包含的子字符串数组
+     *
+     * @return 子字符串数组
      */
     String[] value();
 
     /**
      * 是否忽略大小写，默认为 false（区分大小写）
+     *
+     * @return 是否忽略大小写
      */
     boolean ignoreCase() default false;
 
     /**
      * 匹配模式：true-必须包含所有子字符串(AND)，false-包含任意一个即可(OR)
      * 默认为 false（OR逻辑，满足任意一个即可）
+     *
+     * @return 匹配模式
      */
     boolean matchAll() default false;
 
+    /**
+     * @return 错误消息模板
+     */
     String message() default "{io.github.vipxieliang.validx.annotation.contains}";
+
+    /**
+     * @return 验证组
+     */
     Class<?>[] groups() default {};
+
+    /**
+     * @return 负载
+     */
     Class<? extends Payload>[] payload() default {};
 }

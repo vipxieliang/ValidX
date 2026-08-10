@@ -39,21 +39,38 @@ import java.lang.annotation.*;
 public @interface NotContains {
     /**
      * 不能包含的子字符串数组
+     *
+     * @return 禁止的子字符串数组
      */
     String[] value();
 
     /**
      * 是否忽略大小写，默认为 false（区分大小写）
+     *
+     * @return 是否忽略大小写
      */
     boolean ignoreCase() default false;
 
     /**
      * 匹配模式：true-必须全都不包含(AND)，false-只要有一个不包含即可(OR)
      * 默认为 true（AND逻辑，所有子字符串都不能包含）
+     *
+     * @return 匹配模式
      */
     boolean matchAll() default true;
 
+    /**
+     * @return 错误消息模板
+     */
     String message() default "{io.github.vipxieliang.validx.annotation.not.contains}";
+
+    /**
+     * @return 验证组
+     */
     Class<?>[] groups() default {};
+
+    /**
+     * @return 负载
+     */
     Class<? extends Payload>[] payload() default {};
 }

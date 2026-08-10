@@ -63,16 +63,22 @@ public @interface GeoPoint {
 
     /**
      * 错误消息
+     *
+     * @return 错误消息模板
      */
     String message() default "{io.github.vipxieliang.validx.annotation.coordinate}";
 
     /**
      * 分组
+     *
+     * @return 验证组
      */
     Class<?>[] groups() default {};
 
     /**
      * 负载
+     *
+     * @return 负载
      */
     Class<? extends Payload>[] payload() default {};
 
@@ -88,6 +94,8 @@ public @interface GeoPoint {
 
     /**
      * 分隔符类型
+     *
+     * @return 分隔符类型
      */
     SeparatorType separator() default SeparatorType.ANY;
 

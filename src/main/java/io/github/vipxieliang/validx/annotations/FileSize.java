@@ -71,6 +71,8 @@ public @interface FileSize {
      * 最小文件大小（支持单位：B、KB、MB、GB、TB）
      * 默认值为 "0B"，表示无最小限制
      * 示例: "1KB", "10MB", "1.5GB"
+     *
+     * @return 最小文件大小字符串
      */
     String min() default "0B";
 
@@ -78,6 +80,8 @@ public @interface FileSize {
      * 最大文件大小（支持单位：B、KB、MB、GB、TB）
      * 默认值为空字符串，表示无最大限制
      * 示例: "1KB", "10MB", "1.5GB"
+     *
+     * @return 最大文件大小字符串
      */
     String max() default "";
 
@@ -85,15 +89,25 @@ public @interface FileSize {
      * 允许的MIME类型（可选）
      * 仅对支持MIME类型的文件有效（如 MultipartFile）
      * 示例: {"image/jpeg", "image/png", "application/pdf"}
+     *
+     * @return 允许的MIME类型数组
      */
     String[] allowedTypes() default {};
 
     /**
      * 错误消息
+     *
+     * @return 错误消息模板
      */
     String message() default "{io.github.vipxieliang.validx.annotation.file.size}";
 
+    /**
+     * @return 验证组
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * @return 负载
+     */
     Class<? extends Payload>[] payload() default {};
 }

@@ -50,6 +50,8 @@ public @interface FinancialProductCode {
     /**
      * 支持的产品类型
      * 默认支持所有产品类型
+     *
+     * @return 产品类型数组
      */
     ProductType[] productTypes() default { ProductType.FUND, ProductType.BOND };
     

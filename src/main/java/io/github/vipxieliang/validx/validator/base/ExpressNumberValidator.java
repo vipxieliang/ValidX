@@ -113,6 +113,9 @@ public class ExpressNumberValidator implements ConstraintValidator<ExpressNumber
 
     /**
      * 验证快递单号格式（静态方法，供链式调用使用）
+     *
+     * @param value 要验证的值
+     * @return 如果值为有效的快递单号格式则返回true，否则返回false
      */
     public static boolean isValid(Object value) {
         return isValid(value, new HashSet<>(Arrays.asList(ExpressCompany.values())));
@@ -120,6 +123,10 @@ public class ExpressNumberValidator implements ConstraintValidator<ExpressNumber
 
     /**
      * 验证快递单号格式（静态方法，指定快递公司）
+     *
+     * @param value 要验证的值
+     * @param companies 支持的快递公司类型数组
+     * @return 如果值为有效的快递单号格式则返回true，否则返回false
      */
     public static boolean isValid(Object value, ExpressCompany... companies) {
         Set<ExpressCompany> companySet;

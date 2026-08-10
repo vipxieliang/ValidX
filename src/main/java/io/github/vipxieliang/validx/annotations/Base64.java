@@ -69,16 +69,22 @@ public @interface Base64 {
 
     /**
      * 验证失败时的错误消息
+     *
+     * @return 错误消息模板
      */
     String message() default "{io.github.vipxieliang.validx.annotation.base64}";
 
     /**
      * 验证分组
+     *
+     * @return 验证组
      */
     Class<?>[] groups() default {};
 
     /**
      * 负载
+     *
+     * @return 负载
      */
     Class<? extends Payload>[] payload() default {};
 }

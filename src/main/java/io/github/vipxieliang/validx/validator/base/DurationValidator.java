@@ -83,6 +83,9 @@ public class DurationValidator implements ConstraintValidator<Duration, Object> 
 
     /**
      * 验证时间段格式（静态方法，供链式调用使用）
+     *
+     * @param value 要验证的值
+     * @return 如果值为有效的时间段格式则返回true，否则返回false
      */
     public static boolean isValid(Object value) {
         return isValid(value, DurationFormat.ANY);
@@ -90,6 +93,10 @@ public class DurationValidator implements ConstraintValidator<Duration, Object> 
 
     /**
      * 验证时间段格式（静态方法，指定格式）
+     *
+     * @param value 要验证的值
+     * @param format 时间段格式类型
+     * @return 如果值为有效的时间段格式则返回true，否则返回false
      */
     public static boolean isValid(Object value, DurationFormat format) {
         if (value == null) {

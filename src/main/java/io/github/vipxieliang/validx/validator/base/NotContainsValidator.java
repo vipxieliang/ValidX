@@ -41,6 +41,10 @@ public class NotContainsValidator implements ConstraintValidator<NotContains, St
 
     /**
      * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param substrings 禁止的子字符串数组
+     * @param ignoreCase 是否忽略大小写
+     * @param matchAll 是否匹配所有子字符串（true=AND逻辑，全部不包含；false=OR逻辑，至少一个不包含）
      */
     public void initialize(String[] substrings, boolean ignoreCase, boolean matchAll) {
         this.substrings = substrings;

@@ -50,6 +50,8 @@ public @interface StockCode {
     /**
      * 支持的交易所类型
      * 默认支持所有交易所
+     *
+     * @return 交易所类型数组
      */
     Exchange[] exchanges() default { Exchange.SHANGHAI, Exchange.SHENZHEN, Exchange.HONG_KONG, Exchange.NEW_YORK };
     

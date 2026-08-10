@@ -57,15 +57,25 @@ public @interface UUID {
      * 是否允许不带连字符的格式
      * 默认值为 false，只允许标准格式（带连字符）
      * 设置为 true 时，同时允许带连字符和不带连字符的格式
+     *
+     * @return 是否允许不带连字符的格式
      */
     boolean allowWithoutHyphens() default false;
 
     /**
      * 错误消息
+     *
+     * @return 错误消息模板
      */
     String message() default "{io.github.vipxieliang.validx.annotation.uuid}";
 
+    /**
+     * @return 验证组
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * @return 负载
+     */
     Class<? extends Payload>[] payload() default {};
 }

@@ -41,6 +41,10 @@ public class ContainsValidator implements ConstraintValidator<Contains, String> 
 
     /**
      * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param substrings 要匹配的子字符串数组
+     * @param ignoreCase 是否忽略大小写
+     * @param matchAll 是否匹配所有子字符串（true=AND逻辑，false=OR逻辑）
      */
     public void initialize(String[] substrings, boolean ignoreCase, boolean matchAll) {
         this.substrings = substrings;

@@ -77,6 +77,13 @@ public class JSONValidator implements ConstraintValidator<JSON, String> {
 
     /**
      * 静态验证方法，供链式调用使用
+     *
+     * @param value 要验证的JSON字符串
+     * @param type JSON类型（OBJECT/ARRAY/ANY）
+     * @param strict 是否启用严格模式
+     * @param maxDepth 最大嵌套深度（0表示不限制）
+     * @param maxLength 最大字符串长度（0表示不限制）
+     * @return 如果值为有效的JSON格式则返回true，否则返回false
      */
     public static boolean isValidJSON(String value, JSON.JSONType type, boolean strict,
                                      int maxDepth, int maxLength) {

@@ -40,11 +40,24 @@ public @interface Ip {
     /**
      * IP地址版本
      * 默认为 ANY，表示同时支持 IPv4 和 IPv6
+     *
+     * @return IP版本
      */
     IpVersion version() default IpVersion.ANY;
 
+    /**
+     * @return 错误消息模板
+     */
     String message() default "{io.github.vipxieliang.validx.annotation.ip}";
+
+    /**
+     * @return 验证组
+     */
     Class<?>[] groups() default {};
+
+    /**
+     * @return 负载
+     */
     Class<? extends Payload>[] payload() default {};
 
     /**

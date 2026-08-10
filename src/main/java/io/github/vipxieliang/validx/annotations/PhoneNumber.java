@@ -31,6 +31,8 @@ public @interface PhoneNumber {
      * 如果指定，则只接受该国家代码的电话号码
      * 例如："+86", "+1", "+44" 等
      * 默认为空字符串，表示接受所有国家代码
+     *
+     * @return 国家代码
      */
     String countryCode() default "";
 
@@ -38,6 +40,8 @@ public @interface PhoneNumber {
      * 是否允许分机号
      * 支持的分机号格式：ext. 123, ext 123, x123, #123
      * 默认为 true
+     *
+     * @return 是否允许分机号
      */
     boolean allowExtension() default true;
 
@@ -46,21 +50,29 @@ public @interface PhoneNumber {
      * true: 必须包含国家代码（以+开头）
      * false: 也接受本地格式的电话号码
      * 默认为 false
+     *
+     * @return 是否严格模式
      */
     boolean strict() default false;
 
     /**
      * 错误消息
+     *
+     * @return 错误消息模板
      */
     String message() default "{io.github.vipxieliang.validx.annotation.phonenumber}";
 
     /**
      * 分组
+     *
+     * @return 验证组
      */
     Class<?>[] groups() default {};
 
     /**
      * 负载
+     *
+     * @return 负载
      */
     Class<? extends Payload>[] payload() default {};
 }

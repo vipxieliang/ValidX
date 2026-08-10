@@ -90,6 +90,9 @@ public class CronExpressionValidator implements ConstraintValidator<CronExpressi
 
     /**
      * 验证Cron表达式是否有效
+     *
+     * @param value 要验证的值
+     * @return 如果值为有效的Cron表达式则返回true，否则返回false
      */
     public static boolean isValid(Object value) {
         if (value == null) {
