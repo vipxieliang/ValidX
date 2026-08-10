@@ -37,10 +37,23 @@ public class JSONValidator implements ConstraintValidator<JSON, String> {
 
     @Override
     public void initialize(JSON constraintAnnotation) {
-        this.type = constraintAnnotation.type();
-        this.strict = constraintAnnotation.strict();
-        this.maxDepth = constraintAnnotation.maxDepth();
-        this.maxLength = constraintAnnotation.maxLength();
+        initialize(constraintAnnotation.type(), constraintAnnotation.strict(),
+                   constraintAnnotation.maxDepth(), constraintAnnotation.maxLength());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param type JSON类型
+     * @param strict 是否严格模式
+     * @param maxDepth 最大深度
+     * @param maxLength 最大长度
+     */
+    public void initialize(JSON.JSONType type, boolean strict, int maxDepth, int maxLength) {
+        this.type = type;
+        this.strict = strict;
+        this.maxDepth = maxDepth;
+        this.maxLength = maxLength;
     }
 
     @Override

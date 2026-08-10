@@ -541,59 +541,11 @@ public class BaseValidation {
         }
 
         JSONValidator validator = new JSONValidator();
-        io.github.vipxieliang.validx.annotations.JSON annotation =
-            createJSONAnnotation(type, strict, maxDepth, maxLength, locale);
-        validator.initialize(annotation);
+        validator.initialize(type, strict, maxDepth, maxLength);
 
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.json", locale));
         }
-    }
-
-    private io.github.vipxieliang.validx.annotations.JSON createJSONAnnotation(
-            io.github.vipxieliang.validx.annotations.JSON.JSONType type,
-            boolean strict, int maxDepth, int maxLength, Locale locale) {
-        return new io.github.vipxieliang.validx.annotations.JSON() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.JSON.class;
-            }
-
-            @Override
-            public JSONType type() {
-                return type;
-            }
-
-            @Override
-            public boolean strict() {
-                return strict;
-            }
-
-            @Override
-            public int maxDepth() {
-                return maxDepth;
-            }
-
-            @Override
-            public int maxLength() {
-                return maxLength;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.json", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
     }
 
     /**
