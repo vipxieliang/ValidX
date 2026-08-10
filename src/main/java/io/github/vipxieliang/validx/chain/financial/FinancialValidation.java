@@ -71,36 +71,9 @@ public class FinancialValidation {
     }
     
     public void validateFinancialProductCode(Object value, FinancialProductCode.ProductType[] productTypes, List<String> errors, Locale locale) {
-        // 创建一个临时的FinancialProductCode注解实例来传递产品类型参数
-        FinancialProductCode financialProductCode = new FinancialProductCode() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return FinancialProductCode.class;
-            }
-            
-            @Override
-            public String message() {
-                return "{io.github.vipxieliang.validx.annotation.financial.product.code}";
-            }
-            
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-            
-            @Override
-            public Class<? extends Payload>[] payload() {
-                return new Class[0];
-            }
-            
-            @Override
-            public ProductType[] productTypes() {
-                return productTypes != null ? productTypes : new ProductType[]{ProductType.FUND, ProductType.BOND};
-            }
-        };
-        
         FinancialProductCodeValidator validator = new FinancialProductCodeValidator();
-        validator.initialize(financialProductCode);
+        validator.initialize(productTypes != null ? productTypes :
+            new FinancialProductCode.ProductType[]{FinancialProductCode.ProductType.FUND, FinancialProductCode.ProductType.BOND});
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.financial.product.code", locale));
         }

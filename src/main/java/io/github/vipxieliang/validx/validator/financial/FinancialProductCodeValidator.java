@@ -62,11 +62,20 @@ public class FinancialProductCodeValidator implements ConstraintValidator<Financ
     private static final Pattern BOND_COMPANY_PATTERN = Pattern.compile("^13\\d{4}$");
     
     private Set<FinancialProductCode.ProductType> supportedProductTypes;
-    
+
     @Override
     public void initialize(FinancialProductCode constraintAnnotation) {
+        initialize(constraintAnnotation.productTypes());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param productTypes 支持的产品类型数组
+     */
+    public void initialize(FinancialProductCode.ProductType[] productTypes) {
         // 初始化支持的产品类型列表
-        supportedProductTypes = new HashSet<>(Arrays.asList(constraintAnnotation.productTypes()));
+        supportedProductTypes = new HashSet<>(Arrays.asList(productTypes));
     }
 
     @Override
