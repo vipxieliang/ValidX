@@ -50,11 +50,20 @@ public class StockCodeValidator implements ConstraintValidator<StockCode, String
     private static final Pattern NEW_YORK_PATTERN = Pattern.compile("^[A-Z]{1,5}(\\.[A-Z])?$");
     
     private Set<StockCode.Exchange> supportedExchanges;
-    
+
     @Override
     public void initialize(StockCode constraintAnnotation) {
+        initialize(constraintAnnotation.exchanges());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param exchanges 支持的交易所数组
+     */
+    public void initialize(StockCode.Exchange[] exchanges) {
         // 初始化支持的交易所列表
-        supportedExchanges = new HashSet<>(Arrays.asList(constraintAnnotation.exchanges()));
+        supportedExchanges = new HashSet<>(Arrays.asList(exchanges));
     }
 
     @Override

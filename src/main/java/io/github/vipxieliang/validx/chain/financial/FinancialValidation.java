@@ -63,36 +63,8 @@ public class FinancialValidation {
     }
     
     public void validateStockCode(Object value, StockCode.Exchange[] exchanges, List<String> errors, Locale locale) {
-        // 创建一个临时的StockCode注解实例来传递交易所参数
-        StockCode stockCode = new StockCode() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return StockCode.class;
-            }
-
-            @Override
-            public String message() {
-                return "{io.github.vipxieliang.validx.annotation.stock.code}";
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends Payload>[] payload() {
-                return new Class[0];
-            }
-
-            @Override
-            public Exchange[] exchanges() {
-                return exchanges != null ? exchanges : new Exchange[0];
-            }
-        };
-
         StockCodeValidator validator = new StockCodeValidator();
-        validator.initialize(stockCode);
+        validator.initialize(exchanges != null ? exchanges : new StockCode.Exchange[0]);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.stock.code", locale));
         }
