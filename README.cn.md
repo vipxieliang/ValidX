@@ -51,10 +51,16 @@
 
 **v1.1.0 主要更新：**
 - ✨ 新增验证注解：`@Date`、`@DateTime`、`@FutureDateTime`、`@PastDateTime`、`@ChineseName`、`@Contains` 等
-- ⚠️ **破坏性变更**：`@FutureDate` 和 `@PastDate` 不再支持包含时间的格式
-  - 如需验证包含时间的日期，请使用新增的 `@FutureDateTime` 和 `@PastDateTime` 注解
 - 🔧 改进了日期验证的严格性和准确性（支持闰年、无效日期检测等）
 - 📖 完善了文档和示例代码
+
+**⚠️ 破坏性变更：**
+
+> **如果你正在从 v1.0.0 或 v1.0.1 升级到 v1.1.0**，请注意 `@FutureDate` 和 `@PastDate` 存在破坏性变更。
+>
+> - **v1.0.0/v1.0.1**：自动支持 `yyyy-MM-dd` 和 `yyyy-MM-dd HH:mm:ss` 两种格式
+> - **v1.1.0**：仅支持纯日期格式（如 `yyyy-MM-dd`），不再支持包含时间的格式
+> - **迁移方案**：使用新增的 `@FutureDateTime` 和 `@PastDateTime` 替代
 
 **升级指南：** 如果你正在从 v1.0.x 升级，请查看 [v1.1.0 迁移指南](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md)
 
@@ -136,18 +142,6 @@ ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证�
 - **单一依赖**：除 Bean Validation API 外无外部依赖
 - **体积小巧**：~300KB JAR 包大小
 - **高性能**：优化的验证器，最小化性能开销
-
----
-
-## ⚠️ 重要提示：v1.1.0 破坏性变更
-
-> **如果你正在从 v1.0.0 或 v1.0.1 升级到 v1.1.0**，请注意 `@FutureDate` 和 `@PastDate` 存在破坏性变更。
->
-> - **v1.0.0/v1.0.1**：自动支持 `yyyy-MM-dd` 和 `yyyy-MM-dd HH:mm:ss` 两种格式
-> - **v1.1.0**：仅支持纯日期格式（如 `yyyy-MM-dd`），不再支持包含时间的格式
-> - **迁移方案**：使用新增的 `@FutureDateTime` 和 `@PastDateTime` 替代
->
-> 📖 **详细迁移指南**：[MIGRATION_v1.1.0.cn.md](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md)
 
 ---
 

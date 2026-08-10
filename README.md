@@ -51,10 +51,16 @@
 
 **v1.1.0 Key Updates:**
 - ✨ New validation annotations: `@Date`, `@DateTime`, `@FutureDateTime`, `@PastDateTime`, `@ChineseName`, `@Contains`, etc.
-- ⚠️ **Breaking Changes**: `@FutureDate` and `@PastDate` no longer support formats with time components
-  - Use the newly added `@FutureDateTime` and `@PastDateTime` annotations for validating dates with time
 - 🔧 Enhanced date validation strictness and accuracy (leap year support, invalid date detection, etc.)
 - 📖 Improved documentation and code examples
+
+**⚠️ Breaking Changes:**
+
+> **If you're upgrading from v1.0.0 or v1.0.1 to v1.1.0**, please note the breaking changes in `@FutureDate` and `@PastDate`.
+>
+> - **v1.0.0/v1.0.1**: Automatically supported both `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats
+> - **v1.1.0**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
+> - **Migration Solution**: Use the newly added `@FutureDateTime` and `@PastDateTime` annotations for validating dates with time
 
 **Migration Guide:** If upgrading from v1.0.x, please refer to the [v1.1.0 Migration Guide](docs/version/v1.1.0/MIGRATION_v1.1.0.md)
 
@@ -136,18 +142,6 @@ We hope ValidX can become the standard tool for every Java application serving C
 - **Single dependency**: No external dependencies beyond Bean Validation API
 - **Small footprint**: ~300KB JAR size
 - **High performance**: Optimized validators with minimal overhead
-
----
-
-## ⚠️ Important: v1.1.0 Breaking Changes
-
-> **If you're upgrading from v1.0.0 or v1.0.1 to v1.1.0**, please note the breaking changes in `@FutureDate` and `@PastDate`.
->
-> - **v1.0.0/v1.0.1**: Automatically supported both `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats
-> - **v1.1.0**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
-> - **Migration Solution**: Use the newly added `@FutureDateTime` and `@PastDateTime` annotations instead
->
-> 📖 **Detailed Migration Guide**: [MIGRATION_v1.1.0.md](docs/version/v1.1.0/MIGRATION_v1.1.0.md)
 
 ---
 
