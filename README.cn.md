@@ -47,26 +47,29 @@
 
 ## 📢 版本更新通知
 
-**当前版本：v1.1.0** (2026年8月10日发布)
+**当前版本：v1.2.0** (2026年8月10日发布)
 
-**v1.1.0 主要更新：**
-- ✨ 新增验证注解：`@Date`、`@DateTime`、`@FutureDateTime`、`@PastDateTime`、`@ChineseName`、`@Contains` 等
-- 🔧 改进了日期验证的严格性和准确性（支持闰年、无效日期检测等）
-- 📖 完善了文档和示例代码
+### v1.2.0 主要更新
 
-**⚠️ 破坏性变更：**
+- ⚠️ **破坏性变更**：`isStartsWith()` 和 `isEndsWith()` 链式 API 参数从 `String[]` 改为 `String`
+- ✨ **新增功能**：`@StartsWithAny` 和 `@EndsWithAny` 多值验证注解
+- 🔧 **功能增强**：`@FileSize` 支持 MIME 类型验证（`allowedTypes` 参数）
+- 🎯 **代码优化**：简化 20+ 个验证器类的初始化代码
 
-> **如果你正在从 v1.0.0 或 v1.0.1 升级到 v1.1.0**，请注意 `@FutureDate` 和 `@PastDate` 存在破坏性变更。
->
-> - **v1.0.0/v1.0.1**：自动支持 `yyyy-MM-dd` 和 `yyyy-MM-dd HH:mm:ss` 两种格式
-> - **v1.1.0**：仅支持纯日期格式（如 `yyyy-MM-dd`），不再支持包含时间的格式
-> - **迁移方案**：使用新增的 `@FutureDateTime` 和 `@PastDateTime` 替代
+> **⚠️ 升级提醒**：从 v1.1.0 升级需注意链式 API 变更。单值用 `isStartsWith(value, "prefix")`，多值用 `isStartsWithAny(value, new String[]{"p1", "p2"})`
 
-**升级指南：** 如果你正在从 v1.0.x 升级，请查看 [v1.1.0 迁移指南](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md)
+**详细说明：** [v1.2.0 更新日志](docs/version/v1.2.0/CHANGELOG_CN.md)
 
-**历史版本文档：**
-- [v1.0.1 文档](docs/version/v1.0.1/README_CN.md) | [v1.0.1 更新日志](docs/version/v1.0.1/CHANGELOG_CN.md)
-- [v1.0.0 文档](docs/version/v1.0.0/README_CN.md)
+---
+
+### 历史版本
+
+| 版本 | 发布日期 | 主要特性 | 破坏性变更 | 文档 |
+|------|---------|---------|-----------|------|
+| **v1.2.0** | 2026-08-10 | `@StartsWithAny`、`@EndsWithAny`、`@FileSize` 增强 | 链式 API 参数变更 | [更新日志](docs/version/v1.2.0/CHANGELOG_CN.md) |
+| **v1.1.0** | 2026-08-10 | `@Date`、`@DateTime`、`@ChineseName`、`@NotContains` 等 6 个新注解 | `@PastDate`/`@FutureDate` 不再支持时间格式 → 使用 `@PastDateTime`/`@FutureDateTime` | [更新日志](docs/version/v1.1.0/CHANGELOG_CN.md) \| [迁移指南](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md) |
+| **v1.0.1** | 2026-06-15 | Bug 修复和性能优化 | 无 | [更新日志](docs/version/v1.0.1/CHANGELOG_CN.md) |
+| **v1.0.0** | 2026-05-01 | 首次发布，100+ 验证注解 | - | [文档](docs/version/v1.0.0/README_CN.md) |
 
 ---
 

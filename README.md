@@ -47,26 +47,29 @@
 
 ## 📢 Version Update Notice
 
-**Current Version: v1.1.0** (Released August 10, 2026)
+**Current Version: v1.2.0** (Released August 10, 2026)
 
-**v1.1.0 Key Updates:**
-- ✨ New validation annotations: `@Date`, `@DateTime`, `@FutureDateTime`, `@PastDateTime`, `@ChineseName`, `@Contains`, etc.
-- 🔧 Enhanced date validation strictness and accuracy (leap year support, invalid date detection, etc.)
-- 📖 Improved documentation and code examples
+### v1.2.0 Key Updates
 
-**⚠️ Breaking Changes:**
+- ⚠️ **Breaking Change**: `isStartsWith()` and `isEndsWith()` chain API parameter changed from `String[]` to `String`
+- ✨ **New Features**: `@StartsWithAny` and `@EndsWithAny` annotations for multiple value validation
+- 🔧 **Enhancement**: `@FileSize` now supports MIME type validation (`allowedTypes` parameter)
+- 🎯 **Code Optimization**: Simplified initialization code across 20+ validator classes
 
-> **If you're upgrading from v1.0.0 or v1.0.1 to v1.1.0**, please note the breaking changes in `@FutureDate` and `@PastDate`.
->
-> - **v1.0.0/v1.0.1**: Automatically supported both `yyyy-MM-dd` and `yyyy-MM-dd HH:mm:ss` formats
-> - **v1.1.0**: Only supports pure date formats (e.g., `yyyy-MM-dd`), no longer supports formats with time components
-> - **Migration Solution**: Use the newly added `@FutureDateTime` and `@PastDateTime` annotations for validating dates with time
+> **⚠️ Upgrade Notice**: When upgrading from v1.1.0, note the chain API changes. Use `isStartsWith(value, "prefix")` for single value, `isStartsWithAny(value, new String[]{"p1", "p2"})` for multiple values.
 
-**Migration Guide:** If upgrading from v1.0.x, please refer to the [v1.1.0 Migration Guide](docs/version/v1.1.0/MIGRATION_v1.1.0.md)
+**Details:** [v1.2.0 Changelog](docs/version/v1.2.0/CHANGELOG.md)
 
-**Historical Version Documentation:**
-- [v1.0.1 Documentation](docs/version/v1.0.1/README.md) | [v1.0.1 Changelog](docs/version/v1.0.1/CHANGELOG.md)
-- [v1.0.0 Documentation](docs/version/v1.0.0/README.md)
+---
+
+### Version History
+
+| Version | Release Date | Key Features | Breaking Changes | Documentation |
+|---------|-------------|--------------|------------------|---------------|
+| **v1.2.0** | 2026-08-10 | `@StartsWithAny`, `@EndsWithAny`, `@FileSize` enhancement | Chain API parameter change | [Changelog](docs/version/v1.2.0/CHANGELOG.md) |
+| **v1.1.0** | 2026-08-10 | 6 new annotations: `@Date`, `@DateTime`, `@ChineseName`, `@NotContains`, etc. | `@PastDate`/`@FutureDate` no longer support time formats → Use `@PastDateTime`/`@FutureDateTime` | [Changelog](docs/version/v1.1.0/CHANGELOG.md) \| [Migration Guide](docs/version/v1.1.0/MIGRATION_v1.1.0.md) |
+| **v1.0.1** | 2026-06-15 | Bug fixes and performance improvements | None | [Changelog](docs/version/v1.0.1/CHANGELOG.md) |
+| **v1.0.0** | 2026-05-01 | Initial release with 100+ validation annotations | - | [Documentation](docs/version/v1.0.0/README.md) |
 
 ---
 
