@@ -57,23 +57,29 @@ public class FileSizeMultipartFileValidator implements ConstraintValidator<FileS
 
     @Override
     public void initialize(FileSize constraintAnnotation) {
-        // 解析字符串格式的文件大小
-        String minStr = constraintAnnotation.min();
-        String maxStr = constraintAnnotation.max();
+        initialize(constraintAnnotation.min(), constraintAnnotation.max(), constraintAnnotation.allowedTypes());
+    }
 
-        this.minBytes = FileSizeUtils.parseSize(minStr);
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param min 最小文件大小（如 "1KB"、"10MB"）
+     * @param max 最大文件大小（如 "10MB"、"5GB"）
+     * @param allowedTypes 允许的MIME类型
+     */
+    public void initialize(String min, String max, String[] allowedTypes) {
+        this.minBytes = FileSizeUtils.parseSize(min);
 
         // 如果max为空字符串，表示无最大限制
-        if (maxStr != null && !maxStr.trim().isEmpty()) {
-            this.maxBytes = FileSizeUtils.parseSize(maxStr);
+        if (max != null && !max.trim().isEmpty()) {
+            this.maxBytes = FileSizeUtils.parseSize(max);
         } else {
             this.maxBytes = Long.MAX_VALUE;
         }
 
         // 初始化允许的MIME类型
-        String[] types = constraintAnnotation.allowedTypes();
-        if (types != null && types.length > 0) {
-            this.allowedTypes = new HashSet<>(Arrays.asList(types));
+        if (allowedTypes != null && allowedTypes.length > 0) {
+            this.allowedTypes = new HashSet<>(Arrays.asList(allowedTypes));
         }
 
         // 验证配置的合法性

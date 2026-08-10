@@ -287,6 +287,20 @@ public class BaseValidation {
      * @param locale 语言环境
      */
     public void validateFileSize(Object value, String min, String max, List<String> errors, Locale locale) {
+        validateFileSize(value, min, max, new String[0], errors, locale);
+    }
+
+    /**
+     * 验证文件大小（支持MIME类型限制）
+     * @param value 文件对象（File、Path、byte[]、MultipartFile等）
+     * @param min 最小大小（如 "1KB"、"10MB"）
+     * @param max 最大大小（如 "10MB"、"5GB"）
+     * @param allowedTypes 允许的MIME类型（仅对MultipartFile有效），如 {"image/jpeg", "image/png"}
+     * @param errors 错误列表
+     * @param locale 语言环境
+     */
+    public void validateFileSize(Object value, String min, String max, String[] allowedTypes,
+                                 List<String> errors, Locale locale) {
         // 根据value类型选择对应的验证器
         if (value instanceof java.io.File) {
             validateFileSizeForFile((java.io.File) value, min, max, errors, locale);
@@ -296,15 +310,14 @@ public class BaseValidation {
             validateFileSizeForByteArray((byte[]) value, min, max, errors, locale);
         } else if (value != null) {
             // 尝试MultipartFile（通过反射）
-            validateFileSizeForMultipartFile(value, min, max, errors, locale);
+            validateFileSizeForMultipartFile(value, min, max, allowedTypes, errors, locale);
         }
     }
 
     private void validateFileSizeForFile(java.io.File file, String min, String max,
                                          List<String> errors, Locale locale) {
         FileSizeValidator validator = new FileSizeValidator();
-        io.github.vipxieliang.validx.annotations.FileSize annotation = createFileSizeAnnotation(min, max, locale);
-        validator.initialize(annotation);
+        validator.initialize(min, max);
         if (!validator.isValid(file, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.size", locale));
         }
@@ -313,8 +326,7 @@ public class BaseValidation {
     private void validateFileSizeForPath(java.nio.file.Path path, String min, String max,
                                          List<String> errors, Locale locale) {
         FileSizePathValidator validator = new FileSizePathValidator();
-        io.github.vipxieliang.validx.annotations.FileSize annotation = createFileSizeAnnotation(min, max, locale);
-        validator.initialize(annotation);
+        validator.initialize(min, max);
         if (!validator.isValid(path, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.size", locale));
         }
@@ -323,61 +335,19 @@ public class BaseValidation {
     private void validateFileSizeForByteArray(byte[] data, String min, String max,
                                                List<String> errors, Locale locale) {
         FileSizeByteArrayValidator validator = new FileSizeByteArrayValidator();
-        io.github.vipxieliang.validx.annotations.FileSize annotation = createFileSizeAnnotation(min, max, locale);
-        validator.initialize(annotation);
+        validator.initialize(min, max);
         if (!validator.isValid(data, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.size", locale));
         }
     }
 
     private void validateFileSizeForMultipartFile(Object file, String min, String max,
-                                                   List<String> errors, Locale locale) {
+                                                   String[] allowedTypes, List<String> errors, Locale locale) {
         FileSizeMultipartFileValidator validator = new FileSizeMultipartFileValidator();
-        io.github.vipxieliang.validx.annotations.FileSize annotation = createFileSizeAnnotation(min, max, locale);
-        validator.initialize(annotation);
+        validator.initialize(min, max, allowedTypes);
         if (!validator.isValid(file, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.size", locale));
         }
-    }
-
-    private io.github.vipxieliang.validx.annotations.FileSize createFileSizeAnnotation(
-            String min, String max, Locale locale) {
-        return new io.github.vipxieliang.validx.annotations.FileSize() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.FileSize.class;
-            }
-
-            @Override
-            public String min() {
-                return min != null ? min : "0B";
-            }
-
-            @Override
-            public String max() {
-                return max != null ? max : "";
-            }
-
-            @Override
-            public String[] allowedTypes() {
-                return new String[0];
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.file.size", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
     }
 
     /**

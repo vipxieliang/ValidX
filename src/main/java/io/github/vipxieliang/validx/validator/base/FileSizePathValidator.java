@@ -37,15 +37,21 @@ public class FileSizePathValidator implements ConstraintValidator<FileSize, Path
 
     @Override
     public void initialize(FileSize constraintAnnotation) {
-        // 解析字符串格式的文件大小
-        String minStr = constraintAnnotation.min();
-        String maxStr = constraintAnnotation.max();
+        initialize(constraintAnnotation.min(), constraintAnnotation.max());
+    }
 
-        this.minBytes = FileSizeUtils.parseSize(minStr);
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param min 最小文件大小（如 "1KB"、"10MB"）
+     * @param max 最大文件大小（如 "10MB"、"5GB"）
+     */
+    public void initialize(String min, String max) {
+        this.minBytes = FileSizeUtils.parseSize(min);
 
         // 如果max为空字符串，表示无最大限制
-        if (maxStr != null && !maxStr.trim().isEmpty()) {
-            this.maxBytes = FileSizeUtils.parseSize(maxStr);
+        if (max != null && !max.trim().isEmpty()) {
+            this.maxBytes = FileSizeUtils.parseSize(max);
         } else {
             this.maxBytes = Long.MAX_VALUE;
         }

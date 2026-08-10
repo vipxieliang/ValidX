@@ -819,6 +819,22 @@ public class ValidX {
     }
 
     /**
+     * 验证文件大小（支持MIME类型限制）
+     * @param value 文件对象（File、Path、byte[]、MultipartFile）
+     * @param min 最小大小（如 "1KB"、"100KB"）
+     * @param max 最大大小（如 "10MB"、"5GB"）
+     * @param allowedTypes 允许的MIME类型（仅对MultipartFile有效），如 {"image/jpeg", "image/png"}
+     * @return ValidX实例
+     */
+    public ValidX isFileSize(Object value, String min, String max, String[] allowedTypes) {
+        if (checkRequirement(value, "File Size", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateFileSize(value, min, max, allowedTypes, errors, getLocale());
+        return this;
+    }
+
+    /**
      * 验证 UUID 格式（只允许标准格式）
      * @param value UUID 字符串
      * @return ValidX实例
