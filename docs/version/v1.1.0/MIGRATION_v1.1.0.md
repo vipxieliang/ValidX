@@ -1,4 +1,4 @@
-# Migration Guide: v1.0.0/v1.0.1 → v1.1.0
+# ValidX Migration Guide: v1.0.0/v1.0.1 → v1.1.0
 
 This document describes breaking changes and migration steps when upgrading from v1.0.0 or v1.0.1 to v1.1.0.
 
