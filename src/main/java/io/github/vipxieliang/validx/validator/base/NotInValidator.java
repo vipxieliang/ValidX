@@ -36,6 +36,15 @@ public class NotInValidator implements ConstraintValidator<NotIn, Object> {
         arrays = constraintAnnotation.value();
     }
 
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param values 不允许的值数组
+     */
+    public void initialize(String[] values) {
+        this.arrays = values != null ? values : new String[0];
+    }
+
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         // 如果值为null，认为验证通过（与大多数验证器保持一致）

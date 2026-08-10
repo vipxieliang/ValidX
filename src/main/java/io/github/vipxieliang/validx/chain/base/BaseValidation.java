@@ -77,36 +77,7 @@ public class BaseValidation {
     
     public void validateIn(Object value, String[] values, List<String> errors, Locale locale) {
         InValidator validator = new InValidator();
-
-        // 创建一个模拟的In注解实例
-        In inAnnotation = new In() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return In.class;
-            }
-
-            @Override
-            public String[] value() {
-                return values != null ? values : new String[0];
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.in", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
-        validator.initialize(inAnnotation);
+        validator.initialize(values);
         if (!validator.isValid(value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.in", locale));
         }
@@ -114,41 +85,12 @@ public class BaseValidation {
     
     public void validateNotIn(Object value, String[] values, List<String> errors, Locale locale) {
         NotInValidator validator = new NotInValidator();
-
-        // 创建一个模拟的NotIn注解实例
-        NotIn notInAnnotation = new NotIn() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return NotIn.class;
-            }
-
-            @Override
-            public String[] value() {
-                return values != null ? values : new String[0];
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.not.in", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
-        validator.initialize(notInAnnotation);
+        validator.initialize(values);
         if (!validator.isValid(value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.not.in", locale));
         }
     }
-    
+
     public void validatePort(Object value, List<String> errors, Locale locale) {
         if (value == null) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.value.null", locale));
