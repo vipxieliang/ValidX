@@ -657,36 +657,7 @@ public class BaseValidation {
         }
 
         TimestampValidator validator = new TimestampValidator();
-
-        // 创建一个模拟的Timestamp注解实例
-        Timestamp timestampAnnotation = new Timestamp() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return Timestamp.class;
-            }
-
-            @Override
-            public Timestamp.TimestampUnit unit() {
-                return unit;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.timestamp", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
-        validator.initialize(timestampAnnotation);
+        validator.initialize(unit);
         if (!validator.isValid(value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.timestamp", locale));
         }

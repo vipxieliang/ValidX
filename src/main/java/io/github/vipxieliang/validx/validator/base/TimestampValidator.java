@@ -54,7 +54,16 @@ public class TimestampValidator implements ConstraintValidator<Timestamp, Object
 
     @Override
     public void initialize(Timestamp constraintAnnotation) {
-        this.unit = constraintAnnotation.unit();
+        initialize(constraintAnnotation.unit());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param unit 时间戳单位
+     */
+    public void initialize(TimestampUnit unit) {
+        this.unit = unit;
     }
 
     @Override
