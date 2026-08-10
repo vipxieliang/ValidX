@@ -374,42 +374,11 @@ public class BaseValidation {
         }
 
         UUIDValidator validator = new UUIDValidator();
-        io.github.vipxieliang.validx.annotations.UUID annotation = createUUIDAnnotation(allowWithoutHyphens, locale);
-        validator.initialize(annotation);
+        validator.initialize(allowWithoutHyphens);
 
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.uuid", locale));
         }
-    }
-
-    private io.github.vipxieliang.validx.annotations.UUID createUUIDAnnotation(
-            boolean allowWithoutHyphens, Locale locale) {
-        return new io.github.vipxieliang.validx.annotations.UUID() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.UUID.class;
-            }
-
-            @Override
-            public boolean allowWithoutHyphens() {
-                return allowWithoutHyphens;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.uuid", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
     }
 
     /**

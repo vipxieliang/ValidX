@@ -50,7 +50,16 @@ public class UUIDValidator implements ConstraintValidator<UUID, String> {
 
     @Override
     public void initialize(UUID constraintAnnotation) {
-        this.allowWithoutHyphens = constraintAnnotation.allowWithoutHyphens();
+        initialize(constraintAnnotation.allowWithoutHyphens());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param allowWithoutHyphens 是否允许不带连字符的格式
+     */
+    public void initialize(boolean allowWithoutHyphens) {
+        this.allowWithoutHyphens = allowWithoutHyphens;
     }
 
     @Override
