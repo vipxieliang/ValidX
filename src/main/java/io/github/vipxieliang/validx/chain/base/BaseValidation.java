@@ -475,9 +475,7 @@ public class BaseValidation {
     public void validateAge(Object value, int minAge, int maxAge, boolean fromIdCard,
                            String dateFormat, List<String> errors, Locale locale) {
         AgeValidator validator = new AgeValidator();
-        io.github.vipxieliang.validx.annotations.Age annotation =
-            createAgeAnnotation(minAge, maxAge, fromIdCard, dateFormat, locale);
-        validator.initialize(annotation);
+        validator.initialize(minAge, maxAge, fromIdCard, dateFormat);
 
         if (!validator.isValid(value, null)) {
             String message = MessageManager.getMessage("io.github.vipxieliang.validx.annotation.age", locale);
@@ -486,51 +484,6 @@ public class BaseValidation {
                            .replace("{max}", String.valueOf(maxAge));
             errors.add(message);
         }
-    }
-
-    private io.github.vipxieliang.validx.annotations.Age createAgeAnnotation(
-            int minAge, int maxAge, boolean fromIdCard, String dateFormat, Locale locale) {
-        return new io.github.vipxieliang.validx.annotations.Age() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.Age.class;
-            }
-
-            @Override
-            public int min() {
-                return minAge;
-            }
-
-            @Override
-            public int max() {
-                return maxAge;
-            }
-
-            @Override
-            public boolean fromIdCard() {
-                return fromIdCard;
-            }
-
-            @Override
-            public String dateFormat() {
-                return dateFormat;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.age", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
     }
 
     /**

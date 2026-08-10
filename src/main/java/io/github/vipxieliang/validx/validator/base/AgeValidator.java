@@ -71,10 +71,23 @@ public class AgeValidator implements ConstraintValidator<Age, Object> {
 
     @Override
     public void initialize(Age constraintAnnotation) {
-        this.minAge = constraintAnnotation.min();
-        this.maxAge = constraintAnnotation.max();
-        this.fromIdCard = constraintAnnotation.fromIdCard();
-        this.dateFormat = constraintAnnotation.dateFormat();
+        initialize(constraintAnnotation.min(), constraintAnnotation.max(),
+                   constraintAnnotation.fromIdCard(), constraintAnnotation.dateFormat());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param minAge 最小年龄
+     * @param maxAge 最大年龄
+     * @param fromIdCard 是否从身份证提取
+     * @param dateFormat 日期格式
+     */
+    public void initialize(int minAge, int maxAge, boolean fromIdCard, String dateFormat) {
+        this.minAge = minAge;
+        this.maxAge = maxAge;
+        this.fromIdCard = fromIdCard;
+        this.dateFormat = dateFormat;
     }
 
     @Override
