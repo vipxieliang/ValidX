@@ -150,44 +150,9 @@ public class BaseValidation {
         if (field != null && !field.isEmpty() && !field.startsWith("get") && !field.startsWith("is")) {
             methodName = "get" + Character.toUpperCase(field.charAt(0)) + (field.length() > 1 ? field.substring(1) : "");
         }
+        String finalMethodName = methodName != null ? methodName : "name";
 
-        // 创建final变量供内部类使用
-        final String finalMethodName = methodName != null ? methodName : "name";
-
-        // 创建一个模拟的Enum注解实例
-        io.github.vipxieliang.validx.annotations.Enum enumAnnotation = new io.github.vipxieliang.validx.annotations.Enum() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.Enum.class;
-            }
-
-            @Override
-            public Class<? extends java.lang.Enum<?>> target() {
-                return target;
-            }
-
-            @Override
-            public String field() {
-                return finalMethodName;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.enum", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
-        validator.initialize(enumAnnotation);
+        validator.initialize(target, finalMethodName);
         if (!validator.isValid(value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.enum", locale));
         }

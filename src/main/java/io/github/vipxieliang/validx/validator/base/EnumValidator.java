@@ -36,8 +36,18 @@ public class EnumValidator implements ConstraintValidator<Enum, Object> {
 
     @Override
     public void initialize(Enum constraintAnnotation) {
-        cls = new Class<?>[] { constraintAnnotation.target() };
-        field = constraintAnnotation.field();
+        initialize(constraintAnnotation.target(), constraintAnnotation.field());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param target 枚举类
+     * @param field 枚举字段名
+     */
+    public void initialize(Class<? extends java.lang.Enum<?>> target, String field) {
+        this.cls = new Class<?>[] { target };
+        this.field = field;
     }
 
     @Override
