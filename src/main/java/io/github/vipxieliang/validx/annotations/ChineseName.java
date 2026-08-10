@@ -39,7 +39,7 @@ import java.lang.annotation.*;
  * <p>使用示例：</p>
  * <pre>
  * // 基本使用，支持所有中文姓名
- * @ChineseName
+ * ChineseName
  * private String realName;
  * </pre>
  *
