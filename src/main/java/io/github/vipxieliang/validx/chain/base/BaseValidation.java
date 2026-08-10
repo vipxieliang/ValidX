@@ -418,48 +418,11 @@ public class BaseValidation {
         }
 
         Base64Validator validator = new Base64Validator();
-        io.github.vipxieliang.validx.annotations.Base64 annotation =
-            createBase64Annotation(urlSafe, allowNoPadding, locale);
-        validator.initialize(annotation);
+        validator.initialize(urlSafe, allowNoPadding);
 
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.base64", locale));
         }
-    }
-
-    private io.github.vipxieliang.validx.annotations.Base64 createBase64Annotation(
-            boolean urlSafe, boolean allowNoPadding, Locale locale) {
-        return new io.github.vipxieliang.validx.annotations.Base64() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.Base64.class;
-            }
-
-            @Override
-            public boolean urlSafe() {
-                return urlSafe;
-            }
-
-            @Override
-            public boolean allowNoPadding() {
-                return allowNoPadding;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.base64", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
     }
 
     /**

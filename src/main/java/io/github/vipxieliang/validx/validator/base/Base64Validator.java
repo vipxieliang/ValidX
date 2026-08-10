@@ -61,8 +61,18 @@ public class Base64Validator implements ConstraintValidator<Base64, String> {
 
     @Override
     public void initialize(Base64 constraintAnnotation) {
-        this.urlSafe = constraintAnnotation.urlSafe();
-        this.allowNoPadding = constraintAnnotation.allowNoPadding();
+        initialize(constraintAnnotation.urlSafe(), constraintAnnotation.allowNoPadding());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param urlSafe 是否为URL-safe格式
+     * @param allowNoPadding 是否允许不带填充符
+     */
+    public void initialize(boolean urlSafe, boolean allowNoPadding) {
+        this.urlSafe = urlSafe;
+        this.allowNoPadding = allowNoPadding;
     }
 
     @Override
