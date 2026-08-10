@@ -31,7 +31,16 @@ public class EndsWithValidator implements ConstraintValidator<EndsWith, String> 
 
     @Override
     public void initialize(EndsWith constraintAnnotation) {
-        this.endsWith = constraintAnnotation.endsWith();
+        initialize(constraintAnnotation.endsWith());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param endsWith 结尾字符串
+     */
+    public void initialize(String endsWith) {
+        this.endsWith = endsWith;
     }
 
     @Override

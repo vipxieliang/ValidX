@@ -195,94 +195,17 @@ public class BaseValidation {
         }
     }
     
-    public void validateEndsWith(Object value, String[] suffixes, List<String> errors, Locale locale) {
+    public void validateEndsWith(Object value, String suffix, List<String> errors, Locale locale) {
         EndsWithValidator validator = new EndsWithValidator();
-        
-        // 创建一个模拟的EndsWith注解实例
-        io.github.vipxieliang.validx.annotations.EndsWith endsWithAnnotation = new io.github.vipxieliang.validx.annotations.EndsWith() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.EndsWith.class;
-            }
-            
-            public String[] value() {
-                return suffixes != null ? suffixes : new String[0];
-            }
-            
-            public boolean ignoreCase() {
-                return false;
-            }
-            
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ends.with", locale);
-            }
-            
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-            
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-            
-            public String endsWith() {
-                // 从value数组中查找是否包含需要检查的后缀
-                if (suffixes != null && suffixes.length > 0) {
-                    // 这里简化处理，实际应用中可能需要更复杂的逻辑
-                    return suffixes[0];
-                }
-                return "";
-            }
-        };
-        
-        validator.initialize(endsWithAnnotation);
+        validator.initialize(suffix != null ? suffix : "");
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ends.with", locale));
         }
     }
-    
-    public void validateStartsWith(Object value, String[] prefixes, List<String> errors, Locale locale) {
+
+    public void validateStartsWith(Object value, String prefix, List<String> errors, Locale locale) {
         StartsWithValidator validator = new StartsWithValidator();
-
-        // 创建一个模拟的StartsWith注解实例
-        io.github.vipxieliang.validx.annotations.StartsWith startsWithAnnotation = new io.github.vipxieliang.validx.annotations.StartsWith() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.StartsWith.class;
-            }
-
-            public String[] value() {
-                return prefixes != null ? prefixes : new String[0];
-            }
-
-            public boolean ignoreCase() {
-                return false;
-            }
-
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.starts.with", locale);
-            }
-
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-
-            public String startsWith() {
-                // 从value数组中查找是否包含需要检查的前缀
-                if (prefixes != null && prefixes.length > 0) {
-                    // 这里简化处理，实际应用中可能需要更复杂的逻辑
-                    return prefixes[0];
-                }
-                return "";
-            }
-        };
-
-        validator.initialize(startsWithAnnotation);
+        validator.initialize(prefix != null ? prefix : "");
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.starts.with", locale));
         }

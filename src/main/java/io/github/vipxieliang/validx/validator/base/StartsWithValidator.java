@@ -31,7 +31,16 @@ public class StartsWithValidator implements ConstraintValidator<StartsWith, Stri
 
     @Override
     public void initialize(StartsWith constraintAnnotation) {
-        this.startsWith = constraintAnnotation.startsWith();
+        initialize(constraintAnnotation.startsWith());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param startsWith 起始字符串
+     */
+    public void initialize(String startsWith) {
+        this.startsWith = startsWith;
     }
 
     @Override

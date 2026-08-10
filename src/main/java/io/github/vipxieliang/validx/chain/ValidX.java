@@ -712,19 +712,19 @@ public class ValidX {
         return this;
     }
     
-    public ValidX isEndsWith(Object value, String[] suffixes) {
+    public ValidX isEndsWith(Object value, String suffix) {
         if (checkRequirement(value, "Ends With", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateEndsWith(value, suffixes, errors, getLocale());
+        baseValidation.validateEndsWith(value, suffix, errors, getLocale());
         return this;
     }
-    
-    public ValidX isStartsWith(Object value, String[] prefixes) {
+
+    public ValidX isStartsWith(Object value, String prefix) {
         if (checkRequirement(value, "Starts With", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateStartsWith(value, prefixes, errors, getLocale());
+        baseValidation.validateStartsWith(value, prefix, errors, getLocale());
         return this;
     }
 

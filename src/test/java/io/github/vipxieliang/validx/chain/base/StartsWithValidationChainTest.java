@@ -27,34 +27,34 @@ public class StartsWithValidationChainTest {
     public void testNullAndEmptyValue() {
         // 测试 null 值
         ValidX chain = ValidX.init();
-        chain = chain.isStartsWith(null, new String[]{"test"});
+        chain = chain.isStartsWith(null, "test");
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
         chain = ValidX.init();
-        chain = chain.isStartsWith((Object)"", new String[]{"test"});
+        chain = chain.isStartsWith((Object)"", "test");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidStartsWith() {
         ValidX chain = ValidX.init();
-        chain = chain.isStartsWith((Object)"test_file.txt", new String[]{"test"});
+        chain = chain.isStartsWith((Object)"test_file.txt", "test");
         assertTrue(chain.passed(), "以指定前缀开头的字符串应该通过验证");
-        
+
         chain = ValidX.init();
-        chain = chain.isStartsWith((Object)"document.pdf", new String[]{"doc", "test"});
+        chain = chain.isStartsWith((Object)"document.pdf", "doc");
         assertTrue(chain.passed(), "以指定前缀开头的字符串应该通过验证");
     }
 
     @Test
     public void testInvalidStartsWith() {
         ValidX chain = ValidX.init();
-        chain = chain.isStartsWith((Object)"file_test.txt", new String[]{"test"});
+        chain = chain.isStartsWith((Object)"file_test.txt", "test");
         assertFalse(chain.passed(), "不以指定前缀开头的字符串不应该通过验证");
-        
+
         chain = ValidX.init();
-        chain = chain.isStartsWith((Object)"_testfile", new String[]{"test"});
+        chain = chain.isStartsWith((Object)"_testfile", "test");
         assertFalse(chain.passed(), "不以指定前缀开头的字符串不应该通过验证");
     }
 }

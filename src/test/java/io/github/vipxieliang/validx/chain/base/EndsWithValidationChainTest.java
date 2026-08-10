@@ -27,30 +27,30 @@ public class EndsWithValidationChainTest {
     public void testNullAndEmptyValue() {
         // 测试 null 值
         ValidX chain = ValidX.init();
-        chain = chain.isEndsWith(null, new String[]{".txt"});
+        chain = chain.isEndsWith(null, ".txt");
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
         chain = ValidX.init();
-        chain = chain.isEndsWith((Object)"", new String[]{".txt"});
+        chain = chain.isEndsWith((Object)"", ".txt");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidEndsWith() {
         ValidX chain = ValidX.init();
-        chain = chain.isEndsWith((Object)"filename.txt", new String[]{".txt"});
+        chain = chain.isEndsWith((Object)"filename.txt", ".txt");
         assertTrue(chain.passed(), "以指定后缀结尾的字符串应该通过验证");
     }
 
     @Test
     public void testInvalidEndsWith() {
         ValidX chain = ValidX.init();
-        chain = chain.isEndsWith((Object)"filename.doc", new String[]{".txt"});
+        chain = chain.isEndsWith((Object)"filename.doc", ".txt");
         assertFalse(chain.passed(), "不以指定后缀结尾的字符串不应该通过验证");
-        
+
         chain = ValidX.init();
-        chain = chain.isEndsWith((Object)"filename", new String[]{".txt"});
+        chain = chain.isEndsWith((Object)"filename", ".txt");
         assertFalse(chain.passed(), "不以指定后缀结尾的字符串不应该通过验证");
     }
 }
