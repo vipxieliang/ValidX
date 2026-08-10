@@ -13,6 +13,7 @@ This document records the changes from v1.1.0 to v1.2.0.
   - New `@EndsWithAny` multiple suffix validation annotation
 - 🔧 [Enhancements](#enhancements-)
   - `@FileSize` annotation now supports MIME type validation with `allowedTypes` parameter
+  - `@StartsWith`, `@EndsWith` now support `ignoreCase` parameter for case-insensitive matching
 - 🎯 [Code Refactoring](#code-refactoring-)
   - Simplified validator initialization code across multiple validators
   - Removed verbose anonymous annotation instance creation
@@ -95,7 +96,7 @@ Added dedicated multiple prefix validation annotation to verify that strings sta
 **Features:**
 - Validates if a string starts with any of the specified prefixes
 - Supports validation of multiple prefixes (e.g., URL protocol validation, title validation)
-- Case-sensitive matching by default
+- Supports `ignoreCase` parameter for case-insensitive matching
 - Null and empty strings pass validation by default
 - Full internationalization support (9 languages)
 - Complements the `@StartsWith` annotation for flexible prefix validation
@@ -119,6 +120,10 @@ public class RequestDTO {
     // Example 4: File path validation
     @StartsWithAny({"/home/", "/usr/", "/opt/"})
     private String filePath;
+
+    // Example 5: Case-insensitive validation
+    @StartsWithAny(value = {"http://", "https://"}, ignoreCase = true)
+    private String urlCaseInsensitive;
 }
 ```
 
@@ -129,6 +134,9 @@ ValidX validator = ValidX.init();
 
 // Basic usage
 validator.field("URL").isStartsWithAny("http://example.com", new String[]{"http://", "https://"});
+
+// Case-insensitive
+validator.field("URL").isStartsWithAny("HTTP://example.com", new String[]{"http://", "https://"}, true);
 
 // Multiple prefix options
 validator.field("Name").isStartsWithAny("Mr. Smith", new String[]{"Mr.", "Mrs.", "Ms.", "Dr."});
@@ -173,7 +181,7 @@ public class FileAccessDTO {
 ```
 
 **Notes:**
-- Case-sensitive by default (e.g., "HTTP://" will not match "http://")
+- Case-sensitive by default (e.g., "HTTP://" will not match "http://"), use `ignoreCase = true` for case-insensitive matching
 - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
 - Empty prefix array will cause validation to fail
 - Empty string prefix matches all strings (any string starts with empty string)
@@ -188,7 +196,7 @@ Added dedicated multiple suffix validation annotation to verify that strings end
 **Features:**
 - Validates if a string ends with any of the specified suffixes
 - Supports validation of multiple suffixes (e.g., file extension validation, name suffix validation)
-- Case-sensitive matching by default
+- Supports `ignoreCase` parameter for case-insensitive matching
 - Null and empty strings pass validation by default
 - Full internationalization support (9 languages)
 - Complements the `@EndsWith` annotation for flexible suffix validation
@@ -212,6 +220,10 @@ public class FileDTO {
     // Example 4: Compressed file validation
     @EndsWithAny({".zip", ".rar", ".7z", ".tar.gz"})
     private String archiveFile;
+
+    // Example 5: Case-insensitive validation
+    @EndsWithAny(value = {".jpg", ".jpeg", ".png"}, ignoreCase = true)
+    private String imageCaseInsensitive;
 }
 ```
 
@@ -222,6 +234,9 @@ ValidX validator = ValidX.init();
 
 // Basic usage
 validator.field("File").isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png", ".gif"});
+
+// Case-insensitive
+validator.field("File").isEndsWithAny("photo.JPG", new String[]{".jpg", ".jpeg", ".png"}, true);
 
 // Multiple suffix options
 validator.field("Document").isEndsWithAny("report.pdf", new String[]{".txt", ".doc", ".docx", ".pdf"});
@@ -266,7 +281,7 @@ public class PersonDTO {
 ```
 
 **Notes:**
-- Case-sensitive by default (e.g., ".JPG" will not match ".jpg")
+- Case-sensitive by default (e.g., ".JPG" will not match ".jpg"), use `ignoreCase = true` for case-insensitive matching
 - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
 - Empty suffix array will cause validation to fail
 - Empty string suffix matches all strings (any string ends with empty string)
@@ -276,7 +291,89 @@ public class PersonDTO {
 
 ## Enhancements 🔧
 
-### @FileSize Supports MIME Type Validation
+### 1. @StartsWith, @EndsWith Support Case-Insensitive Matching
+
+Added `ignoreCase` parameter to existing prefix and suffix validation annotations, enabling case-insensitive string matching.
+
+**New Feature:**
+- Added optional `ignoreCase` parameter, defaults to `false` (case-sensitive)
+- Adds new functionality to v1.0.0 `@StartsWith` and `@EndsWith` annotations
+- Chain API also supports `ignoreCase` parameter
+- Maintains backward compatibility, default behavior unchanged
+
+**Note:** The new `@StartsWithAny` and `@EndsWithAny` annotations also support the `ignoreCase` parameter, see [New Features](#new-features-) section.
+
+**Annotation Examples:**
+
+```java
+public class RequestDTO {
+    // Example 1: URL protocol validation (case-insensitive)
+    @StartsWith(startsWith = "http://", ignoreCase = true)
+    private String url;  // Both "HTTP://example.com" and "http://example.com" pass
+
+    // Example 2: File extension validation (case-insensitive)
+    @EndsWith(endsWith = ".jpg", ignoreCase = true)
+    private String imageFile;  // Both "photo.JPG" and "photo.jpg" pass
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// StartsWith - case-insensitive
+validator.isStartsWith("HTTP://example.com", "http://", true);  // passes
+
+// EndsWith - case-insensitive
+validator.isEndsWith("file.TXT", ".txt", true);  // passes
+
+// Check validation result
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-world Use Cases:**
+
+```java
+// Use Case 1: User-entered URL validation (users may input uppercase)
+@RestController
+public class LinkController {
+    @PostMapping("/links")
+    public Result addLink(@Valid @RequestBody LinkDTO dto) {
+        return linkService.add(dto);
+    }
+}
+
+public class LinkDTO {
+    @NotBlank(message = "URL cannot be empty")
+    @StartsWith(startsWith = "http://", ignoreCase = true)
+    private String url;  // Accepts "HTTP://", "Http://", "http://", etc.
+}
+
+// Use Case 2: File extension validation (Windows users may use uppercase extensions)
+public class FileDTO {
+    @NotBlank(message = "Filename cannot be empty")
+    @EndsWith(endsWith = ".txt", ignoreCase = true)
+    private String fileName;  // Accepts ".TXT", ".Txt", ".txt", etc.
+}
+
+// Use Case 3: Chain validation for file paths
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("File Path").isStartsWith(filePath, "/home/", true);  // Accepts "/HOME/", "/Home/", etc.
+```
+
+**Notes:**
+- `ignoreCase` parameter defaults to `false`, maintaining original case-sensitive behavior
+- When `ignoreCase = true` is set, uses `toLowerCase()` for case-insensitive comparison
+- Suitable for scenarios requiring tolerance for inconsistent user input casing
+- Minimal performance impact (only adds one `toLowerCase()` call)
+
+---
+
+### 2. @FileSize Supports MIME Type Validation
 
 Enhanced the `@FileSize` annotation with a new `allowedTypes` parameter to validate file MIME types, particularly useful for `MultipartFile` validation in Spring applications.
 

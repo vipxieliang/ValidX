@@ -13,6 +13,7 @@
   - 新增 `@EndsWithAny` 多后缀验证注解
 - 🔧 [功能增强](#功能增强-)
   - `@FileSize` 注解新增 MIME 类型验证，支持 `allowedTypes` 参数
+  - `@StartsWith`、`@EndsWith` 新增 `ignoreCase` 参数支持大小写不敏感匹配
 - 🎯 [代码重构](#代码重构-)
   - 简化多个验证器的初始化代码
   - 移除冗长的匿名注解实例创建
@@ -95,7 +96,7 @@ validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png"});
 **功能特性：**
 - 验证字符串是否以指定的任意一个前缀开头
 - 支持多个前缀的验证（如：URL 协议验证、称谓验证）
-- 默认区分大小写
+- 支持 `ignoreCase` 参数进行大小写不敏感匹配
 - null 和空字符串默认通过验证
 - 完整的国际化支持（9 种语言）
 - 与 `@StartsWith` 注解互补，提供灵活的前缀验证
@@ -119,6 +120,10 @@ public class RequestDTO {
     // 示例 4：文件路径验证
     @StartsWithAny({"/home/", "/usr/", "/opt/"})
     private String filePath;
+
+    // 示例 5：忽略大小写验证
+    @StartsWithAny(value = {"http://", "https://"}, ignoreCase = true)
+    private String urlCaseInsensitive;
 }
 ```
 
@@ -129,6 +134,9 @@ ValidX validator = ValidX.init();
 
 // 基本用法
 validator.field("URL").isStartsWithAny("http://example.com", new String[]{"http://", "https://"});
+
+// 忽略大小写
+validator.field("URL").isStartsWithAny("HTTP://example.com", new String[]{"http://", "https://"}, true);
 
 // 多个前缀选项
 validator.field("姓名").isStartsWithAny("Mr. Smith", new String[]{"Mr.", "Mrs.", "Ms.", "Dr."});
@@ -173,7 +181,7 @@ public class FileAccessDTO {
 ```
 
 **注意事项：**
-- 默认区分大小写（如："HTTP://" 不会匹配 "http://"）
+- 默认区分大小写（如："HTTP://" 不会匹配 "http://"），可通过 `ignoreCase = true` 进行大小写不敏感匹配
 - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
 - 空前缀数组会导致验证失败
 - 空字符串前缀会匹配所有字符串（任何字符串都以空字符串开头）
@@ -188,7 +196,7 @@ public class FileAccessDTO {
 **功能特性：**
 - 验证字符串是否以指定的任意一个后缀结尾
 - 支持多个后缀的验证（如：文件扩展名验证、名称后缀验证）
-- 默认区分大小写
+- 支持 `ignoreCase` 参数进行大小写不敏感匹配
 - null 和空字符串默认通过验证
 - 完整的国际化支持（9 种语言）
 - 与 `@EndsWith` 注解互补，提供灵活的后缀验证
@@ -212,6 +220,10 @@ public class FileDTO {
     // 示例 4：压缩文件验证
     @EndsWithAny({".zip", ".rar", ".7z", ".tar.gz"})
     private String archiveFile;
+
+    // 示例 5：忽略大小写验证
+    @EndsWithAny(value = {".jpg", ".jpeg", ".png"}, ignoreCase = true)
+    private String imageCaseInsensitive;
 }
 ```
 
@@ -222,6 +234,9 @@ ValidX validator = ValidX.init();
 
 // 基本用法
 validator.field("文件").isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png", ".gif"});
+
+// 忽略大小写
+validator.field("文件").isEndsWithAny("photo.JPG", new String[]{".jpg", ".jpeg", ".png"}, true);
 
 // 多个后缀选项
 validator.field("文档").isEndsWithAny("report.pdf", new String[]{".txt", ".doc", ".docx", ".pdf"});
@@ -266,7 +281,7 @@ public class PersonDTO {
 ```
 
 **注意事项：**
-- 默认区分大小写（如：".JPG" 不会匹配 ".jpg"）
+- 默认区分大小写（如：".JPG" 不会匹配 ".jpg"），可通过 `ignoreCase = true` 进行大小写不敏感匹配
 - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
 - 空后缀数组会导致验证失败
 - 空字符串后缀会匹配所有字符串（任何字符串都以空字符串结尾）
@@ -276,7 +291,89 @@ public class PersonDTO {
 
 ## 功能增强 🔧
 
-### @FileSize 支持 MIME 类型验证
+### 1. @StartsWith、@EndsWith 支持忽略大小写
+
+为已有的前缀和后缀验证注解新增 `ignoreCase` 参数，支持大小写不敏感的字符串匹配。
+
+**新功能：**
+- 新增可选的 `ignoreCase` 参数，默认为 `false`（区分大小写）
+- 为 v1.0.0 版本的 `@StartsWith` 和 `@EndsWith` 注解增加新功能
+- 链式 API 同步支持 `ignoreCase` 参数
+- 保持向后兼容，默认行为不变
+
+**注：** 新增的 `@StartsWithAny` 和 `@EndsWithAny` 注解也支持 `ignoreCase` 参数，详见[新增功能](#新增功能-)部分。
+
+**注解方式示例：**
+
+```java
+public class RequestDTO {
+    // 示例 1：URL 协议验证（忽略大小写）
+    @StartsWith(startsWith = "http://", ignoreCase = true)
+    private String url;  // "HTTP://example.com" 或 "http://example.com" 都通过
+
+    // 示例 2：文件扩展名验证（忽略大小写）
+    @EndsWith(endsWith = ".jpg", ignoreCase = true)
+    private String imageFile;  // "photo.JPG" 或 "photo.jpg" 都通过
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// StartsWith - 忽略大小写
+validator.isStartsWith("HTTP://example.com", "http://", true);  // 通过
+
+// EndsWith - 忽略大小写
+validator.isEndsWith("file.TXT", ".txt", true);  // 通过
+
+// 检查验证结果
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：用户输入的 URL 验证（用户可能输入大写）
+@RestController
+public class LinkController {
+    @PostMapping("/links")
+    public Result addLink(@Valid @RequestBody LinkDTO dto) {
+        return linkService.add(dto);
+    }
+}
+
+public class LinkDTO {
+    @NotBlank(message = "URL 不能为空")
+    @StartsWith(startsWith = "http://", ignoreCase = true)
+    private String url;  // 接受 "HTTP://", "Http://", "http://" 等
+}
+
+// 场景 2：文件扩展名验证（Windows 用户可能使用大写扩展名）
+public class FileDTO {
+    @NotBlank(message = "文件名不能为空")
+    @EndsWith(endsWith = ".txt", ignoreCase = true)
+    private String fileName;  // 接受 ".TXT", ".Txt", ".txt" 等
+}
+
+// 场景 3：链式验证文件路径
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("文件路径").isStartsWith(filePath, "/home/", true);  // 接受 "/HOME/", "/Home/" 等
+```
+
+**注意事项：**
+- `ignoreCase` 参数默认为 `false`，保持原有的区分大小写行为
+- 设置 `ignoreCase = true` 后，使用 `toLowerCase()` 进行大小写不敏感比较
+- 适用于需要兼容用户输入大小写不一致的场景
+- 对性能影响极小（仅增加一次 `toLowerCase()` 调用）
+
+---
+
+### 2. @FileSize 支持 MIME 类型验证
 
 增强了 `@FileSize` 注解，新增 `allowedTypes` 参数用于验证文件 MIME 类型，特别适用于 Spring 应用中的 `MultipartFile` 验证。
 
