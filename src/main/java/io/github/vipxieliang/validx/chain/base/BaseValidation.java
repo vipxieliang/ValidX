@@ -92,37 +92,7 @@ public class BaseValidation {
     }
 
     public void validatePort(Object value, List<String> errors, Locale locale) {
-        if (value == null) {
-            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.value.null", locale));
-            return;
-        }
-
         PortValidator validator = new PortValidator();
-        
-        // 创建一个模拟的Port注解实例
-        Port portAnnotation = new Port() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return Port.class;
-            }
-            
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.port", locale);
-            }
-            
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-            
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-        
-        validator.initialize(portAnnotation);
         if (!validator.isValid(value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.port", locale));
         }
