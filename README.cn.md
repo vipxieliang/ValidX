@@ -47,7 +47,7 @@
 
 ## 📢 版本更新通知
 
-**当前版本：v1.1.0** (2026年8月6日发布)
+**当前版本：v1.1.0** (2026年8月10日发布)
 
 **v1.1.0 主要更新：**
 - ✨ 新增验证注解：`@Date`、`@DateTime`、`@FutureDateTime`、`@PastDateTime`、`@ChineseName`、`@Contains` 等

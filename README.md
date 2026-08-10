@@ -47,7 +47,7 @@
 
 ## 📢 Version Update Notice
 
-**Current Version: v1.1.0** (Released August 6, 2026)
+**Current Version: v1.1.0** (Released August 10, 2026)
 
 **v1.1.0 Key Updates:**
 - ✨ New validation annotations: `@Date`, `@DateTime`, `@FutureDateTime`, `@PastDateTime`, `@ChineseName`, `@Contains`, etc.
