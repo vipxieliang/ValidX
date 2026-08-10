@@ -40,10 +40,7 @@ public class NetworkValidation {
     }
 
     public void validateIp(Object value, List<String> errors, Locale locale) {
-        IpValidator validator = new IpValidator();
-        if (!validator.isValid((String) value, null)) {
-            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ip", locale));
-        }
+        validateIp(value, Ip.IpVersion.ANY, errors, locale);
     }
 
     /**
@@ -54,36 +51,8 @@ public class NetworkValidation {
      * @param locale 语言环境
      */
     public void validateIp(Object value, Ip.IpVersion version, List<String> errors, Locale locale) {
-        // 创建一个模拟的 Ip 注解来传递版本参数
         IpValidator validator = new IpValidator();
-        Ip annotation = new Ip() {
-            @Override
-            public Ip.IpVersion version() {
-                return version;
-            }
-
-            @Override
-            public String message() {
-                return "{io.github.vipxieliang.validx.annotation.ip}";
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return Ip.class;
-            }
-        };
-
-        validator.initialize(annotation);
+        validator.initialize(version);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ip", locale));
         }

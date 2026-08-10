@@ -35,7 +35,16 @@ public class IpValidator implements ConstraintValidator<Ip, String> {
 
     @Override
     public void initialize(Ip ip) {
-        this.version = ip.version();
+        initialize(ip.version());
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param version IP版本
+     */
+    public void initialize(Ip.IpVersion version) {
+        this.version = version;
     }
 
     @Override
