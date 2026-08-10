@@ -211,6 +211,22 @@ public class BaseValidation {
         }
     }
 
+    public void validateStartsWithAny(Object value, String[] prefixes, List<String> errors, Locale locale) {
+        StartsWithAnyValidator validator = new StartsWithAnyValidator();
+        validator.initialize(prefixes);
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.starts.with.any", locale));
+        }
+    }
+
+    public void validateEndsWithAny(Object value, String[] suffixes, List<String> errors, Locale locale) {
+        EndsWithAnyValidator validator = new EndsWithAnyValidator();
+        validator.initialize(suffixes);
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ends.with.any", locale));
+        }
+    }
+
     public void validateContains(Object value, String[] substrings, boolean ignoreCase, boolean matchAll, List<String> errors, Locale locale) {
         io.github.vipxieliang.validx.validator.base.ContainsValidator validator = new io.github.vipxieliang.validx.validator.base.ContainsValidator();
         validator.initialize(substrings, ignoreCase, matchAll);

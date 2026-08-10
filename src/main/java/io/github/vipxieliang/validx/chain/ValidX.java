@@ -728,6 +728,22 @@ public class ValidX {
         return this;
     }
 
+    public ValidX isStartsWithAny(Object value, String[] prefixes) {
+        if (checkRequirement(value, "Starts With Any", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateStartsWithAny(value, prefixes, errors, getLocale());
+        return this;
+    }
+
+    public ValidX isEndsWithAny(Object value, String[] suffixes) {
+        if (checkRequirement(value, "Ends With Any", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateEndsWithAny(value, suffixes, errors, getLocale());
+        return this;
+    }
+
     // Base Validation Methods - Contains
     public ValidX isContains(Object value, String[] substrings) {
         return isContains(value, substrings, false, false);
