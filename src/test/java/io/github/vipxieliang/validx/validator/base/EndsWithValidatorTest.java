@@ -97,4 +97,53 @@ public class EndsWithValidatorTest {
         assertTrue(validator.isValid("file_backup", context), "file_backup should be valid");
         assertFalse(validator.isValid("backup_file", context), "backup_file should be invalid");
     }
+
+    @Test
+    public void testIgnoreCaseTrue() {
+        // 准备注解 - 忽略大小写
+        EndsWith annotation = mock(EndsWith.class);
+        when(annotation.endsWith()).thenReturn(".txt");
+        when(annotation.ignoreCase()).thenReturn(true);
+        validator.initialize(annotation);
+
+        // 大小写不同应该通过验证
+        assertTrue(validator.isValid("file.TXT", context), "file.TXT should be valid with ignoreCase");
+        assertTrue(validator.isValid("file.txt", context), "file.txt should be valid with ignoreCase");
+        assertTrue(validator.isValid("file.TxT", context), "file.TxT should be valid with ignoreCase");
+    }
+
+    @Test
+    public void testIgnoreCaseFalse() {
+        // 准备注解 - 区分大小写
+        EndsWith annotation = mock(EndsWith.class);
+        when(annotation.endsWith()).thenReturn(".txt");
+        when(annotation.ignoreCase()).thenReturn(false);
+        validator.initialize(annotation);
+
+        // 大小写不同应该失败
+        assertFalse(validator.isValid("file.TXT", context), "file.TXT should be invalid with case sensitive");
+        assertTrue(validator.isValid("file.txt", context), "file.txt should be valid");
+        assertFalse(validator.isValid("file.TxT", context), "file.TxT should be invalid with case sensitive");
+    }
+
+    @Test
+    public void testDirectInitializeWithIgnoreCase() {
+        // 直接初始化验证器（用于链式调用）- 忽略大小写
+        validator.initialize(".jpg", true);
+
+        assertTrue(validator.isValid("image.JPG", context), "image.JPG should be valid with ignoreCase");
+        assertTrue(validator.isValid("image.Jpg", context), "image.Jpg should be valid with ignoreCase");
+        assertTrue(validator.isValid("image.jpg", context), "image.jpg should be valid with ignoreCase");
+        assertFalse(validator.isValid("image.png", context), "image.png should be invalid");
+    }
+
+    @Test
+    public void testDirectInitializeWithoutIgnoreCase() {
+        // 直接初始化验证器（用于链式调用）- 区分大小写
+        validator.initialize(".jpg", false);
+
+        assertFalse(validator.isValid("image.JPG", context), "image.JPG should be invalid with case sensitive");
+        assertFalse(validator.isValid("image.Jpg", context), "image.Jpg should be invalid with case sensitive");
+        assertTrue(validator.isValid("image.jpg", context), "image.jpg should be valid");
+    }
 }

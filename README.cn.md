@@ -2053,14 +2053,18 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 #### @StartsWith
 * 校验规则：前缀验证，验证字符串是否以指定的前缀开头。
 * 示例格式：以指定字符串开头
+* 配置选项：
+  - `startsWith`：要匹配的前缀字符串
+  - `ignoreCase`：是否忽略大小写，默认为 `false`（区分大小写）
 * 版本信息：
   - 新增版本：1.0.0
-  - 修改版本：1.2.0（链式 API 参数从 `String[]` 改为 `String`）
+  - 修改版本：1.2.0（链式 API 参数从 `String[]` 改为 `String`；新增 `ignoreCase` 参数）
 * **重要变更（v1.0.0 → v1.2.0）**：
   - **链式 API 变更**：`isStartsWith()` 方法参数从 `String[]` 改为 `String`
   - **v1.0.0 行为**：`validator.isStartsWith("text", new String[]{"prefix"})`
   - **v1.2.0 行为**：`validator.isStartsWith("text", "prefix")`
   - **注解使用**：未变更，仍然使用 `@StartsWith(startsWith = "prefix")`
+  - **新增功能**：支持 `ignoreCase` 参数进行忽略大小写匹配
   - **迁移指南**：单个前缀验证时移除数组包装；多个前缀验证请使用新的 `@StartsWithAny` 注解或 `isStartsWithAny()` 方法
 * 使用示例：
   ```java
@@ -2068,10 +2072,23 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   @StartsWith(startsWith = "prefix")
   private String code;
 
+  // 忽略大小写验证
+  @StartsWith(startsWith = "http://", ignoreCase = true)
+  private String url;
+
   // 链式调用方式使用（v1.2.0 - 简化为单值参数）
   ValidX validator = ValidX.init();
+
+  // 区分大小写（默认）
   validator.isStartsWith("prefix_string", "prefix");
+
+  // 忽略大小写
+  validator.isStartsWith("PREFIX_string", "prefix", true);
   ```
+* 注意事项：
+  - 默认区分大小写
+  - 设置 `ignoreCase = true` 可以忽略大小写进行匹配
+  - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 [↑ 返回快速查询表](#快速查询表)
 
@@ -2080,6 +2097,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 示例格式：`"http://example.com"` 以 `"http://"` 或 `"https://"` 开头，`"张先生"` 以 `"Mr."`、`"Mrs."`、`"Ms."` 或 `"Dr."` 开头
 * 配置选项：
   - `value`：要匹配的前缀数组（至少匹配其中一个）
+  - `ignoreCase`：是否忽略大小写，默认为 `false`（区分大小写）
 * 示例格式：
   - URL 协议：`"http://example.com"` 匹配 `{"http://", "https://"}`
   - 称谓：`"Dr. Smith"` 匹配 `{"Mr.", "Mrs.", "Ms.", "Dr."}`
@@ -2103,11 +2121,18 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   @StartsWithAny({"/home/", "/usr/", "/opt/"})
   private String filePath;
 
+  // 忽略大小写验证（不区分大小写）
+  @StartsWithAny(value = {"http://", "https://"}, ignoreCase = true)
+  private String urlCaseInsensitive;
+
   // 链式调用方式使用
   ValidX validator = ValidX.init();
 
-  // 基本用法
+  // 基本用法（区分大小写）
   validator.isStartsWithAny("http://example.com", new String[]{"http://", "https://"});
+
+  // 忽略大小写（不区分大小写）
+  validator.isStartsWithAny("HTTP://example.com", new String[]{"http://", "https://"}, true);
 
   // 多个前缀选项
   validator.isStartsWithAny("张先生", new String[]{"Mr.", "Mrs.", "Ms.", "Dr."});
@@ -2122,6 +2147,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   ```
 * 注意事项：
   - 默认区分大小写（如："HTTP://" 不会匹配 "http://"）
+  - 设置 `ignoreCase = true` 可以忽略大小写进行匹配
   - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
   - 空前缀数组会导致验证失败
   - 空字符串前缀会匹配所有字符串（任何字符串都以空字符串开头）
@@ -2132,14 +2158,18 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 #### @EndsWith
 * 校验规则：后缀验证，验证字符串是否以指定的后缀结尾。
 * 示例格式：以指定字符串结尾
+* 配置选项：
+  - `endsWith`：要匹配的后缀字符串
+  - `ignoreCase`：是否忽略大小写，默认为 `false`（区分大小写）
 * 版本信息：
   - 新增版本：1.0.0
-  - 修改版本：1.2.0（链式 API 参数从 `String[]` 改为 `String`）
+  - 修改版本：1.2.0（链式 API 参数从 `String[]` 改为 `String`；新增 `ignoreCase` 参数）
 * **重要变更（v1.0.0 → v1.2.0）**：
   - **链式 API 变更**：`isEndsWith()` 方法参数从 `String[]` 改为 `String`
   - **v1.0.0 行为**：`validator.isEndsWith("text", new String[]{"suffix"})`
   - **v1.2.0 行为**：`validator.isEndsWith("text", "suffix")`
   - **注解使用**：未变更，仍然使用 `@EndsWith(endsWith = "suffix")`
+  - **新增功能**：支持 `ignoreCase` 参数进行忽略大小写匹配
   - **迁移指南**：单个后缀验证时移除数组包装；多个后缀验证请使用新的 `@EndsWithAny` 注解或 `isEndsWithAny()` 方法
 * 使用示例：
   ```java
@@ -2147,10 +2177,23 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   @EndsWith(endsWith = "suffix")
   private String code;
 
+  // 忽略大小写验证
+  @EndsWith(endsWith = ".txt", ignoreCase = true)
+  private String filename;
+
   // 链式调用方式使用（v1.2.0 - 简化为单值参数）
   ValidX validator = ValidX.init();
+
+  // 区分大小写（默认）
   validator.isEndsWith("string_suffix", "suffix");
+
+  // 忽略大小写
+  validator.isEndsWith("file.TXT", ".txt", true);
   ```
+* 注意事项：
+  - 默认区分大小写
+  - 设置 `ignoreCase = true` 可以忽略大小写进行匹配
+  - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 [↑ 返回快速查询表](#快速查询表)
 
@@ -2159,6 +2202,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 * 示例格式：`"photo.jpg"` 以 `".jpg"`、`".jpeg"`、`".png"` 或 `".gif"` 结尾，`"report.pdf"` 以 `".txt"`、`".doc"`、`".docx"` 或 `".pdf"` 结尾
 * 配置选项：
   - `value`：要匹配的后缀数组（至少匹配其中一个）
+  - `ignoreCase`：是否忽略大小写，默认为 `false`（区分大小写）
 * 示例格式：
   - 图片文件：`"photo.jpg"` 匹配 `{".jpg", ".jpeg", ".png", ".gif"}`
   - 文档文件：`"report.pdf"` 匹配 `{".txt", ".doc", ".docx", ".pdf"}`
@@ -2182,11 +2226,18 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   @EndsWithAny({".zip", ".rar", ".7z", ".tar.gz"})
   private String archiveFile;
 
+  // 忽略大小写验证（不区分大小写）
+  @EndsWithAny(value = {".jpg", ".jpeg", ".png"}, ignoreCase = true)
+  private String imageCaseInsensitive;
+
   // 链式调用方式使用
   ValidX validator = ValidX.init();
 
-  // 基本用法
+  // 基本用法（区分大小写）
   validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png", ".gif"});
+
+  // 忽略大小写（不区分大小写）
+  validator.isEndsWithAny("photo.JPG", new String[]{".jpg", ".jpeg", ".png"}, true);
 
   // 多个后缀选项
   validator.isEndsWithAny("report.pdf", new String[]{".txt", ".doc", ".docx", ".pdf"});
@@ -2201,6 +2252,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   ```
 * 注意事项：
   - 默认区分大小写（如：".JPG" 不会匹配 ".jpg"）
+  - 设置 `ignoreCase = true` 可以忽略大小写进行匹配
   - null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
   - 空后缀数组会导致验证失败
   - 空字符串后缀会匹配所有字符串（任何字符串都以空字符串结尾）

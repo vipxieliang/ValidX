@@ -138,4 +138,45 @@ public class StartsWithAnyValidatorTest {
         Set<ConstraintViolation<EmptyStringPrefixBean>> violations = validator.validate(bean);
         assertTrue(violations.isEmpty(), "Any string starts with empty string");
     }
+
+    static class IgnoreCaseBean {
+        @StartsWithAny(value = {"http://", "https://"}, ignoreCase = true)
+        private String url;
+
+        @StartsWithAny(value = {".jpg", ".png"}, ignoreCase = true)
+        private String extension;
+
+        public IgnoreCaseBean(String url, String extension) {
+            this.url = url;
+            this.extension = extension;
+        }
+    }
+
+    @Test
+    public void testIgnoreCaseTrue() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("HTTP://example.com", ".JPG");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertTrue(violations.isEmpty(), "Should pass when ignoreCase is true");
+    }
+
+    @Test
+    public void testIgnoreCaseMixedCase() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("HtTp://example.com", ".JpG");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertTrue(violations.isEmpty(), "Should pass with mixed case when ignoreCase is true");
+    }
+
+    @Test
+    public void testIgnoreCaseLowerCase() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("http://example.com", ".jpg");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertTrue(violations.isEmpty(), "Should pass with lowercase when ignoreCase is true");
+    }
+
+    @Test
+    public void testIgnoreCaseInvalid() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("ftp://example.com", ".gif");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertEquals(2, violations.size(), "Should fail when prefix doesn't match even with ignoreCase");
+    }
 }

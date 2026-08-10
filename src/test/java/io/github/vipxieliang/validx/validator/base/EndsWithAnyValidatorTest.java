@@ -138,4 +138,45 @@ public class EndsWithAnyValidatorTest {
         Set<ConstraintViolation<EmptyStringSuffixBean>> violations = validator.validate(bean);
         assertTrue(violations.isEmpty(), "Any string ends with empty string");
     }
+
+    static class IgnoreCaseBean {
+        @EndsWithAny(value = {".jpg", ".jpeg", ".png"}, ignoreCase = true)
+        private String imageFile;
+
+        @EndsWithAny(value = {".txt", ".pdf"}, ignoreCase = true)
+        private String documentFile;
+
+        public IgnoreCaseBean(String imageFile, String documentFile) {
+            this.imageFile = imageFile;
+            this.documentFile = documentFile;
+        }
+    }
+
+    @Test
+    public void testIgnoreCaseTrue() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("photo.JPG", "document.PDF");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertTrue(violations.isEmpty(), "Should pass when ignoreCase is true");
+    }
+
+    @Test
+    public void testIgnoreCaseMixedCase() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("photo.JpG", "document.PdF");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertTrue(violations.isEmpty(), "Should pass with mixed case when ignoreCase is true");
+    }
+
+    @Test
+    public void testIgnoreCaseLowerCase() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("photo.jpg", "document.pdf");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertTrue(violations.isEmpty(), "Should pass with lowercase when ignoreCase is true");
+    }
+
+    @Test
+    public void testIgnoreCaseInvalid() {
+        IgnoreCaseBean bean = new IgnoreCaseBean("photo.gif", "document.doc");
+        Set<ConstraintViolation<IgnoreCaseBean>> violations = validator.validate(bean);
+        assertEquals(2, violations.size(), "Should fail when suffix doesn't match even with ignoreCase");
+    }
 }

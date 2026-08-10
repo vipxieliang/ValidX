@@ -31,10 +31,11 @@ import javax.validation.ConstraintValidatorContext;
 public class EndsWithAnyValidator implements ConstraintValidator<EndsWithAny, String> {
 
     private String[] suffixes;
+    private boolean ignoreCase;
 
     @Override
     public void initialize(EndsWithAny constraintAnnotation) {
-        initialize(constraintAnnotation.value());
+        initialize(constraintAnnotation.value(), constraintAnnotation.ignoreCase());
     }
 
     /**
@@ -43,7 +44,18 @@ public class EndsWithAnyValidator implements ConstraintValidator<EndsWithAny, St
      * @param suffixes 后缀数组
      */
     public void initialize(String[] suffixes) {
+        initialize(suffixes, false);
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用，支持忽略大小写）
+     *
+     * @param suffixes 后缀数组
+     * @param ignoreCase 是否忽略大小写
+     */
+    public void initialize(String[] suffixes, boolean ignoreCase) {
         this.suffixes = suffixes != null ? suffixes : new String[0];
+        this.ignoreCase = ignoreCase;
     }
 
     @Override
@@ -60,8 +72,18 @@ public class EndsWithAnyValidator implements ConstraintValidator<EndsWithAny, St
 
         // OR 逻辑：任意一个匹配即通过
         for (String suffix : suffixes) {
-            if (suffix != null && value.endsWith(suffix)) {
-                return true;
+            if (suffix != null) {
+                if (ignoreCase) {
+                    // 忽略大小写比较
+                    if (value.toLowerCase().endsWith(suffix.toLowerCase())) {
+                        return true;
+                    }
+                } else {
+                    // 区分大小写比较
+                    if (value.endsWith(suffix)) {
+                        return true;
+                    }
+                }
             }
         }
 

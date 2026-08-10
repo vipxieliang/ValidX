@@ -196,32 +196,48 @@ public class BaseValidation {
     }
     
     public void validateEndsWith(Object value, String suffix, List<String> errors, Locale locale) {
+        validateEndsWith(value, suffix, false, errors, locale);
+    }
+
+    public void validateEndsWith(Object value, String suffix, boolean ignoreCase, List<String> errors, Locale locale) {
         EndsWithValidator validator = new EndsWithValidator();
-        validator.initialize(suffix != null ? suffix : "");
+        validator.initialize(suffix != null ? suffix : "", ignoreCase);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ends.with", locale));
         }
     }
 
     public void validateStartsWith(Object value, String prefix, List<String> errors, Locale locale) {
+        validateStartsWith(value, prefix, false, errors, locale);
+    }
+
+    public void validateStartsWith(Object value, String prefix, boolean ignoreCase, List<String> errors, Locale locale) {
         StartsWithValidator validator = new StartsWithValidator();
-        validator.initialize(prefix != null ? prefix : "");
+        validator.initialize(prefix != null ? prefix : "", ignoreCase);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.starts.with", locale));
         }
     }
 
     public void validateStartsWithAny(Object value, String[] prefixes, List<String> errors, Locale locale) {
+        validateStartsWithAny(value, prefixes, false, errors, locale);
+    }
+
+    public void validateStartsWithAny(Object value, String[] prefixes, boolean ignoreCase, List<String> errors, Locale locale) {
         StartsWithAnyValidator validator = new StartsWithAnyValidator();
-        validator.initialize(prefixes);
+        validator.initialize(prefixes, ignoreCase);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.starts.with.any", locale));
         }
     }
 
     public void validateEndsWithAny(Object value, String[] suffixes, List<String> errors, Locale locale) {
+        validateEndsWithAny(value, suffixes, false, errors, locale);
+    }
+
+    public void validateEndsWithAny(Object value, String[] suffixes, boolean ignoreCase, List<String> errors, Locale locale) {
         EndsWithAnyValidator validator = new EndsWithAnyValidator();
-        validator.initialize(suffixes);
+        validator.initialize(suffixes, ignoreCase);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ends.with.any", locale));
         }

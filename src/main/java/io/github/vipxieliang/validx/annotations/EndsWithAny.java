@@ -55,6 +55,13 @@ public @interface EndsWithAny {
     String[] value();
 
     /**
+     * 是否忽略大小写，默认为 false（区分大小写）
+     *
+     * @return true 表示忽略大小写，false 表示区分大小写
+     */
+    boolean ignoreCase() default false;
+
+    /**
      * 验证失败时的错误消息
      *
      * @return 错误消息模板

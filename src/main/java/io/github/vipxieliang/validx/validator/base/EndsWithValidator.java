@@ -28,10 +28,11 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class EndsWithValidator implements ConstraintValidator<EndsWith, String> {
     protected String endsWith;
+    private boolean ignoreCase;
 
     @Override
     public void initialize(EndsWith constraintAnnotation) {
-        initialize(constraintAnnotation.endsWith());
+        initialize(constraintAnnotation.endsWith(), constraintAnnotation.ignoreCase());
     }
 
     /**
@@ -40,7 +41,18 @@ public class EndsWithValidator implements ConstraintValidator<EndsWith, String> 
      * @param endsWith 结尾字符串
      */
     public void initialize(String endsWith) {
+        initialize(endsWith, false);
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用，支持忽略大小写）
+     *
+     * @param endsWith 结尾字符串
+     * @param ignoreCase 是否忽略大小写
+     */
+    public void initialize(String endsWith, boolean ignoreCase) {
         this.endsWith = endsWith;
+        this.ignoreCase = ignoreCase;
     }
 
     @Override
@@ -48,6 +60,13 @@ public class EndsWithValidator implements ConstraintValidator<EndsWith, String> 
         if (value == null || value.isEmpty()) {
             return true; // 空值应该由@NotNull等其他注解处理
         }
-        return value.endsWith(endsWith);
+
+        if (ignoreCase) {
+            // 忽略大小写比较
+            return value.toLowerCase().endsWith(endsWith.toLowerCase());
+        } else {
+            // 区分大小写比较
+            return value.endsWith(endsWith);
+        }
     }
 }

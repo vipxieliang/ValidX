@@ -39,6 +39,14 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = StartsWithValidator.class)
 public @interface StartsWith {
     String startsWith();
+
+    /**
+     * 是否忽略大小写，默认为 false（区分大小写）
+     *
+     * @return true 表示忽略大小写，false 表示区分大小写
+     */
+    boolean ignoreCase() default false;
+
     String message() default "{io.github.vipxieliang.validx.annotation.starts.with}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

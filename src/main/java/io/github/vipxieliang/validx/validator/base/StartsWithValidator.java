@@ -28,10 +28,11 @@ import javax.validation.ConstraintValidatorContext;
  */
 public class StartsWithValidator implements ConstraintValidator<StartsWith, String> {
     protected String startsWith;
+    private boolean ignoreCase;
 
     @Override
     public void initialize(StartsWith constraintAnnotation) {
-        initialize(constraintAnnotation.startsWith());
+        initialize(constraintAnnotation.startsWith(), constraintAnnotation.ignoreCase());
     }
 
     /**
@@ -40,7 +41,18 @@ public class StartsWithValidator implements ConstraintValidator<StartsWith, Stri
      * @param startsWith 起始字符串
      */
     public void initialize(String startsWith) {
+        initialize(startsWith, false);
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用，支持忽略大小写）
+     *
+     * @param startsWith 起始字符串
+     * @param ignoreCase 是否忽略大小写
+     */
+    public void initialize(String startsWith, boolean ignoreCase) {
         this.startsWith = startsWith;
+        this.ignoreCase = ignoreCase;
     }
 
     @Override
@@ -48,6 +60,13 @@ public class StartsWithValidator implements ConstraintValidator<StartsWith, Stri
         if (value == null || value.isEmpty()) {
             return true; // 空值应该由@NotNull等其他注解处理
         }
-        return value.startsWith(startsWith);
+
+        if (ignoreCase) {
+            // 忽略大小写比较
+            return value.toLowerCase().startsWith(startsWith.toLowerCase());
+        } else {
+            // 区分大小写比较
+            return value.startsWith(startsWith);
+        }
     }
 }

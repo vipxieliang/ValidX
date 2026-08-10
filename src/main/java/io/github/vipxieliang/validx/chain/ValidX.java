@@ -713,34 +713,50 @@ public class ValidX {
     }
     
     public ValidX isEndsWith(Object value, String suffix) {
+        return isEndsWith(value, suffix, false);
+    }
+
+    public ValidX isEndsWith(Object value, String suffix, boolean ignoreCase) {
         if (checkRequirement(value, "Ends With", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateEndsWith(value, suffix, errors, getLocale());
+        baseValidation.validateEndsWith(value, suffix, ignoreCase, errors, getLocale());
         return this;
     }
 
     public ValidX isStartsWith(Object value, String prefix) {
+        return isStartsWith(value, prefix, false);
+    }
+
+    public ValidX isStartsWith(Object value, String prefix, boolean ignoreCase) {
         if (checkRequirement(value, "Starts With", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateStartsWith(value, prefix, errors, getLocale());
+        baseValidation.validateStartsWith(value, prefix, ignoreCase, errors, getLocale());
         return this;
     }
 
     public ValidX isStartsWithAny(Object value, String[] prefixes) {
+        return isStartsWithAny(value, prefixes, false);
+    }
+
+    public ValidX isStartsWithAny(Object value, String[] prefixes, boolean ignoreCase) {
         if (checkRequirement(value, "Starts With Any", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateStartsWithAny(value, prefixes, errors, getLocale());
+        baseValidation.validateStartsWithAny(value, prefixes, ignoreCase, errors, getLocale());
         return this;
     }
 
     public ValidX isEndsWithAny(Object value, String[] suffixes) {
+        return isEndsWithAny(value, suffixes, false);
+    }
+
+    public ValidX isEndsWithAny(Object value, String[] suffixes, boolean ignoreCase) {
         if (checkRequirement(value, "Ends With Any", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateEndsWithAny(value, suffixes, errors, getLocale());
+        baseValidation.validateEndsWithAny(value, suffixes, ignoreCase, errors, getLocale());
         return this;
     }
 

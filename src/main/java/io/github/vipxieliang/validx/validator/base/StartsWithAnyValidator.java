@@ -31,10 +31,11 @@ import javax.validation.ConstraintValidatorContext;
 public class StartsWithAnyValidator implements ConstraintValidator<StartsWithAny, String> {
 
     private String[] prefixes;
+    private boolean ignoreCase;
 
     @Override
     public void initialize(StartsWithAny constraintAnnotation) {
-        initialize(constraintAnnotation.value());
+        initialize(constraintAnnotation.value(), constraintAnnotation.ignoreCase());
     }
 
     /**
@@ -43,7 +44,18 @@ public class StartsWithAnyValidator implements ConstraintValidator<StartsWithAny
      * @param prefixes 前缀数组
      */
     public void initialize(String[] prefixes) {
+        initialize(prefixes, false);
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用，支持忽略大小写）
+     *
+     * @param prefixes 前缀数组
+     * @param ignoreCase 是否忽略大小写
+     */
+    public void initialize(String[] prefixes, boolean ignoreCase) {
         this.prefixes = prefixes != null ? prefixes : new String[0];
+        this.ignoreCase = ignoreCase;
     }
 
     @Override
@@ -60,8 +72,18 @@ public class StartsWithAnyValidator implements ConstraintValidator<StartsWithAny
 
         // OR 逻辑：任意一个匹配即通过
         for (String prefix : prefixes) {
-            if (prefix != null && value.startsWith(prefix)) {
-                return true;
+            if (prefix != null) {
+                if (ignoreCase) {
+                    // 忽略大小写比较
+                    if (value.toLowerCase().startsWith(prefix.toLowerCase())) {
+                        return true;
+                    }
+                } else {
+                    // 区分大小写比较
+                    if (value.startsWith(prefix)) {
+                        return true;
+                    }
+                }
             }
         }
 

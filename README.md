@@ -2045,14 +2045,18 @@ Click on the annotation name to jump to its detailed documentation.
 #### @StartsWith
 * Validation Rule: Prefix validation, validating whether the string starts with the specified prefix.
 * Example Format: Starting with specified string
+* Configuration Options:
+  - `startsWith`: The prefix string to match
+  - `ignoreCase`: Whether to ignore case, default is `false` (case-sensitive)
 * Version Information:
   - Added Version: 1.0.0
-  - Modified Version: 1.2.0 (Chain API parameter changed from `String[]` to `String`)
+  - Modified Version: 1.2.0 (Chain API parameter changed from `String[]` to `String`; added `ignoreCase` parameter)
 * **Important Changes (v1.0.0 → v1.2.0)**:
   - **Chain API Change**: The `isStartsWith()` method parameter changed from `String[]` to `String`
   - **v1.0.0 Behavior**: `validator.isStartsWith("text", new String[]{"prefix"})`
   - **v1.2.0 Behavior**: `validator.isStartsWith("text", "prefix")`
   - **Annotation Usage**: Unchanged, still uses `@StartsWith(startsWith = "prefix")`
+  - **New Feature**: Support for `ignoreCase` parameter for case-insensitive matching
   - **Migration**: For single prefix validation, remove the array wrapper; for multiple prefixes, use the new `@StartsWithAny` annotation or `isStartsWithAny()` method
 * Usage Example:
   ```java
@@ -2060,10 +2064,23 @@ Click on the annotation name to jump to its detailed documentation.
   @StartsWith(startsWith = "prefix")
   private String code;
 
+  // Case-insensitive validation
+  @StartsWith(startsWith = "http://", ignoreCase = true)
+  private String url;
+
   // Chain call usage (v1.2.0 - simplified single value parameter)
   ValidX validator = ValidX.init();
+
+  // Case-sensitive (default)
   validator.isStartsWith("prefix_string", "prefix");
+
+  // Case-insensitive
+  validator.isStartsWith("PREFIX_string", "prefix", true);
   ```
+* Notes:
+  - Case-sensitive by default
+  - Set `ignoreCase = true` for case-insensitive matching
+  - Null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty` if required)
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
@@ -2072,6 +2089,7 @@ Click on the annotation name to jump to its detailed documentation.
 * Example Format: `"http://example.com"` starts with `"http://"` or `"https://"`, `"Mr. Smith"` starts with `"Mr."`, `"Mrs."`, `"Ms."`, or `"Dr."`
 * Configuration Options:
   - `value`: Array of prefixes to match (at least one must match)
+  - `ignoreCase`: Whether to ignore case, default is `false` (case-sensitive)
 * Example Formats:
   - URL protocols: `"http://example.com"` matches `{"http://", "https://"}`
   - Titles: `"Dr. Smith"` matches `{"Mr.", "Mrs.", "Ms.", "Dr."}`
@@ -2095,11 +2113,18 @@ Click on the annotation name to jump to its detailed documentation.
   @StartsWithAny({"/home/", "/usr/", "/opt/"})
   private String filePath;
 
+  // Case-insensitive validation
+  @StartsWithAny(value = {"http://", "https://"}, ignoreCase = true)
+  private String urlCaseInsensitive;
+
   // Chain call usage
   ValidX validator = ValidX.init();
 
-  // Basic usage
+  // Basic usage (case-sensitive)
   validator.isStartsWithAny("http://example.com", new String[]{"http://", "https://"});
+
+  // Case-insensitive
+  validator.isStartsWithAny("HTTP://example.com", new String[]{"http://", "https://"}, true);
 
   // Multiple prefix options
   validator.isStartsWithAny("Mr. Smith", new String[]{"Mr.", "Mrs.", "Ms.", "Dr."});
@@ -2114,6 +2139,7 @@ Click on the annotation name to jump to its detailed documentation.
   ```
 * Notes:
   - Case-sensitive by default (e.g., "HTTP://" will not match "http://")
+  - Set `ignoreCase = true` for case-insensitive matching
   - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
   - Empty prefix array will cause validation to fail
   - Empty string prefix matches all strings (any string starts with empty string)
@@ -2124,14 +2150,18 @@ Click on the annotation name to jump to its detailed documentation.
 #### @EndsWith
 * Validation Rule: Suffix validation, validating whether the string ends with the specified suffix.
 * Example Format: Ending with specified string
+* Configuration Options:
+  - `endsWith`: The suffix string to match
+  - `ignoreCase`: Whether to ignore case, default is `false` (case-sensitive)
 * Version Information:
   - Added Version: 1.0.0
-  - Modified Version: 1.2.0 (Chain API parameter changed from `String[]` to `String`)
+  - Modified Version: 1.2.0 (Chain API parameter changed from `String[]` to `String`; added `ignoreCase` parameter)
 * **Important Changes (v1.0.0 → v1.2.0)**:
   - **Chain API Change**: The `isEndsWith()` method parameter changed from `String[]` to `String`
   - **v1.0.0 Behavior**: `validator.isEndsWith("text", new String[]{"suffix"})`
   - **v1.2.0 Behavior**: `validator.isEndsWith("text", "suffix")`
   - **Annotation Usage**: Unchanged, still uses `@EndsWith(endsWith = "suffix")`
+  - **New Feature**: Support for `ignoreCase` parameter for case-insensitive matching
   - **Migration**: For single suffix validation, remove the array wrapper; for multiple suffixes, use the new `@EndsWithAny` annotation or `isEndsWithAny()` method
 * Usage Example:
   ```java
@@ -2139,10 +2169,23 @@ Click on the annotation name to jump to its detailed documentation.
   @EndsWith(endsWith = "suffix")
   private String code;
 
+  // Case-insensitive validation
+  @EndsWith(endsWith = ".txt", ignoreCase = true)
+  private String filename;
+
   // Chain call usage (v1.2.0 - simplified single value parameter)
   ValidX validator = ValidX.init();
+
+  // Case-sensitive (default)
   validator.isEndsWith("string_suffix", "suffix");
+
+  // Case-insensitive
+  validator.isEndsWith("file.TXT", ".txt", true);
   ```
+* Notes:
+  - Case-sensitive by default
+  - Set `ignoreCase = true` for case-insensitive matching
+  - Null and empty strings pass validation by default (use with `@NotNull` or `@NotEmpty` if required)
 
 [↑ Back to Quick Reference](#quick-reference-table)
 
@@ -2151,6 +2194,7 @@ Click on the annotation name to jump to its detailed documentation.
 * Example Format: `"photo.jpg"` ends with `".jpg"`, `".jpeg"`, `".png"`, or `".gif"`, `"report.pdf"` ends with `".txt"`, `".doc"`, `".docx"`, or `".pdf"`
 * Configuration Options:
   - `value`: Array of suffixes to match (at least one must match)
+  - `ignoreCase`: Whether to ignore case, default is `false` (case-sensitive)
 * Example Formats:
   - Image files: `"photo.jpg"` matches `{".jpg", ".jpeg", ".png", ".gif"}`
   - Document files: `"report.pdf"` matches `{".txt", ".doc", ".docx", ".pdf"}`
@@ -2174,11 +2218,18 @@ Click on the annotation name to jump to its detailed documentation.
   @EndsWithAny({".zip", ".rar", ".7z", ".tar.gz"})
   private String archiveFile;
 
+  // Case-insensitive validation
+  @EndsWithAny(value = {".jpg", ".jpeg", ".png"}, ignoreCase = true)
+  private String imageCaseInsensitive;
+
   // Chain call usage
   ValidX validator = ValidX.init();
 
-  // Basic usage
+  // Basic usage (case-sensitive)
   validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png", ".gif"});
+
+  // Case-insensitive
+  validator.isEndsWithAny("photo.JPG", new String[]{".jpg", ".jpeg", ".png"}, true);
 
   // Multiple suffix options
   validator.isEndsWithAny("report.pdf", new String[]{".txt", ".doc", ".docx", ".pdf"});
@@ -2193,6 +2244,7 @@ Click on the annotation name to jump to its detailed documentation.
   ```
 * Notes:
   - Case-sensitive by default (e.g., ".JPG" will not match ".jpg")
+  - Set `ignoreCase = true` for case-insensitive matching
   - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
   - Empty suffix array will cause validation to fail
   - Empty string suffix matches all strings (any string ends with empty string)

@@ -97,4 +97,53 @@ public class StartsWithValidatorTest {
         assertTrue(validator.isValid("file_001.txt", context), "file_001.txt should be valid");
         assertFalse(validator.isValid("doc_001.txt", context), "doc_001.txt should be invalid");
     }
+
+    @Test
+    public void testIgnoreCaseTrue() {
+        // 准备注解 - 忽略大小写
+        StartsWith annotation = mock(StartsWith.class);
+        when(annotation.startsWith()).thenReturn("http://");
+        when(annotation.ignoreCase()).thenReturn(true);
+        validator.initialize(annotation);
+
+        // 大小写不同应该通过验证
+        assertTrue(validator.isValid("HTTP://example.com", context), "HTTP://example.com should be valid with ignoreCase");
+        assertTrue(validator.isValid("http://example.com", context), "http://example.com should be valid with ignoreCase");
+        assertTrue(validator.isValid("HtTp://example.com", context), "HtTp://example.com should be valid with ignoreCase");
+    }
+
+    @Test
+    public void testIgnoreCaseFalse() {
+        // 准备注解 - 区分大小写
+        StartsWith annotation = mock(StartsWith.class);
+        when(annotation.startsWith()).thenReturn("http://");
+        when(annotation.ignoreCase()).thenReturn(false);
+        validator.initialize(annotation);
+
+        // 大小写不同应该失败
+        assertFalse(validator.isValid("HTTP://example.com", context), "HTTP://example.com should be invalid with case sensitive");
+        assertTrue(validator.isValid("http://example.com", context), "http://example.com should be valid");
+        assertFalse(validator.isValid("HtTp://example.com", context), "HtTp://example.com should be invalid with case sensitive");
+    }
+
+    @Test
+    public void testDirectInitializeWithIgnoreCase() {
+        // 直接初始化验证器（用于链式调用）- 忽略大小写
+        validator.initialize("test", true);
+
+        assertTrue(validator.isValid("TEST123", context), "TEST123 should be valid with ignoreCase");
+        assertTrue(validator.isValid("Test123", context), "Test123 should be valid with ignoreCase");
+        assertTrue(validator.isValid("test123", context), "test123 should be valid with ignoreCase");
+        assertFalse(validator.isValid("mytest", context), "mytest should be invalid");
+    }
+
+    @Test
+    public void testDirectInitializeWithoutIgnoreCase() {
+        // 直接初始化验证器（用于链式调用）- 区分大小写
+        validator.initialize("test", false);
+
+        assertFalse(validator.isValid("TEST123", context), "TEST123 should be invalid with case sensitive");
+        assertFalse(validator.isValid("Test123", context), "Test123 should be invalid with case sensitive");
+        assertTrue(validator.isValid("test123", context), "test123 should be valid");
+    }
 }
