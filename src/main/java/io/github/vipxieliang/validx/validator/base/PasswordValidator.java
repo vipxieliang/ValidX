@@ -36,11 +36,31 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
 
     @Override
     public void initialize(Password constraintAnnotation) {
-        this.minLength = constraintAnnotation.minLength();
-        this.requireUppercase = constraintAnnotation.requireUppercase();
-        this.requireLowercase = constraintAnnotation.requireLowercase();
-        this.requireDigit = constraintAnnotation.requireDigit();
-        this.requireSpecialChar = constraintAnnotation.requireSpecialChar();
+        initialize(
+            constraintAnnotation.minLength(),
+            constraintAnnotation.requireUppercase(),
+            constraintAnnotation.requireLowercase(),
+            constraintAnnotation.requireDigit(),
+            constraintAnnotation.requireSpecialChar()
+        );
+    }
+
+    /**
+     * 直接使用参数初始化验证器（用于链式调用）
+     *
+     * @param minLength 最小长度
+     * @param requireUppercase 是否需要大写字母
+     * @param requireLowercase 是否需要小写字母
+     * @param requireDigit 是否需要数字
+     * @param requireSpecialChar 是否需要特殊字符
+     */
+    public void initialize(int minLength, boolean requireUppercase, boolean requireLowercase,
+                          boolean requireDigit, boolean requireSpecialChar) {
+        this.minLength = minLength;
+        this.requireUppercase = requireUppercase;
+        this.requireLowercase = requireLowercase;
+        this.requireDigit = requireDigit;
+        this.requireSpecialChar = requireSpecialChar;
     }
 
     @Override

@@ -261,56 +261,7 @@ public class BaseValidation {
                                 boolean requireLowercase, boolean requireDigit, boolean requireSpecialChar,
                                 List<String> errors, Locale locale) {
         PasswordValidator validator = new PasswordValidator();
-
-        // 创建一个模拟的Password注解实例
-        io.github.vipxieliang.validx.annotations.Password passwordAnnotation = new io.github.vipxieliang.validx.annotations.Password() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return io.github.vipxieliang.validx.annotations.Password.class;
-            }
-
-            @Override
-            public String message() {
-                return MessageManager.getMessage("io.github.vipxieliang.validx.annotation.password", locale);
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends javax.validation.Payload>[] payload() {
-                return new Class[0];
-            }
-
-            @Override
-            public int minLength() {
-                return minLength;
-            }
-
-            @Override
-            public boolean requireUppercase() {
-                return requireUppercase;
-            }
-
-            @Override
-            public boolean requireLowercase() {
-                return requireLowercase;
-            }
-
-            @Override
-            public boolean requireDigit() {
-                return requireDigit;
-            }
-
-            @Override
-            public boolean requireSpecialChar() {
-                return requireSpecialChar;
-            }
-        };
-
-        validator.initialize(passwordAnnotation);
+        validator.initialize(minLength, requireUppercase, requireLowercase, requireDigit, requireSpecialChar);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.password", locale));
         }
