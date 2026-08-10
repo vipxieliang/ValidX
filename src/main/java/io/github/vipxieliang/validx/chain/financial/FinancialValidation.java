@@ -80,31 +80,7 @@ public class FinancialValidation {
     }
     
     public void validateTradeOrderNumber(Object value, List<String> errors, Locale locale) {
-        // 创建一个临时的TradeOrderNumber注解实例
-        TradeOrderNumber tradeOrderNumber = new TradeOrderNumber() {
-            @Override
-            public Class<? extends java.lang.annotation.Annotation> annotationType() {
-                return TradeOrderNumber.class;
-            }
-
-            @Override
-            public String message() {
-                return "{io.github.vipxieliang.validx.annotation.trade.order.number}";
-            }
-
-            @Override
-            public Class<?>[] groups() {
-                return new Class[0];
-            }
-
-            @Override
-            public Class<? extends Payload>[] payload() {
-                return new Class[0];
-            }
-        };
-
         TradeOrderNumberValidator validator = new TradeOrderNumberValidator();
-        validator.initialize(tradeOrderNumber);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.trade.order.number", locale));
         }
