@@ -1,4 +1,4 @@
-# ValidX vs Hibernate Validator 时间注解对比
+# Java时间验证注解技术对比：ValidX vs 主流框架
 
 ## 📋 目录
 - [概述](#概述)
@@ -17,28 +17,30 @@
 
 ## 概述
 
-ValidX 和 Hibernate Validator 都提供了丰富的时间验证注解，但它们的设计理念和使用场景有所不同：
+ValidX、Hibernate Validator、Spring和JPA都提供了时间相关的注解，但它们的设计目的和使用场景各不相同：
 
-- **Hibernate Validator**：基于 JSR-380 标准，提供通用的、符合规范的验证注解
-- **ValidX**：专注于中国业务场景，提供更细粒度、更灵活的验证注解
+- **Hibernate Validator**：基于 JSR-380 标准，提供时间相对关系验证（@Past/@Future等）
+- **Spring Framework**：提供 `@DateTimeFormat` 用于数据绑定和格式化
+- **JPA/Hibernate ORM**：提供 `@Temporal` 用于数据库字段映射
+- **ValidX**：专注于严格的时间格式验证和中国业务场景
 
 ---
 
 ## 快速对比表
 
-| 功能 | Hibernate Validator | ValidX | ValidX 优势 |
-|------|---------------------|--------|-------------|
-| **日期格式验证** | ❌ 无专用注解 | ✅ `@Date` + `@DateTime` | 严格区分日期和日期时间，防止误用 |
-| **过去时间** | ✅ `@Past` + `@PastOrPresent` | ✅ `@PastDate` + `@PastDateTime` | 支持自定义日期格式 |
-| **未来时间** | ✅ `@Future` + `@FutureOrPresent` | ✅ `@FutureDate` + `@FutureDateTime` | 支持自定义日期格式 |
-| **时间戳验证** | ❌ 无 | ✅ `@Timestamp` | 支持秒级/毫秒级区分 |
-| **时间段验证** | ❌ 无 | ✅ `@Duration` | 支持 ISO 8601 和简化格式 |
-| **时分验证** | ❌ 无 | ✅ `@HourMinute` | 专门用于时间选择场景 |
-| **时分秒验证** | ❌ 无 | ✅ `@HourMinuteSecond` | 独立的时间验证 |
-| **年龄验证** | ❌ 无 | ✅ `@Age` | 基于出生日期或身份证号 |
-| **支持类型** | 仅 Temporal 类型 | String + Temporal 类型 | 更适合前后端交互 |
-| **严格模式** | ⚠️ 宽松 | ✅ 严格 | 格式必须完全匹配 |
-| **includeToday 参数** | ❌ 需两个注解 | ✅ 一个参数搞定 | 代码更简洁 |
+| 功能 | Hibernate Validator | Spring | JPA | ValidX | ValidX 优势 |
+|------|---------------------|--------|-----|--------|-------------|
+| **日期格式验证** | ❌ 无专用注解 | `@DateTimeFormat` (宽松) | `@Temporal` (仅映射) | ✅ `@Date` + `@DateTime` | 严格区分日期和日期时间，防止误用 |
+| **过去时间** | ✅ `@Past` + `@PastOrPresent` | - | - | ✅ `@PastDate` + `@PastDateTime` | 支持自定义日期格式 |
+| **未来时间** | ✅ `@Future` + `@FutureOrPresent` | - | - | ✅ `@FutureDate` + `@FutureDateTime` | 支持自定义日期格式 |
+| **时间戳验证** | ❌ 无 | - | - | ✅ `@Timestamp` | 支持秒级/毫秒级区分 |
+| **时间段验证** | ❌ 无 | - | - | ✅ `@Duration` | 支持 ISO 8601 和简化格式 |
+| **时分验证** | ❌ 无 | - | - | ✅ `@HourMinute` | 专门用于时间选择场景 |
+| **时分秒验证** | ❌ 无 | - | - | ✅ `@HourMinuteSecond` | 独立的时间验证 |
+| **年龄验证** | ❌ 无 | - | - | ✅ `@Age` | 基于出生日期或身份证号 |
+| **支持类型** | 仅 Temporal 类型 | String (需Spring MVC) | Date/Calendar | String + Temporal 类型 | 更适合前后端交互 |
+| **验证严格度** | 相对宽松 | 宽松（自动转换） | 不验证 | ✅ 严格 | 格式必须完全匹配 |
+| **includeToday 参数** | ❌ 需两个注解 | - | - | ✅ 一个参数搞定 | 代码更简洁 |
 
 ---
 
