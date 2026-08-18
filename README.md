@@ -64,12 +64,12 @@
 
 ### Version History
 
-| Version | Release Date | Key Features | Breaking Changes | Changelog | Migration Guide |
-|---------|-------------|--------------|------------------|-----------|-----------------|
-| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String` | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
-| **v1.1.0** | 2026-08-10 | 6 new annotations: `@Date`, `@DateTime`, `@PastDateTime`, `@FutureDateTime`, `@ChineseName`, `@NotContains`; Enhanced date validation strictness | `@PastDate`/`@FutureDate` no longer support time formats, use `@PastDateTime`/`@FutureDateTime` instead | [View](docs/version/v1.1.0/CHANGELOG.md) | [View](docs/version/v1.1.0/MIGRATION_v1.1.0.md) |
-| **v1.0.1** | 2026-07-31 | New `@Contains` annotation; Core class renamed ValidaX → ValidX; Documentation improvements; Added open source license | None | [View](docs/version/v1.0.1/CHANGELOG.md) | - |
-| **v1.0.0** | 2026-05-01 | Initial release with 100+ validation annotations, supporting both annotation and chain API styles | None | [View](docs/version/v1.0.0/README.md) | - |
+| Version | Release Date | Key Features | Breaking Changes | Documentation | Changelog | Migration Guide |
+|---------|-------------|--------------|------------------|---------------|-----------|-----------------|
+| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
+| **v1.1.0** | 2026-08-10 | 6 new annotations: `@Date`, `@DateTime`, `@PastDateTime`, `@FutureDateTime`, `@ChineseName`, `@NotContains`; Enhanced date validation strictness | `@PastDate`/`@FutureDate` no longer support time formats, use `@PastDateTime`/`@FutureDateTime` instead | [View](docs/version/v1.1.0/README.md) | [View](docs/version/v1.1.0/CHANGELOG.md) | [View](docs/version/v1.1.0/MIGRATION_v1.1.0.md) |
+| **v1.0.1** | 2026-07-31 | New `@Contains` annotation; Core class renamed ValidaX → ValidX; Documentation improvements; Added open source license | None | [View](docs/version/v1.0.1/README.md) | [View](docs/version/v1.0.1/CHANGELOG.md) | - |
+| **v1.0.0** | 2026-05-01 | Initial release with 100+ validation annotations, supporting both annotation and chain API styles | None | [View](docs/version/v1.0.0/README.md) | - | - |
 
 ---
 
