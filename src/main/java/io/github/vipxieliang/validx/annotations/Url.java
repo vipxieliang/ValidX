@@ -38,6 +38,14 @@ import java.lang.annotation.*;
 @Documented
 @Constraint(validatedBy = UrlValidator.class)
 public @interface Url {
+    /**
+     * 允许的协议白名单
+     * 默认允许 http / https / ftp（与历史版本行为一致，向下兼容）；如需收紧可自定义（如 {"http", "https"}）
+     *
+     * @return 协议白名单（不含 "://" 后缀）
+     */
+    String[] protocols() default {"http", "https", "ftp"};
+
     String message() default "{io.github.vipxieliang.validx.annotation.url}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

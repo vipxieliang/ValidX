@@ -71,6 +71,21 @@ public class NetworkValidation {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.url", locale));
         }
     }
+
+    /**
+     * 验证URL（指定协议白名单）
+     * @param value 待验证的URL
+     * @param protocols 允许的协议列表（如 {"http", "https"}）
+     * @param errors 错误列表
+     * @param locale 语言环境
+     */
+    public void validateUrl(Object value, String[] protocols, List<String> errors, Locale locale) {
+        UrlValidator validator = new UrlValidator();
+        validator.initialize(protocols);
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.url", locale));
+        }
+    }
     
     public void validateDomain(Object value, List<String> errors, Locale locale) {
         DomainValidator validator = new DomainValidator();

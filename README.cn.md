@@ -53,7 +53,7 @@
 
 - ⚠️ **破坏性变更**：`isStartsWith()` 和 `isEndsWith()` 链式 API 参数从 `String[]` 改为 `String`
 - ✨ **新增功能**：`@StartsWithAny` 和 `@EndsWithAny` 多值验证注解
-- 🔧 **功能增强**：`@FileSize` 支持 MIME 类型验证（`allowedTypes` 参数）
+- 🔧 **功能增强**：`@FileSize` 支持 MIME 类型验证（`allowedTypes` 参数）；`@Url` 支持协议白名单配置（`protocols` 参数，默认 http / https / ftp）
 - 🎯 **代码优化**：简化 20+ 个验证器类的初始化代码
 
 > **⚠️ 升级提醒**：从 v1.1.0 升级需注意链式 API 变更。单值用 `isStartsWith(value, "prefix")`，多值用 `isStartsWithAny(value, new String[]{"p1", "p2"})`
@@ -66,7 +66,7 @@
 
 | 版本 | 发布日期 | 主要特性 | 破坏性变更 | 说明文档 | 更新日志 | 迁移指南 |
 |------|---------|---------|-----------|---------|---------|---------|
-| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String` | - | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | [查看](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md) |
+| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；`@Url` 支持协议白名单；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String` | - | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | [查看](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md) |
 | **v1.1.0** | 2026-08-10 | 新增 6 个注解：`@Date`、`@DateTime`、`@PastDateTime`、`@FutureDateTime`、`@ChineseName`、`@NotContains`；增强日期验证严格性 | `@PastDate`/`@FutureDate` 不再支持时间格式，需使用 `@PastDateTime`/`@FutureDateTime` | [查看](docs/version/v1.1.0/README.cn.md) | [查看](docs/version/v1.1.0/CHANGELOG_CN.md) | [查看](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md) |
 | **v1.0.1** | 2026-07-31 | 新增 `@Contains` 注解；核心类重命名 ValidaX → ValidX；文档优化；添加开源协议 | 无 | [查看](docs/version/v1.0.1/README_CN.md) | [查看](docs/version/v1.0.1/CHANGELOG_CN.md) | - |
 | **v1.0.0** | 2026-05-01 | 首次发布，提供 100+ 验证注解，支持注解和链式两种使用方式 | 无 | [查看](docs/version/v1.0.0/README_CN.md) | - | - |
@@ -708,7 +708,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **网络相关** | [@Domain](#domain) | 域名验证 | 1.0.0 | - |
 | **网络相关** | [@Ip](#ip) | IP地址验证（IPv4/IPv6） | 1.0.0 | - |
 | **网络相关** | [@Mac](#mac) | MAC地址验证 | 1.0.0 | - |
-| **网络相关** | [@Url](#url) | URL地址验证 | 1.0.0 | - |
+| **网络相关** | [@Url](#url) | URL地址验证 | 1.0.0 | 1.2.0 |
 | **网络相关** | [@SubnetMask](#subnetmask) | 子网掩码验证 | 1.0.0 | - |
 | **中国特定验证** | [@ChineseLicensePlate](#chineselicenseplate) | 中国车牌号验证 | 1.0.0 | - |
 | **中国特定验证** | [@ChinesePatent](#chinesepatent) | 中国专利号验证 | 1.0.0 | - |
@@ -3093,18 +3093,38 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 [↑ 返回快速查询表](#快速查询表)
 
 #### @Url
-* 校验规则：URL地址验证，验证URL地址格式。
-* 示例格式：`http://example.com`, `https://example.com/path`
+* 校验规则：URL地址验证，验证URL地址格式。支持可配置的协议白名单（默认：http / https / ftp）。
+* 示例格式：`http://example.com`, `https://example.com/path`, `ftp://example.com/resource`
+* 配置项：
+  - `protocols`：允许的协议白名单，默认为 `{"http", "https", "ftp"}`（与历史版本兼容）。如 `@Url(protocols = {"https"})` 仅允许 HTTPS，或 `{"http", "https"}` 收紧为仅 Web 协议。
+* 版本信息：
+  - 新增版本：1.0.0
+  - 修改版本：1.2.0（新增 `protocols` 参数支持协议白名单配置）
 * 使用示例：
   ```java
-  // 注解方式使用
+  // 注解方式使用（默认白名单：http / https / ftp）
   @Url
   private String url;
+
+  // 仅 HTTPS
+  @Url(protocols = {"https"})
+  private String secureUrl;
+
+  // 收紧为仅 Web 协议
+  @Url(protocols = {"http", "https"})
+  private String webUrl;
 
   // 链式调用方式使用
   ValidX validator = ValidX.init();
   validator.isUrl("http://example.com");
+
+  // 链式调用指定协议白名单
+  validator.isUrl("https://example.com", "https");
   ```
+* 注意事项：
+  - null 和空字符串通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty`）
+  - 协议匹配大小写不敏感
+  - 默认白名单允许 http / https / ftp（向下兼容），如需收紧或扩展可通过 `protocols` 配置
 
 [↑ 返回快速查询表](#快速查询表)
 

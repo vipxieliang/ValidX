@@ -51,4 +51,24 @@ public class UrlValidationChainTest {
         assertEquals(1, chain.getErrors().size());
         assertEquals("URL格式不正确", chain.getErrors().get(0));
     }
+
+    @Test
+    public void testUrlWithProtocolWhitelist() {
+        // https 在白名单内
+        ValidX chain = ValidX.init();
+        chain = chain.isUrl((Object)"https://example.com", "https");
+        assertTrue(chain.passed(), "https 在 https 白名单内应该通过验证");
+
+        // http 不在 https 白名单内
+        chain = ValidX.init();
+        chain = chain.isUrl((Object)"http://example.com", "https");
+        assertFalse(chain.passed(), "http 不在 https 白名单内不应该通过验证");
+        assertEquals(1, chain.getErrors().size());
+        assertEquals("URL格式不正确", chain.getErrors().get(0));
+
+        // 多协议白名单
+        chain = ValidX.init();
+        chain = chain.isUrl((Object)"ftp://example.com/resource", "http", "https", "ftp");
+        assertTrue(chain.passed(), "ftp 在多协议白名单内应该通过验证");
+    }
 }

@@ -411,6 +411,20 @@ public class ValidX {
         return this;
     }
 
+    /**
+     * 验证URL（指定协议白名单）
+     * @param value 待验证的URL
+     * @param protocols 允许的协议白名单（如 "http"、"https"）
+     * @return ValidX实例
+     */
+    public ValidX isUrl(Object value, String... protocols) {
+        if (checkRequirement(value, "URL", errors, getLocale())) {
+            return this;
+        }
+        networkValidation.validateUrl(value, protocols, errors, getLocale());
+        return this;
+    }
+
     public ValidX isDomain(Object value) {
         if (checkRequirement(value, "Domain", errors, getLocale())) {
             return this;

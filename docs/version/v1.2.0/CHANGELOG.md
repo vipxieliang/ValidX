@@ -14,6 +14,7 @@ This document records the changes from v1.1.0 to v1.2.0.
 - 🔧 [Enhancements](#enhancements-)
   - `@FileSize` annotation now supports MIME type validation with `allowedTypes` parameter
   - `@StartsWith`, `@EndsWith` now support `ignoreCase` parameter for case-insensitive matching
+  - `@Url` annotation now supports `protocols` parameter for protocol whitelist configuration (default: http / https / ftp)
 - 🎯 [Code Refactoring](#code-refactoring-)
   - Simplified validator initialization code across multiple validators
   - Removed verbose anonymous annotation instance creation
@@ -449,6 +450,54 @@ public class DocumentDTO {
 - MIME type validation only works with file types that provide MIME information (e.g., `MultipartFile`)
 - For `File`, `Path`, and `byte[]` types, `allowedTypes` is ignored
 - Common MIME types: `image/jpeg`, `image/png`, `image/gif`, `application/pdf`, `text/plain`, etc.
+
+---
+
+### 3. @Url Supports Protocol Whitelist
+
+Added a `protocols` parameter to the `@Url` annotation, allowing configuration of the allowed URL protocol whitelist to restrict or extend accepted URL protocols.
+
+**New Feature:**
+- Added optional `protocols` parameter to configure the allowed protocol whitelist
+- Default whitelist is `{"http", "https", "ftp"}`, consistent with historical behavior (backward compatible)
+- Chain API supports new `isUrl(value, protocols...)` overload
+- Protocol matching is case-insensitive
+- Whitelist can restrict (e.g., HTTPS only) or extend allowed protocols
+
+**Annotation Examples:**
+
+```java
+public class RequestDTO {
+    // Default whitelist: http / https / ftp (backward compatible)
+    @Url
+    private String url;
+
+    // HTTPS only
+    @Url(protocols = {"https"})
+    private String secureUrl;
+
+    // Web protocols only
+    @Url(protocols = {"http", "https"})
+    private String webUrl;
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// Default whitelist (http / https / ftp)
+validator.isUrl("http://example.com");
+
+// Specified protocol whitelist (https only)
+validator.isUrl("https://example.com", "https");
+```
+
+**Notes:**
+- The `protocols` parameter is optional; default `{"http", "https", "ftp"}` maintains backward compatibility with no breaking changes
+- Protocol matching is case-insensitive
+- Null and empty strings still pass validation (use with `@NotNull` or `@NotEmpty` for required fields)
 
 ---
 

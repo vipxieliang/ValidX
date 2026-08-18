@@ -53,7 +53,7 @@
 
 - ⚠️ **Breaking Change**: `isStartsWith()` and `isEndsWith()` chain API parameter changed from `String[]` to `String`
 - ✨ **New Features**: `@StartsWithAny` and `@EndsWithAny` annotations for multiple value validation
-- 🔧 **Enhancement**: `@FileSize` now supports MIME type validation (`allowedTypes` parameter)
+- 🔧 **Enhancements**: `@FileSize` now supports MIME type validation (`allowedTypes` parameter); `@Url` now supports protocol whitelist configuration (`protocols` parameter, default: http / https / ftp)
 - 🎯 **Code Optimization**: Simplified initialization code across 20+ validator classes
 
 > **⚠️ Upgrade Notice**: When upgrading from v1.1.0, note the chain API changes. Use `isStartsWith(value, "prefix")` for single value, `isStartsWithAny(value, new String[]{"p1", "p2"})` for multiple values.
@@ -66,7 +66,7 @@
 
 | Version | Release Date | Key Features | Breaking Changes | Documentation | Changelog | Migration Guide |
 |---------|-------------|--------------|------------------|---------------|-----------|-----------------|
-| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
+| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; `@Url` protocol whitelist; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
 | **v1.1.0** | 2026-08-10 | 6 new annotations: `@Date`, `@DateTime`, `@PastDateTime`, `@FutureDateTime`, `@ChineseName`, `@NotContains`; Enhanced date validation strictness | `@PastDate`/`@FutureDate` no longer support time formats, use `@PastDateTime`/`@FutureDateTime` instead | [View](docs/version/v1.1.0/README.md) | [View](docs/version/v1.1.0/CHANGELOG.md) | [View](docs/version/v1.1.0/MIGRATION_v1.1.0.md) |
 | **v1.0.1** | 2026-07-31 | New `@Contains` annotation; Core class renamed ValidaX → ValidX; Documentation improvements; Added open source license | None | [View](docs/version/v1.0.1/README.md) | [View](docs/version/v1.0.1/CHANGELOG.md) | - |
 | **v1.0.0** | 2026-05-01 | Initial release with 100+ validation annotations, supporting both annotation and chain API styles | None | [View](docs/version/v1.0.0/README.md) | - | - |
@@ -708,7 +708,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Network Validation** | [@Domain](#domain) | Domain name validation | 1.0.0   | - |
 | **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) | 1.0.0   | - |
 | **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   | - |
-| **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   | - |
+| **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   | 1.2.0 |
 | **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation | 1.0.0   | - |
 | **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate | 1.0.0   | - |
 | **China-Specific Validation** | [@ChinesePatent](#chinesepatent) | Chinese patent number | 1.0.0   | - |
@@ -3085,18 +3085,38 @@ Click on the annotation name to jump to its detailed documentation.
 [↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Url
-* Validation Rule: URL address validation, validating URL address format.
-* Example Format: `http://example.com`, `https://example.com/path`
+* Validation Rule: URL address validation, validating URL address format. Supports configurable protocol whitelist (default: http / https / ftp).
+* Example Format: `http://example.com`, `https://example.com/path`, `ftp://example.com/resource`
+* Configuration Options:
+  - `protocols`: Allowed protocol whitelist, default is `{"http", "https", "ftp"}` (backward compatible with historical versions). e.g. `@Url(protocols = {"https"})` for HTTPS only, or `{"http", "https"}` to restrict to web protocols.
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.2.0 (Added `protocols` parameter for protocol whitelist configuration)
 * Usage Example:
   ```java
-  // Annotation-based usage
+  // Annotation-based usage (default whitelist: http / https / ftp)
   @Url
   private String url;
+
+  // HTTPS only
+  @Url(protocols = {"https"})
+  private String secureUrl;
+
+  // Restrict to web protocols
+  @Url(protocols = {"http", "https"})
+  private String webUrl;
 
   // Chain call usage
   ValidX validator = ValidX.init();
   validator.isUrl("http://example.com");
+
+  // Chain call with protocol whitelist
+  validator.isUrl("https://example.com", "https");
   ```
+* Notes:
+  - Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` if required)
+  - Protocol matching is case-insensitive
+  - Default whitelist allows http / https / ftp (backward compatible); configure `protocols` to restrict or extend
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

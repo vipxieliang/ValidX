@@ -14,6 +14,7 @@
 - 🔧 [功能增强](#功能增强-)
   - `@FileSize` 注解新增 MIME 类型验证，支持 `allowedTypes` 参数
   - `@StartsWith`、`@EndsWith` 新增 `ignoreCase` 参数支持大小写不敏感匹配
+  - `@Url` 注解新增 `protocols` 参数，支持协议白名单配置（默认 http / https / ftp）
 - 🎯 [代码重构](#代码重构-)
   - 简化多个验证器的初始化代码
   - 移除冗长的匿名注解实例创建
@@ -449,6 +450,54 @@ public class DocumentDTO {
 - MIME 类型验证仅对提供 MIME 信息的文件类型有效（如 `MultipartFile`）
 - 对于 `File`、`Path` 和 `byte[]` 类型，`allowedTypes` 会被忽略
 - 常见 MIME 类型：`image/jpeg`、`image/png`、`image/gif`、`application/pdf`、`text/plain` 等
+
+---
+
+### 3. @Url 支持协议白名单
+
+为 `@Url` 注解新增 `protocols` 参数，支持配置允许的 URL 协议白名单，用于限制或扩展可接受的 URL 协议。
+
+**新功能：**
+- 新增可选的 `protocols` 参数，用于配置允许的协议白名单
+- 默认白名单为 `{"http", "https", "ftp"}`，与历史版本行为一致（向下兼容）
+- 链式 API 同步支持 `isUrl(value, protocols...)` 重载
+- 协议匹配大小写不敏感
+- 可通过白名单收紧（如仅 HTTPS）或扩展允许的协议范围
+
+**注解方式示例：**
+
+```java
+public class RequestDTO {
+    // 默认白名单：http / https / ftp（向下兼容）
+    @Url
+    private String url;
+
+    // 仅允许 HTTPS
+    @Url(protocols = {"https"})
+    private String secureUrl;
+
+    // 仅允许 Web 协议
+    @Url(protocols = {"http", "https"})
+    private String webUrl;
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 默认白名单（http / https / ftp）
+validator.isUrl("http://example.com");
+
+// 指定协议白名单（仅 https）
+validator.isUrl("https://example.com", "https");
+```
+
+**注意事项：**
+- `protocols` 参数是可选的；默认 `{"http", "https", "ftp"}` 与历史版本保持一致，无破坏性变更
+- 协议匹配大小写不敏感
+- null 和空字符串仍通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
 
 ---
 
