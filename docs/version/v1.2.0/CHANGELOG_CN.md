@@ -8,6 +8,7 @@
 
 - ⚠️ [破坏性变更](#破坏性变更-️)
   - `isStartsWith()` 和 `isEndsWith()` 链式 API 参数从 `String[]` 改为 `String`
+  - `isAlphaNum()` 重命名为 `isAlphaNumber()`，`isMacAddress()` 重命名为 `isMac()`（与注解命名 1:1 对齐）
 - ✨ [新增功能](#新增功能-)
   - 新增 `@StartsWithAny` 多前缀验证注解
   - 新增 `@EndsWithAny` 多后缀验证注解
@@ -85,6 +86,50 @@ validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png"});
 - 仅影响使用 `isStartsWith()` 或 `isEndsWith()` 方法的链式 API 用户
 - 基于注解的验证（`@StartsWith`、`@EndsWith`）保持不变
 - 简单迁移：单值情况移除数组包装，或使用 `*Any` 方法处理多值
+
+---
+
+### 链式 API 方法重命名：isAlphaNum() → isAlphaNumber()、isMacAddress() → isMac()
+
+链式 API 中的 `isAlphaNum()` 和 `isMacAddress()` 方法已重命名，以与对应注解命名 1:1 对齐（`@AlphaNumber` ↔ `isAlphaNumber`、`@Mac` ↔ `isMac`）。
+
+**变更内容：**
+
+**之前（v1.1.0）：**
+```java
+ValidX validator = ValidX.init();
+validator.isAlphaNum("abc123");                        // 旧名称
+validator.isMacAddress("00:1A:2B:3C:4D:5E");           // 旧名称
+```
+
+**之后（v1.2.0）：**
+```java
+ValidX validator = ValidX.init();
+validator.isAlphaNumber("abc123");                     // 与 @AlphaNumber 对齐
+validator.isMac("00:1A:2B:3C:4D:5E");                  // 与 @Mac 对齐
+```
+
+**迁移指南：**
+
+```java
+// v1.1.0 代码
+validator.isAlphaNum(value);
+validator.isMacAddress(value);
+
+// v1.2.0 迁移 - 直接替换方法名，参数与行为不变
+validator.isAlphaNumber(value);
+validator.isMac(value);
+```
+
+**变更原因：**
+
+- **注解/链式 1:1 对齐**：链式方法名与注解名保持一致，消除同名注解与链式方法命名不一致的困惑
+- **API 一致性**：无论使用注解还是链式方式，规则名称完全对应，降低查找成本
+
+**影响范围：**
+- 仅影响链式 API 中使用 `isAlphaNum()` 或 `isMacAddress()` 方法的用户
+- 基于注解的验证（`@AlphaNumber`、`@Mac`）保持不变
+- 简单迁移：直接替换方法名即可，参数与行为不变
 
 ---
 

@@ -8,6 +8,7 @@ This document records the changes from v1.1.0 to v1.2.0.
 
 - ⚠️ [Breaking Changes](#breaking-changes-️)
   - `isStartsWith()` and `isEndsWith()` chain API parameter changed from `String[]` to `String`
+  - Chain API method renames: `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()` (aligned 1:1 with annotation names)
 - ✨ [New Features](#new-features-)
   - New `@StartsWithAny` multiple prefix validation annotation
   - New `@EndsWithAny` multiple suffix validation annotation
@@ -85,6 +86,50 @@ validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png"});
 - Affects only chain API users who use `isStartsWith()` or `isEndsWith()` methods
 - Annotation-based validation (`@StartsWith`, `@EndsWith`) remains unchanged
 - Simple migration: remove array wrapper for single values, or use `*Any` methods for multiple values
+
+---
+
+### Chain API Method Renames: isAlphaNum() → isAlphaNumber(), isMacAddress() → isMac()
+
+The `isAlphaNum()` and `isMacAddress()` methods in the chain API have been renamed to align 1:1 with their corresponding annotations (`@AlphaNumber` ↔ `isAlphaNumber`, `@Mac` ↔ `isMac`).
+
+**What Changed:**
+
+**Before (v1.1.0):**
+```java
+ValidX validator = ValidX.init();
+validator.isAlphaNum("abc123");                        // old name
+validator.isMacAddress("00:1A:2B:3C:4D:5E");           // old name
+```
+
+**After (v1.2.0):**
+```java
+ValidX validator = ValidX.init();
+validator.isAlphaNumber("abc123");                     // aligned with @AlphaNumber
+validator.isMac("00:1A:2B:3C:4D:5E");                  // aligned with @Mac
+```
+
+**Migration Guide:**
+
+```java
+// v1.1.0 code
+validator.isAlphaNum(value);
+validator.isMacAddress(value);
+
+// v1.2.0 migration - simply replace method names; parameters and behavior unchanged
+validator.isAlphaNumber(value);
+validator.isMac(value);
+```
+
+**Rationale:**
+
+- **Annotation/Chain 1:1 Alignment**: Chain method names now match annotation names, eliminating confusion between matching annotations and chain methods
+- **API Consistency**: Whether using annotations or the chain API, rule names correspond exactly, reducing lookup friction
+
+**Impact:**
+- Affects only chain API users who use `isAlphaNum()` or `isMacAddress()` methods
+- Annotation-based validation (`@AlphaNumber`, `@Mac`) remains unchanged
+- Simple migration: replace the method name directly; parameters and behavior unchanged
 
 ---
 

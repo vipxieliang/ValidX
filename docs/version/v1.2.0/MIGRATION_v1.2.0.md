@@ -6,9 +6,12 @@ This document describes the breaking changes and migration steps when upgrading 
 
 ## Overview
 
-Version 1.2.0 introduces a **breaking change** to the `isStartsWith()` and `isEndsWith()` methods in the chain API: the parameter type has changed from `String[]` to `String` to better align with their single-value validation purpose.
+Version 1.2.0 introduces two **breaking changes** to the chain API:
 
-**Impact Level**: 🟡 **MEDIUM** - Affects only users of the `isStartsWith()` or `isEndsWith()` chain API methods; annotation-based validation (`@StartsWith`, `@EndsWith`) is completely unaffected.
+1. The `isStartsWith()` and `isEndsWith()` methods: the parameter type has changed from `String[]` to `String` to better align with their single-value validation purpose.
+2. `isAlphaNum()` has been renamed to `isAlphaNumber()`, and `isMacAddress()` has been renamed to `isMac()`, aligned 1:1 with their corresponding annotation names.
+
+**Impact Level**: 🟡 **MEDIUM** - Affects only users of the `isStartsWith()`, `isEndsWith()`, `isAlphaNum()` or `isMacAddress()` chain API methods; annotation-based validation (`@StartsWith`, `@EndsWith`, `@AlphaNumber`, `@Mac`) is completely unaffected.
 
 ---
 
@@ -46,21 +49,63 @@ validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png"});
 
 ---
 
+### isAlphaNum() → isAlphaNumber(), isMacAddress() → isMac() - Chain Method Renames
+
+The `isAlphaNum()` and `isMacAddress()` methods in the chain API have been renamed to align 1:1 with their corresponding annotations (`@AlphaNumber` ↔ `isAlphaNumber`, `@Mac` ↔ `isMac`).
+
+#### v1.1.0 Behavior
+```java
+ValidX validator = ValidX.init();
+
+// Old API - method names did not match annotation names
+validator.isAlphaNum("abc123");
+validator.isMacAddress("00:1A:2B:3C:4D:5E");
+```
+
+#### v1.2.0 Behavior
+```java
+ValidX validator = ValidX.init();
+
+// New API - method names aligned 1:1 with annotation names
+validator.isAlphaNumber("abc123");
+validator.isMac("00:1A:2B:3C:4D:5E");
+```
+
+**What changed:**
+- `isAlphaNum(Object value)` renamed to `isAlphaNumber(Object value)`, aligned with the `@AlphaNumber` annotation
+- `isMacAddress(Object value)` renamed to `isMac(Object value)`, aligned with the `@Mac` annotation
+- Parameters and validation behavior are completely unchanged; only the method names changed
+
+**Migration Guide:**
+
+```java
+// v1.1.0 code
+validator.isAlphaNum(value);
+validator.isMacAddress(value);
+
+// v1.2.0 migration - simply replace method names; parameters and behavior unchanged
+validator.isAlphaNumber(value);
+validator.isMac(value);
+```
+
+---
+
 ## Migration Steps
 
 ### Step 1: Identify Affected Code
 
-Search your codebase for `isStartsWith` and `isEndsWith` calls in the chain API:
+Search your codebase for calls in the chain API that need migration:
 
 ```bash
 # Search for chain API usage
-grep -rn "isStartsWith\|isEndsWith" --include="*.java" your-project/
+grep -rn "isStartsWith\|isEndsWith\|isAlphaNum\|isMacAddress" --include="*.java" your-project/
 ```
 
 Look for:
 - Chain validation calls using `isStartsWith()` or `isEndsWith()`
 - Calls passing `new String[]{...}` arrays as the second parameter (these need migration)
-- Optionally search for `@StartsWith` / `@EndsWith` annotations (no migration needed, but confirms the scope)
+- Calls using `isAlphaNum()` or `isMacAddress()` (these need method rename migration, see Step 4)
+- Optionally search for `@StartsWith` / `@EndsWith` / `@AlphaNumber` / `@Mac` annotations (no migration needed, but confirms the scope)
 
 ### Step 2: Choose Migration Strategy
 
@@ -181,6 +226,31 @@ void testStartsWithIgnoreCase() {
 
 ---
 
+### Step 4: Chain Method Rename Migration
+
+Directly replace calls to `isAlphaNum()` / `isMacAddress()` with the new method names:
+
+```bash
+# Globally search for the old method names
+grep -rn "isAlphaNum\|isMacAddress" --include="*.java" your-project/
+```
+
+**Before (v1.1.0):**
+```java
+validator.isAlphaNum("abc123");
+validator.isMacAddress("00:1A:2B:3C:4D:5E");
+```
+
+**After (v1.2.0):**
+```java
+validator.isAlphaNumber("abc123");
+validator.isMac("00:1A:2B:3C:4D:5E");
+```
+
+> 💡 Pure method name change: parameters and validation behavior are completely unchanged. A global replacement is sufficient; no call-logic adjustment is needed.
+
+---
+
 ## Quick Reference: API Mapping
 
 | Use Case | v1.1.0 | v1.2.0 | Notes |
@@ -190,8 +260,12 @@ void testStartsWithIgnoreCase() {
 | Multiple prefixes | `isStartsWith(value, new String[]{p1, p2})` | `isStartsWithAny(value, new String[]{p1, p2})` | ⚠️ **Use *Any methods** |
 | Multiple suffixes | `isEndsWith(value, new String[]{s1, s2})` | `isEndsWithAny(value, new String[]{s1, s2})` | ⚠️ **Use *Any methods** |
 | Case-insensitive | Not supported | `isStartsWith(value, p, true)` / `isStartsWithAny(value, prefixes, true)` | ✅ New feature |
+| Alphanumeric | `isAlphaNum(value)` | `isAlphaNumber(value)` | ⚠️ **Method rename** |
+| MAC address | `isMacAddress(value)` | `isMac(value)` | ⚠️ **Method rename** |
 | Annotation (single) | `@StartsWith` / `@EndsWith` | `@StartsWith` / `@EndsWith` | ✅ No change needed |
 | Annotation (multiple) | Not supported | `@StartsWithAny` / `@EndsWithAny` | ✅ New feature |
+| Annotation (alphanumeric) | `@AlphaNumber` | `@AlphaNumber` | ✅ No change needed |
+| Annotation (MAC) | `@Mac` | `@Mac` | ✅ No change needed |
 
 ---
 
@@ -271,9 +345,13 @@ Separating single and multi-value methods eliminates confusion between the two a
 ### Q6: Is there a deprecation period?
 
 **No.** This is an immediate breaking change in v1.2.0. We recommend:
-1. Search and count all `isStartsWith` / `isEndsWith` calls before upgrading
-2. Batch-replace following the rules: "remove array wrapper for single values, use *Any for multiple values"
+1. Search and count all `isStartsWith` / `isEndsWith` / `isAlphaNum` / `isMacAddress` calls before upgrading
+2. Batch-replace following the rules: "remove array wrapper for single values, use *Any for multiple values, align method names"
 3. Run the full test suite after upgrading to verify no regressions
+
+### Q7: Do I need to migrate isAlphaNum() and isMacAddress()?
+
+**A:** ✅ Yes. These two methods have been renamed in v1.2.0: `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()`. This is a pure method name change (parameters and behavior unchanged), so a simple global replacement is sufficient. The corresponding annotations (`@AlphaNumber`, `@Mac`) need no changes.
 
 ---
 
@@ -295,15 +373,16 @@ If you encounter issues during migration:
 
 Before deploying v1.2.0 to production:
 
-- [ ] Searched codebase for all `isStartsWith` and `isEndsWith` calls
+- [ ] Searched codebase for all `isStartsWith`, `isEndsWith`, `isAlphaNum`, `isMacAddress` calls
 - [ ] Identified all calls passing `new String[]{...}`
 - [ ] Single prefix/suffix: removed the array wrapper (`new String[]{"x"}` → `"x"`)
 - [ ] Multiple prefixes/suffixes: switched to `isStartsWithAny()` / `isEndsWithAny()`
+- [ ] Method renames: `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()`
 - [ ] Added the `ignoreCase` parameter where case-insensitive matching is needed
 - [ ] Updated all chain validation test cases
 - [ ] Ran full test suite to verify no regressions
 - [ ] Tested validation behavior in staging environment
-- [ ] Confirmed annotation validation (`@StartsWith` / `@EndsWith`) is unaffected
+- [ ] Confirmed annotation validation (`@StartsWith` / `@EndsWith` / `@AlphaNumber` / `@Mac`) is unaffected
 
 ---
 

@@ -51,12 +51,12 @@
 
 ### v1.2.0 Key Updates
 
-- ⚠️ **Breaking Change**: `isStartsWith()` and `isEndsWith()` chain API parameter changed from `String[]` to `String`
+- ⚠️ **Breaking Change**: `isStartsWith()` and `isEndsWith()` chain API parameter changed from `String[]` to `String`; chain API method renames `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()` (aligned 1:1 with annotation names)
 - ✨ **New Features**: `@StartsWithAny` and `@EndsWithAny` annotations for multiple value validation
 - 🔧 **Enhancements**: `@FileSize` now supports MIME type validation (`allowedTypes` parameter); `@Url` now supports protocol whitelist configuration (`protocols` parameter, default: http / https / ftp)
 - 🎯 **Code Optimization**: Simplified initialization code across 20+ validator classes
 
-> **⚠️ Upgrade Notice**: When upgrading from v1.1.0, note the chain API changes. Use `isStartsWith(value, "prefix")` for single value, `isStartsWithAny(value, new String[]{"p1", "p2"})` for multiple values.
+> **⚠️ Upgrade Notice**: When upgrading from v1.1.0, note the chain API changes. Use `isStartsWith(value, "prefix")` for single value, `isStartsWithAny(value, new String[]{"p1", "p2"})` for multiple values. `isAlphaNum` and `isMacAddress` have been renamed to `isAlphaNumber` and `isMac` respectively (pure method name change; parameters and behavior unchanged).
 
 **Details:** [v1.2.0 Changelog](docs/version/v1.2.0/CHANGELOG.md) | [Migration Guide](docs/version/v1.2.0/MIGRATION_v1.2.0.md)
 
@@ -66,7 +66,7 @@
 
 | Version | Release Date | Key Features | Breaking Changes | Documentation | Changelog | Migration Guide |
 |---------|-------------|--------------|------------------|---------------|-----------|-----------------|
-| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; `@Url` protocol whitelist; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
+| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; `@Url` protocol whitelist; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String`; method renames: `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
 | **v1.1.0** | 2026-08-10 | 6 new annotations: `@Date`, `@DateTime`, `@PastDateTime`, `@FutureDateTime`, `@ChineseName`, `@NotContains`; Enhanced date validation strictness | `@PastDate`/`@FutureDate` no longer support time formats, use `@PastDateTime`/`@FutureDateTime` instead | [View](docs/version/v1.1.0/README.md) | [View](docs/version/v1.1.0/CHANGELOG.md) | [View](docs/version/v1.1.0/MIGRATION_v1.1.0.md) |
 | **v1.0.1** | 2026-07-31 | New `@Contains` annotation; Core class renamed ValidaX → ValidX; Documentation improvements; Added open source license | None | [View](docs/version/v1.0.1/README.md) | [View](docs/version/v1.0.1/CHANGELOG.md) | - |
 | **v1.0.0** | 2026-05-01 | Initial release with 100+ validation annotations, supporting both annotation and chain API styles | None | [View](docs/version/v1.0.0/README.md) | - | - |
@@ -631,7 +631,7 @@ Click on the annotation name to jump to its detailed documentation.
 |----------|------------|-------------|---------------|------------------|
 | **Basic Validation** | [@Alpha](#alpha) | Pure English letter validation | 1.0.0   | - |
 | **Basic Validation** | [@AlphaDash](#alphadash) | Alphanumeric with underscore and hyphen | 1.0.0   | - |
-| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination | 1.0.0   | - |
+| **Basic Validation** | [@AlphaNumber](#alphanumber) | Alphanumeric combination | 1.0.0   | 1.2.0 |
 | **Basic Validation** | [@Chinese](#chinese) | Pure Chinese character validation | 1.0.0   | - |
 | **Basic Validation** | [@ChineseAlpha](#chinesealpha) | Chinese characters and letters | 1.0.0   | - |
 | **Basic Validation** | [@ChineseAlphaNum](#chinesealphanum) | Chinese characters, letters and numbers | 1.0.0   | - |
@@ -707,7 +707,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Education/Professional Qualification** | [@Accountant](#accountant) | Accountant certificate | 1.0.0   | - |
 | **Network Validation** | [@Domain](#domain) | Domain name validation | 1.0.0   | - |
 | **Network Validation** | [@Ip](#ip) | IP address (IPv4/IPv6) | 1.0.0   | - |
-| **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   | - |
+| **Network Validation** | [@Mac](#mac) | MAC address validation | 1.0.0   | 1.2.0 |
 | **Network Validation** | [@Url](#url) | URL address validation | 1.0.0   | 1.2.0 |
 | **Network Validation** | [@SubnetMask](#subnetmask) | Subnet mask validation | 1.0.0   | - |
 | **China-Specific Validation** | [@ChineseLicensePlate](#chineselicenseplate) | Chinese license plate | 1.0.0   | - |
@@ -771,6 +771,9 @@ Click on the annotation name to jump to its detailed documentation.
 #### @AlphaNumber
 * Validation Rule: Alphanumeric combination validation, only allowing English letters and numbers.
 * Example Format: `abc123`
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.2.0 (chain method renamed: `isAlphaNum()` → `isAlphaNumber()`; annotation itself unchanged)
 * Usage Example:
   ```java
   // Annotation-based usage
@@ -3071,6 +3074,9 @@ Click on the annotation name to jump to its detailed documentation.
 #### @Mac
 * Validation Rule: MAC address validation, validating MAC addresses.
 * Example Format: `00:1A:2B:3C:4D:5E`, `00-1A-2B-3C-4D-5E`
+* Version Information:
+  - Added Version: 1.0.0
+  - Modified Version: 1.2.0 (chain method renamed: `isMacAddress()` → `isMac()`; annotation itself unchanged)
 * Usage Example:
   ```java
   // Annotation-based usage

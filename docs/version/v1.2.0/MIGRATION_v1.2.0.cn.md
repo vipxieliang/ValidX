@@ -6,9 +6,12 @@
 
 ## 概述
 
-版本 1.2.0 对链式 API 中的 `isStartsWith()` 和 `isEndsWith()` 方法引入了**破坏性变更**：参数类型从 `String[]` 改为 `String`，使其更贴合单值验证的语义。
+版本 1.2.0 对链式 API 引入了两处**破坏性变更**：
 
-**影响级别**：🟡 **中** - 仅影响使用链式 API 中 `isStartsWith()` 或 `isEndsWith()` 方法的用户；基于注解的验证（`@StartsWith`、`@EndsWith`）完全不受影响。
+1. `isStartsWith()` 和 `isEndsWith()` 方法：参数类型从 `String[]` 改为 `String`，使其更贴合单值验证的语义。
+2. `isAlphaNum()` 重命名为 `isAlphaNumber()`、`isMacAddress()` 重命名为 `isMac()`，与对应注解命名 1:1 对齐。
+
+**影响级别**：🟡 **中** - 仅影响使用链式 API 中 `isStartsWith()`、`isEndsWith()`、`isAlphaNum()` 或 `isMacAddress()` 方法的用户；基于注解的验证（`@StartsWith`、`@EndsWith`、`@AlphaNumber`、`@Mac`）完全不受影响。
 
 ---
 
@@ -46,21 +49,63 @@ validator.isEndsWithAny("photo.jpg", new String[]{".jpg", ".jpeg", ".png"});
 
 ---
 
+### isAlphaNum() → isAlphaNumber()、isMacAddress() → isMac() - 链式方法重命名
+
+链式 API 中的 `isAlphaNum()` 和 `isMacAddress()` 方法已重命名，以与对应注解命名 1:1 对齐（`@AlphaNumber` ↔ `isAlphaNumber`、`@Mac` ↔ `isMac`）。
+
+#### v1.1.0 行为
+```java
+ValidX validator = ValidX.init();
+
+// 旧 API - 方法名与注解名不一致
+validator.isAlphaNum("abc123");
+validator.isMacAddress("00:1A:2B:3C:4D:5E");
+```
+
+#### v1.2.0 行为
+```java
+ValidX validator = ValidX.init();
+
+// 新 API - 方法名与注解名 1:1 对齐
+validator.isAlphaNumber("abc123");
+validator.isMac("00:1A:2B:3C:4D:5E");
+```
+
+**变更内容：**
+- `isAlphaNum(Object value)` 重命名为 `isAlphaNumber(Object value)`，与 `@AlphaNumber` 注解对齐
+- `isMacAddress(Object value)` 重命名为 `isMac(Object value)`，与 `@Mac` 注解对齐
+- 参数与验证行为完全不变，仅方法名变更
+
+**迁移指南：**
+
+```java
+// v1.1.0 代码
+validator.isAlphaNum(value);
+validator.isMacAddress(value);
+
+// v1.2.0 迁移 - 直接替换方法名，参数与行为不变
+validator.isAlphaNumber(value);
+validator.isMac(value);
+```
+
+---
+
 ## 迁移步骤
 
 ### 步骤 1：识别受影响的代码
 
-在代码库中搜索链式 API 中 `isStartsWith` 和 `isEndsWith` 的调用：
+在代码库中搜索链式 API 中的待迁移调用：
 
 ```bash
 # 搜索链式 API 的调用位置
-grep -rn "isStartsWith\|isEndsWith" --include="*.java" your-project/
+grep -rn "isStartsWith\|isEndsWith\|isAlphaNum\|isMacAddress" --include="*.java" your-project/
 ```
 
 查找：
 - 使用 `isStartsWith()` 或 `isEndsWith()` 的链式验证调用
 - 传入 `new String[]{...}` 数组作为第二个参数的调用（这些是需要迁移的）
-- 同时可以顺手搜索 `@StartsWith` / `@EndsWith` 注解的使用（无需迁移，但可确认范围）
+- 使用 `isAlphaNum()` 或 `isMacAddress()` 的调用（这些需要方法重命名迁移，见步骤 4）
+- 同时可以顺手搜索 `@StartsWith` / `@EndsWith` / `@AlphaNumber` / `@Mac` 注解的使用（无需迁移，但可确认范围）
 
 ### 步骤 2：选择迁移策略
 
@@ -181,6 +226,31 @@ void testStartsWithIgnoreCase() {
 
 ---
 
+### 步骤 4：链式方法重命名迁移
+
+将 `isAlphaNum()` / `isMacAddress()` 的调用直接替换为新方法名：
+
+```bash
+# 全局搜索旧方法名
+grep -rn "isAlphaNum\|isMacAddress" --include="*.java" your-project/
+```
+
+**迁移前（v1.1.0）：**
+```java
+validator.isAlphaNum("abc123");
+validator.isMacAddress("00:1A:2B:3C:4D:5E");
+```
+
+**迁移后（v1.2.0）：**
+```java
+validator.isAlphaNumber("abc123");
+validator.isMac("00:1A:2B:3C:4D:5E");
+```
+
+> 💡 纯方法名变更：参数与验证行为完全不变，全局替换即可，无需调整调用逻辑。
+
+---
+
 ## 快速参考：API 映射
 
 | 使用场景 | v1.1.0 | v1.2.0 | 说明 |
@@ -190,8 +260,12 @@ void testStartsWithIgnoreCase() {
 | 多个前缀 | `isStartsWith(value, new String[]{p1, p2})` | `isStartsWithAny(value, new String[]{p1, p2})` | ⚠️ **改用 *Any 方法** |
 | 多个后缀 | `isEndsWith(value, new String[]{s1, s2})` | `isEndsWithAny(value, new String[]{s1, s2})` | ⚠️ **改用 *Any 方法** |
 | 大小写不敏感 | 不支持 | `isStartsWith(value, p, true)` / `isStartsWithAny(value, prefixes, true)` | ✅ 新功能 |
+| 字母数字 | `isAlphaNum(value)` | `isAlphaNumber(value)` | ⚠️ **方法重命名** |
+| MAC 地址 | `isMacAddress(value)` | `isMac(value)` | ⚠️ **方法重命名** |
 | 注解（单值） | `@StartsWith` / `@EndsWith` | `@StartsWith` / `@EndsWith` | ✅ 无需更改 |
 | 注解（多值） | 不支持 | `@StartsWithAny` / `@EndsWithAny` | ✅ 新功能 |
+| 注解（字母数字） | `@AlphaNumber` | `@AlphaNumber` | ✅ 无需更改 |
+| 注解（MAC） | `@Mac` | `@Mac` | ✅ 无需更改 |
 
 ---
 
@@ -271,9 +345,13 @@ public class UrlService {
 ### Q6：有过渡期吗？
 
 **没有。** 这是 v1.2.0 中的即时破坏性变更。我们建议：
-1. 升级前搜索并统计 `isStartsWith` / `isEndsWith` 的调用数量
-2. 按"单值移除数组包装、多值改用 *Any"的规则批量替换
+1. 升级前搜索并统计 `isStartsWith` / `isEndsWith` / `isAlphaNum` / `isMacAddress` 的调用数量
+2. 按"单值移除数组包装、多值改用 *Any、方法名对齐"的规则批量替换
 3. 升级后运行完整测试套件验证无回归
+
+### Q7：isAlphaNum() 和 isMacAddress() 需要迁移吗？
+
+**A：** ✅ 需要。这两个方法在 v1.2.0 中已重命名：`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()`。这是纯方法名变更（参数与行为不变），直接全局替换即可。对应注解（`@AlphaNumber`、`@Mac`）无需更改。
 
 ---
 
@@ -295,15 +373,16 @@ public class UrlService {
 
 在将 v1.2.0 部署到生产环境之前：
 
-- [ ] 在代码库中搜索 `isStartsWith` 和 `isEndsWith` 的所有调用
+- [ ] 在代码库中搜索 `isStartsWith`、`isEndsWith`、`isAlphaNum`、`isMacAddress` 的所有调用
 - [ ] 识别所有传入 `new String[]{...}` 的调用
 - [ ] 单个前缀/后缀：移除数组包装（`new String[]{"x"}` → `"x"`）
 - [ ] 多个前缀/后缀：改用 `isStartsWithAny()` / `isEndsWithAny()`
+- [ ] 方法重命名：`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()`
 - [ ] 如需大小写不敏感：追加 `ignoreCase` 参数
 - [ ] 更新所有链式验证相关的测试用例
 - [ ] 运行完整测试套件以验证无回归
 - [ ] 在预发环境中测试验证行为
-- [ ] 确认注解验证（`@StartsWith` / `@EndsWith`）不受影响
+- [ ] 确认注解验证（`@StartsWith` / `@EndsWith` / `@AlphaNumber` / `@Mac`）不受影响
 
 ---
 

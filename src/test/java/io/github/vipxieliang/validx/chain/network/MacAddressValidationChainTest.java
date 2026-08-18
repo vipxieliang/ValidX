@@ -27,26 +27,26 @@ public class MacAddressValidationChainTest {
     public void testNullAndEmptyValue() {
         // 测试 null 值
         ValidX chain = ValidX.init();
-        chain = chain.isMacAddress(null);
+        chain = chain.isMac(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串
         chain = ValidX.init();
-        chain = chain.isMacAddress((Object)"");
+        chain = chain.isMac((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 
     @Test
     public void testValidMacAddress() {
         ValidX chain = ValidX.init();
-        chain = chain.isMacAddress((Object)"00:1A:2B:3C:4D:5E");
+        chain = chain.isMac((Object)"00:1A:2B:3C:4D:5E");
         assertTrue(chain.passed(), "有效MAC地址应该通过验证");
     }
 
     @Test
     public void testInvalidMacAddress() {
         ValidX chain = ValidX.init();
-        chain = chain.isMacAddress((Object)"00:1A:2B:3C:4D:5G");
+        chain = chain.isMac((Object)"00:1A:2B:3C:4D:5G");
         assertFalse(chain.passed(), "无效MAC地址不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("MAC地址格式不正确", chain.getErrors().get(0));

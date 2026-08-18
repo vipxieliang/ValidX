@@ -357,7 +357,7 @@ public class ValidX {
     }
 
     // Network Validation Methods
-    public ValidX isMacAddress(Object value) {
+    public ValidX isMac(Object value) {
         if (checkRequirement(value, "MAC Address", errors, getLocale())) {
             return this;
         }
@@ -654,8 +654,8 @@ public class ValidX {
         return this;
     }
     
-    public ValidX isAlphaNum(Object value) {
-        if (checkRequirement(value, "Alpha Num", errors, getLocale())) {
+    public ValidX isAlphaNumber(Object value) {
+        if (checkRequirement(value, "Alpha Number", errors, getLocale())) {
             return this;
         }
         baseValidation.validateAlphaNum(value, errors, getLocale());

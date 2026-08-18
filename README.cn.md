@@ -51,12 +51,12 @@
 
 ### v1.2.0 主要更新
 
-- ⚠️ **破坏性变更**：`isStartsWith()` 和 `isEndsWith()` 链式 API 参数从 `String[]` 改为 `String`
+- ⚠️ **破坏性变更**：`isStartsWith()` 和 `isEndsWith()` 链式 API 参数从 `String[]` 改为 `String`；`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()` 链式方法重命名（与注解命名 1:1 对齐）
 - ✨ **新增功能**：`@StartsWithAny` 和 `@EndsWithAny` 多值验证注解
 - 🔧 **功能增强**：`@FileSize` 支持 MIME 类型验证（`allowedTypes` 参数）；`@Url` 支持协议白名单配置（`protocols` 参数，默认 http / https / ftp）
 - 🎯 **代码优化**：简化 20+ 个验证器类的初始化代码
 
-> **⚠️ 升级提醒**：从 v1.1.0 升级需注意链式 API 变更。单值用 `isStartsWith(value, "prefix")`，多值用 `isStartsWithAny(value, new String[]{"p1", "p2"})`
+> **⚠️ 升级提醒**：从 v1.1.0 升级需注意链式 API 变更。单值用 `isStartsWith(value, "prefix")`，多值用 `isStartsWithAny(value, new String[]{"p1", "p2"})`；`isAlphaNum` 和 `isMacAddress` 已分别重命名为 `isAlphaNumber` 和 `isMac`（纯方法名变更，参数与行为不变）
 
 **详细说明：** [v1.2.0 更新日志](docs/version/v1.2.0/CHANGELOG_CN.md) | [迁移指南](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md)
 
@@ -66,7 +66,7 @@
 
 | 版本 | 发布日期 | 主要特性 | 破坏性变更 | 说明文档 | 更新日志 | 迁移指南 |
 |------|---------|---------|-----------|---------|---------|---------|
-| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；`@Url` 支持协议白名单；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String` | - | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | [查看](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md) |
+| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；`@Url` 支持协议白名单；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String`；方法重命名：`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()` | - | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | [查看](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md) |
 | **v1.1.0** | 2026-08-10 | 新增 6 个注解：`@Date`、`@DateTime`、`@PastDateTime`、`@FutureDateTime`、`@ChineseName`、`@NotContains`；增强日期验证严格性 | `@PastDate`/`@FutureDate` 不再支持时间格式，需使用 `@PastDateTime`/`@FutureDateTime` | [查看](docs/version/v1.1.0/README.cn.md) | [查看](docs/version/v1.1.0/CHANGELOG_CN.md) | [查看](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md) |
 | **v1.0.1** | 2026-07-31 | 新增 `@Contains` 注解；核心类重命名 ValidaX → ValidX；文档优化；添加开源协议 | 无 | [查看](docs/version/v1.0.1/README_CN.md) | [查看](docs/version/v1.0.1/CHANGELOG_CN.md) | - |
 | **v1.0.0** | 2026-05-01 | 首次发布，提供 100+ 验证注解，支持注解和链式两种使用方式 | 无 | [查看](docs/version/v1.0.0/README_CN.md) | - | - |
@@ -631,7 +631,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 |------|------|------|---------|---------|
 | **基础验证** | [@Alpha](#alpha) | 纯英文字母验证 | 1.0.0 | - |
 | **基础验证** | [@AlphaDash](#alphadash) | 字母数字下划线横线组合 | 1.0.0 | - |
-| **基础验证** | [@AlphaNumber](#alphanumber) | 字母数字组合验证 | 1.0.0 | - |
+| **基础验证** | [@AlphaNumber](#alphanumber) | 字母数字组合验证 | 1.0.0 | 1.2.0 |
 | **基础验证** | [@Chinese](#chinese) | 纯中文字符验证 | 1.0.0 | - |
 | **基础验证** | [@ChineseAlpha](#chinesealpha) | 中文字符和字母组合 | 1.0.0 | - |
 | **基础验证** | [@ChineseAlphaNum](#chinesealphanum) | 中文字符、字母和数字组合 | 1.0.0 | - |
@@ -707,7 +707,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **教育/职业资格验证** | [@Accountant](#accountant) | 会计资格证书 | 1.0.0 | - |
 | **网络相关** | [@Domain](#domain) | 域名验证 | 1.0.0 | - |
 | **网络相关** | [@Ip](#ip) | IP地址验证（IPv4/IPv6） | 1.0.0 | - |
-| **网络相关** | [@Mac](#mac) | MAC地址验证 | 1.0.0 | - |
+| **网络相关** | [@Mac](#mac) | MAC地址验证 | 1.0.0 | 1.2.0 |
 | **网络相关** | [@Url](#url) | URL地址验证 | 1.0.0 | 1.2.0 |
 | **网络相关** | [@SubnetMask](#subnetmask) | 子网掩码验证 | 1.0.0 | - |
 | **中国特定验证** | [@ChineseLicensePlate](#chineselicenseplate) | 中国车牌号验证 | 1.0.0 | - |
@@ -771,6 +771,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 #### @AlphaNumber
 * 校验规则：字母和数字组合验证，只允许英文字母和数字。
 * 示例格式：`abc123`
+* 版本信息：
+  - 新增版本：1.0.0
+  - 修改版本：1.2.0（链式方法重命名：`isAlphaNum()` → `isAlphaNumber()`，注解本身不变）
 * 使用示例：
   ```java
   // 注解方式使用
@@ -3079,6 +3082,9 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 #### @Mac
 * 校验规则：MAC地址验证，验证MAC地址。
 * 示例格式：`00:1A:2B:3C:4D:5E`, `00-1A-2B-3C-4D-5E`
+* 版本信息：
+  - 新增版本：1.0.0
+  - 修改版本：1.2.0（链式方法重命名：`isMacAddress()` → `isMac()`，注解本身不变）
 * 使用示例：
   ```java
   // 注解方式使用

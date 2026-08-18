@@ -26,24 +26,24 @@ public class AlphaNumValidationChainTest {
     @Test
     public void testValidAlphaNum() {
         ValidX chain = ValidX.init();
-        chain = chain.isAlphaNum((Object)"abc123");
+        chain = chain.isAlphaNumber((Object)"abc123");
         assertTrue(chain.passed(), "有效的字母数字组合应该通过验证");
         
         chain = ValidX.init();
-        chain = chain.isAlphaNum((Object)"ABCDEF");
+        chain = chain.isAlphaNumber((Object)"ABCDEF");
         assertTrue(chain.passed(), "有效的字母组合应该通过验证");
     }
 
     @Test
     public void testInvalidAlphaNum() {
         ValidX chain = ValidX.init();
-        chain = chain.isAlphaNum((Object)"abc_def");
+        chain = chain.isAlphaNumber((Object)"abc_def");
         assertFalse(chain.passed(), "包含下划线的字符串不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("输入不是有效的字母数字字符", chain.getErrors().get(0));
 
         chain = ValidX.init();
-        chain = chain.isAlphaNum((Object)"abc-123");
+        chain = chain.isAlphaNumber((Object)"abc-123");
         assertFalse(chain.passed(), "包含连字符的字符串不应该通过验证");
         assertEquals(1, chain.getErrors().size());
         assertEquals("输入不是有效的字母数字字符", chain.getErrors().get(0));
@@ -53,12 +53,12 @@ public class AlphaNumValidationChainTest {
     public void testNullAndEmptyAlphaNum() {
         // 测试null值应该通过验证（交给@NotNull处理）
         ValidX chain = ValidX.init();
-        chain = chain.isAlphaNum(null);
+        chain = chain.isAlphaNumber(null);
         assertTrue(chain.passed(), "null值应该通过验证");
 
         // 测试空字符串应该通过验证（交给@NotEmpty处理）
         chain = ValidX.init();
-        chain = chain.isAlphaNum((Object)"");
+        chain = chain.isAlphaNumber((Object)"");
         assertTrue(chain.passed(), "空字符串应该通过验证");
     }
 }
