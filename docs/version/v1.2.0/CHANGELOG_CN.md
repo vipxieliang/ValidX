@@ -12,6 +12,7 @@
 - ✨ [新增功能](#新增功能-)
   - 新增 `@StartsWithAny` 多前缀验证注解
   - 新增 `@EndsWithAny` 多后缀验证注解
+  - 新增 `@NationalityCode` 国籍国代码验证注解（ISO 3166-1）
 - 🔧 [功能增强](#功能增强-)
   - `@FileSize` 注解新增 MIME 类型验证，支持 `allowedTypes` 参数
   - `@StartsWith`、`@EndsWith` 新增 `ignoreCase` 参数支持大小写不敏感匹配
@@ -335,6 +336,83 @@ public class PersonDTO {
 
 ---
 
+### 3. @NationalityCode 国籍国代码验证注解
+
+新增国籍国代码验证注解，用于验证字符串是否为有效的 ISO 3166-1 国家/地区代码（两字母、三字母或三位数字）。
+
+**功能特性：**
+- 验证 ISO 3166-1 国家/地区代码，支持三种编码形式：两字母（alpha-2）、三字母（alpha-3）、三位数字（numeric）
+- 内置 `NationalityCodeType` 枚举，通过 `formats` 参数指定允许的编码形式，默认三种形式均可
+- 基于 `IsoCountry` 枚举（249 个国家/地区）校验
+- 匹配大小写不敏感，验证时自动转为大写
+- null 和空字符串默认通过验证
+- 完整的国际化支持（9 种语言）
+- 典型场景：外国人永久居留身份证（五星卡）号码第 4~6 位为三位数字国籍代码，复核时应指定 `NUMERIC`
+
+**注解方式示例：**
+
+```java
+public class PersonDTO {
+    // 示例 1：默认三种形式均可
+    @NationalityCode
+    private String countryCode;  // "CA"、"CAN"、"124" 均通过
+
+    // 示例 2：五星卡复核，仅接受三位数字代码（单值可省略花括号）
+    @NationalityCode(formats = NationalityCode.NationalityCodeType.NUMERIC)
+    private String nationalityCode;  // 仅 "124" 这类数字代码通过
+
+    // 示例 3：仅接受两字母和三字母（多个值必须使用花括号）
+    @NationalityCode(formats = {NationalityCode.NationalityCodeType.ALPHA_2, NationalityCode.NationalityCodeType.ALPHA_3})
+    private String alphaCode;  // 仅 "CA"、"CAN" 通过
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 默认三种形式均可
+validator.isNationalityCode("124");
+
+// 指定仅数字形式（用于五星卡第 4~6 位复核）
+validator.isNationalityCode("124", new NationalityCode.NationalityCodeType[]{NationalityCode.NationalityCodeType.NUMERIC});
+
+// 检查验证结果
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：外国人永久居留身份证（五星卡）号码复核
+public class ForeignerResidenceDTO {
+    @NationalityCode(formats = NationalityCode.NationalityCodeType.NUMERIC)
+    private String nationalityCode;  // 五星卡第 4~6 位数字国籍代码
+}
+
+// 场景 2：通用国家/地区代码录入（任一形式）
+public class CountryDTO {
+    @NationalityCode
+    private String countryCode;
+}
+
+// 场景 3：链式验证
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("国籍代码").isNationalityCode("CAN");
+```
+
+**注意事项：**
+- `formats` 为数组类型，单个值可省略花括号（`formats = ALPHA_2` 等价于 `formats = {ALPHA_2}`），两个及以上值必须使用花括号
+- 匹配大小写不敏感，验证时自动转为大写后匹配
+- null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotEmpty` 使用）
+- 常见应用场景：国籍/国家代码录入校验、外国人永久居留身份证（五星卡）号码复核
+
+---
+
 ## 功能增强 🔧
 
 ### 1. @StartsWith、@EndsWith 支持忽略大小写
@@ -627,7 +705,7 @@ public void validateIn(Object value, String[] values, List<String> errors, Local
 
 ## 国际化支持 🌍
 
-两个新注解均支持以下 9 种语言：
+三个新注解均支持以下 9 种语言：
 
 - **简体中文** - `ValidationMessages.properties` 和 `ValidationMessages_zh.properties`
 - **英语** - `ValidationMessages_en.properties`
@@ -641,6 +719,7 @@ public void validateIn(Object value, String[] values, List<String> errors, Local
 **错误消息：**
 - `@StartsWithAny`: "不是以指定的任意一个字符串开头"
 - `@EndsWithAny`: "不是以指定的任意一个字符串结尾"
+- `@NationalityCode`: "国籍国代码无效，必须是 ISO 3166-1 代码（两字母、三字母或三位数字）"
 
 所有语言包的消息格式保持一致，采用正确的 Unicode 编码。
 
@@ -648,7 +727,7 @@ public void validateIn(Object value, String[] values, List<String> errors, Local
 
 ## 测试覆盖 🧪
 
-两个新功能均具有全面的测试覆盖：
+三个新功能均具有全面的测试覆盖：
 
 **验证器测试（Bean Validation 框架）：**
 - `StartsWithAnyValidatorTest`：9 个测试用例，涵盖有效/无效场景、null/空值、大小写敏感、空数组
@@ -662,7 +741,11 @@ public void validateIn(Object value, String[] values, List<String> errors, Local
 - `StartsWithAnyI18nTest`：8 个测试用例（每种语言一个）
 - `EndsWithAnyI18nTest`：8 个测试用例（每种语言一个）
 
-**总计：** 60 个新测试用例，全部通过 ✅
+**国籍代码验证测试：**
+- `NationalityCodeValidatorTest`：6 个测试用例，涵盖有效/无效代码、各 formats 组合、null/空值
+- `NationalityCodeValidationChainTest`：4 个测试用例，用于链式 API 使用
+
+**总计：** 70 个新测试用例，全部通过 ✅
 
 ---
 

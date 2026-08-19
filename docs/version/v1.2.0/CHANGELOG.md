@@ -12,6 +12,7 @@ This document records the changes from v1.1.0 to v1.2.0.
 - ✨ [New Features](#new-features-)
   - New `@StartsWithAny` multiple prefix validation annotation
   - New `@EndsWithAny` multiple suffix validation annotation
+  - New `@NationalityCode` nationality code validation annotation (ISO 3166-1)
 - 🔧 [Enhancements](#enhancements-)
   - `@FileSize` annotation now supports MIME type validation with `allowedTypes` parameter
   - `@StartsWith`, `@EndsWith` now support `ignoreCase` parameter for case-insensitive matching
@@ -335,6 +336,83 @@ public class PersonDTO {
 
 ---
 
+### 3. @NationalityCode Nationality Code Validation Annotation
+
+Added a nationality code validation annotation to verify that a string is a valid ISO 3166-1 country/region code (two-letter, three-letter, or three-digit).
+
+**Features:**
+- Validates ISO 3166-1 country/region codes in three encoding forms: two-letter (alpha-2), three-letter (alpha-3), and three-digit (numeric)
+- Built-in `NationalityCodeType` enum; the `formats` parameter specifies allowed encoding forms, defaulting to all three
+- Backed by the `IsoCountry` enum (249 countries/regions)
+- Case-insensitive matching; values are uppercased before matching
+- Null and empty strings pass validation by default
+- Full internationalization support (9 languages)
+- Typical use case: the 4th-6th digits of the Foreigner's Permanent Residence ID (Five-Star Card) are a three-digit nationality code; specify `NUMERIC` when validating them
+
+**Annotation Examples:**
+
+```java
+public class PersonDTO {
+    // Example 1: All three forms accepted by default
+    @NationalityCode
+    private String countryCode;  // "CA", "CAN", and "124" all pass
+
+    // Example 2: Five-Star Card validation - numeric code only (braces may be omitted for a single value)
+    @NationalityCode(formats = NationalityCode.NationalityCodeType.NUMERIC)
+    private String nationalityCode;  // Only numeric codes like "124" pass
+
+    // Example 3: Two-letter and three-letter only (braces required for multiple values)
+    @NationalityCode(formats = {NationalityCode.NationalityCodeType.ALPHA_2, NationalityCode.NationalityCodeType.ALPHA_3})
+    private String alphaCode;  // Only "CA" and "CAN" pass
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// All three forms accepted by default
+validator.isNationalityCode("124");
+
+// Numeric code only (for Five-Star Card 4th-6th digit validation)
+validator.isNationalityCode("124", new NationalityCode.NationalityCodeType[]{NationalityCode.NationalityCodeType.NUMERIC});
+
+// Check validation result
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-World Use Cases:**
+
+```java
+// Use Case 1: Foreigner's Permanent Residence ID (Five-Star Card) validation
+public class ForeignerResidenceDTO {
+    @NationalityCode(formats = NationalityCode.NationalityCodeType.NUMERIC)
+    private String nationalityCode;  // 4th-6th digits of the Five-Star Card number
+}
+
+// Use Case 2: Generic country/region code entry (any form)
+public class CountryDTO {
+    @NationalityCode
+    private String countryCode;
+}
+
+// Use Case 3: Chain validation
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("Country Code").isNationalityCode("CAN");
+```
+
+**Notes:**
+- `formats` is an array type; braces may be omitted for a single value (`formats = ALPHA_2` is equivalent to `formats = {ALPHA_2}`), but are required for two or more values
+- Matching is case-insensitive; values are uppercased before matching
+- Null and empty strings pass validation (use with `@NotNull` or `@NotEmpty` for required fields)
+- Common use cases: nationality/country code entry validation, Foreigner's Permanent Residence ID (Five-Star Card) number validation
+
+---
+
 ## Enhancements 🔧
 
 ### 1. @StartsWith, @EndsWith Support Case-Insensitive Matching
@@ -627,7 +705,7 @@ public void validateIn(Object value, String[] values, List<String> errors, Local
 
 ## Internationalization Support 🌍
 
-Both new annotations support the following 9 languages:
+All three new annotations support the following 9 languages:
 
 - **Chinese (Simplified)** - `ValidationMessages.properties` and `ValidationMessages_zh.properties`
 - **English** - `ValidationMessages_en.properties`
@@ -641,6 +719,7 @@ Both new annotations support the following 9 languages:
 **Error Messages:**
 - `@StartsWithAny`: "Does not start with any of the specified strings"
 - `@EndsWithAny`: "Does not end with any of the specified strings"
+- `@NationalityCode`: "Invalid ISO 3166-1 country code (two-letter, three-letter, or three-digit)"
 
 All language packs maintain consistent message format with proper Unicode encoding.
 
@@ -648,7 +727,7 @@ All language packs maintain consistent message format with proper Unicode encodi
 
 ## Testing Coverage 🧪
 
-Comprehensive test coverage for both new features:
+Comprehensive test coverage for all three new features:
 
 **Validator Tests (Bean Validation Framework):**
 - `StartsWithAnyValidatorTest`: 9 test cases covering valid/invalid scenarios, null/empty values, case sensitivity, empty arrays
@@ -662,7 +741,11 @@ Comprehensive test coverage for both new features:
 - `StartsWithAnyI18nTest`: 8 test cases (one per language)
 - `EndsWithAnyI18nTest`: 8 test cases (one per language)
 
-**Total:** 60 new test cases, all passing ✅
+**Nationality Code Validation Tests:**
+- `NationalityCodeValidatorTest`: 6 test cases covering valid/invalid codes, various `formats` combinations, and null/empty values
+- `NationalityCodeValidationChainTest`: 4 test cases for chain API usage
+
+**Total:** 70 new test cases, all passing ✅
 
 ---
 
