@@ -103,6 +103,11 @@ public class ForeignerPermanentResidenceIdentityValidatorTest {
         TestEntity entity7 = new TestEntity("911124199013400015");
         Set<ConstraintViolation<TestEntity>> violations7 = validator.validate(entity7);
         assertFalse(violations7.isEmpty(), "无效出生日期的外国人永久居留身份证号码应该不通过验证: 911124199013400015");
+
+        // 测试无效的外国人永久居留身份证号码（无效的国籍国代码）
+        TestEntity entity8 = new TestEntity("931000199012010012");
+        Set<ConstraintViolation<TestEntity>> violations8 = validator.validate(entity8);
+        assertFalse(violations8.isEmpty(), "无效国籍国代码的外国人永久居留身份证号码应该不通过验证: 931000199012010012");
     }
 
     @Test

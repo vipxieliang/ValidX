@@ -17,13 +17,13 @@
 package io.github.vipxieliang.validx.validator.education;
 
 import io.github.vipxieliang.validx.annotations.Doctor;
+import io.github.vipxieliang.validx.enums.ChinaMainlandProvince;
+import io.github.vipxieliang.validx.enums.DoctorCategory;
+import io.github.vipxieliang.validx.enums.DoctorLevel;
 import io.github.vipxieliang.validx.validator.china.ChineseIdCardValidator;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -42,75 +42,6 @@ public class DoctorValidator implements ConstraintValidator<Doctor, String> {
     
     // 医师资格证编号格式: 24位或27位（前23/26位为数字，最后1位可以是数字或X）
     private static final Pattern DOCTOR_QUALIFICATION_PATTERN = Pattern.compile("^\\d{23}[\\dX]$|^\\d{26}[\\dX]$");
-    
-    // 省、自治区、直辖市代码映射
-    private static final Map<String, String> VALID_PROVINCE_CODES;
-    
-    // 执业医师级别代码映射
-    private static final Map<String, String> VALID_LEVEL_CODES;
-    
-    // 执业医师类别代码映射
-    private static final Map<String, String> VALID_CATEGORY_CODES;
-    
-    static {
-        // 初始化省级行政区代码映射
-        Map<String, String> provinceCodes = new HashMap<>();
-        provinceCodes.put("11", "北京市");
-        provinceCodes.put("12", "天津市");
-        provinceCodes.put("13", "河北省");
-        provinceCodes.put("14", "山西省");
-        provinceCodes.put("15", "内蒙古自治区");
-        provinceCodes.put("21", "辽宁省");
-        provinceCodes.put("22", "吉林省");
-        provinceCodes.put("23", "黑龙江省");
-        provinceCodes.put("31", "上海市");
-        provinceCodes.put("32", "江苏省");
-        provinceCodes.put("33", "浙江省");
-        provinceCodes.put("34", "安徽省");
-        provinceCodes.put("35", "福建省");
-        provinceCodes.put("36", "江西省");
-        provinceCodes.put("37", "山东省");
-        provinceCodes.put("41", "河南省");
-        provinceCodes.put("42", "湖北省");
-        provinceCodes.put("43", "湖南省");
-        provinceCodes.put("44", "广东省");
-        provinceCodes.put("45", "广西壮族自治区");
-        provinceCodes.put("46", "海南省");
-        provinceCodes.put("50", "重庆市");
-        provinceCodes.put("51", "四川省");
-        provinceCodes.put("52", "贵州省");
-        provinceCodes.put("53", "云南省");
-        provinceCodes.put("54", "西藏自治区");
-        provinceCodes.put("61", "陕西省");
-        provinceCodes.put("62", "甘肃省");
-        provinceCodes.put("63", "青海省");
-        provinceCodes.put("64", "宁夏回族自治区");
-        provinceCodes.put("65", "新疆维吾尔自治区");
-        VALID_PROVINCE_CODES = Collections.unmodifiableMap(provinceCodes);
-        
-        // 初始化执业医师级别代码映射
-        Map<String, String> levelCodes = new HashMap<>();
-        levelCodes.put("1", "执业医师");
-        levelCodes.put("2", "执业助理医师");
-        levelCodes.put("3", "师承或确有专长执业医师");
-        levelCodes.put("4", "师承或确有专长执业助理医师");
-        VALID_LEVEL_CODES = Collections.unmodifiableMap(levelCodes);
-        
-        // 初始化执业医师类别代码映射
-        Map<String, String> categoryCodes = new HashMap<>();
-        categoryCodes.put("10", "临床");
-        categoryCodes.put("20", "口腔");
-        categoryCodes.put("30", "公共卫生");
-        categoryCodes.put("41", "中医");
-        categoryCodes.put("42", "中西医结合");
-        categoryCodes.put("43", "蒙医");
-        categoryCodes.put("44", "藏医");
-        categoryCodes.put("45", "维医");
-        categoryCodes.put("46", "傣医");
-        categoryCodes.put("47", "朝医");
-        categoryCodes.put("48", "壮医");
-        VALID_CATEGORY_CODES = Collections.unmodifiableMap(categoryCodes);
-    }
     
     @Override
     public void initialize(Doctor constraintAnnotation) {
@@ -148,18 +79,18 @@ public class DoctorValidator implements ConstraintValidator<Doctor, String> {
             return false;
         }
         
-        // 验证省级行政区代码
-        if (!VALID_PROVINCE_CODES.containsKey(provinceCode)) {
+        // 验证省级行政区代码（大陆 31 省）
+        if (!ChinaMainlandProvince.fromCode(provinceCode).isPresent()) {
             return false;
         }
         
         // 验证执业医师级别代码
-        if (!VALID_LEVEL_CODES.containsKey(levelCode)) {
+        if (!DoctorLevel.fromCode(levelCode).isPresent()) {
             return false;
         }
         
         // 验证执业医师类别代码
-        if (!VALID_CATEGORY_CODES.containsKey(categoryCode)) {
+        if (!DoctorCategory.fromCode(categoryCode).isPresent()) {
             return false;
         }
         

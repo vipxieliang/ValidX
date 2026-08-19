@@ -18,6 +18,7 @@ package io.github.vipxieliang.validx.validator.china;
 
 
 import io.github.vipxieliang.validx.annotations.ChineseIdCard;
+import io.github.vipxieliang.validx.enums.ChinaProvince;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -40,44 +41,6 @@ public class ChineseIdCardValidator implements ConstraintValidator<ChineseIdCard
     public static final String[] idCardCheck= {"1","0","X","9","8","7","6","5","4","3","2"};
     //组装根据余数，对应一个指定的校验码
     static Map<Integer,String> idCardMap=new HashMap<>();
-    
-    // 省份编码映射
-    static Map<String, String> provinceMap = new HashMap<String, String>(){{
-        put("11", "北京市");
-        put("12", "天津市");
-        put("13", "河北省");
-        put("14", "山西省");
-        put("15", "内蒙古自治区");
-        put("21", "辽宁省");
-        put("22", "吉林省");
-        put("23", "黑龙江省");
-        put("31", "上海市");
-        put("32", "江苏省");
-        put("33", "浙江省");
-        put("34", "安徽省");
-        put("35", "福建省");
-        put("36", "江西省");
-        put("37", "山东省");
-        put("41", "河南省");
-        put("42", "湖北省");
-        put("43", "湖南省");
-        put("44", "广东省");
-        put("45", "广西壮族自治区");
-        put("46", "海南省");
-        put("50", "重庆市");
-        put("51", "四川省");
-        put("52", "贵州省");
-        put("53", "云南省");
-        put("54", "西藏自治区");
-        put("61", "陕西省");
-        put("62", "甘肃省");
-        put("63", "青海省");
-        put("64", "宁夏回族自治区");
-        put("65", "新疆维吾尔自治区");
-        put("71", "台湾省");
-        put("81", "香港特别行政区");
-        put("82", "澳门特别行政区");
-    }};
     
     // 预编译正则表达式以提高性能
     private static final Pattern FIFTEEN_ID_PATTERN = Pattern.compile("[0-9]{15}");
@@ -129,7 +92,7 @@ public class ChineseIdCardValidator implements ConstraintValidator<ChineseIdCard
 
         // 验证省份编码
         String provinceCode = idCard.substring(0, 2);
-        if (!provinceMap.containsKey(provinceCode)) {
+        if (!ChinaProvince.fromCode(provinceCode).isPresent()) {
             return false;
         }
 

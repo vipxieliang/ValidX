@@ -66,7 +66,7 @@
 
 | 版本 | 发布日期 | 主要特性 | 破坏性变更 | 说明文档 | 更新日志 | 迁移指南 |
 |------|---------|---------|-----------|---------|---------|---------|
-| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；`@FileSize` 支持 MIME 类型验证；`@Url` 支持协议白名单；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String`；方法重命名：`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()` | - | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | [查看](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md) |
+| **v1.2.0** | 待定 | 新增 `@StartsWithAny`、`@EndsWithAny` 注解；新增 `@NationalityCode` 注解（ISO 3166-1 国籍国代码）；`@FileSize` 支持 MIME 类型验证；`@Url` 支持协议白名单；代码重构优化 20+ 验证器 | 链式 API 参数变更：`isStartsWith()`/`isEndsWith()` 从 `String[]` 改为 `String`；方法重命名：`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()` | - | [查看](docs/version/v1.2.0/CHANGELOG_CN.md) | [查看](docs/version/v1.2.0/MIGRATION_v1.2.0.cn.md) |
 | **v1.1.0** | 2026-08-10 | 新增 6 个注解：`@Date`、`@DateTime`、`@PastDateTime`、`@FutureDateTime`、`@ChineseName`、`@NotContains`；增强日期验证严格性 | `@PastDate`/`@FutureDate` 不再支持时间格式，需使用 `@PastDateTime`/`@FutureDateTime` | [查看](docs/version/v1.1.0/README.cn.md) | [查看](docs/version/v1.1.0/CHANGELOG_CN.md) | [查看](docs/version/v1.1.0/MIGRATION_v1.1.0.cn.md) |
 | **v1.0.1** | 2026-07-31 | 新增 `@Contains` 注解；核心类重命名 ValidaX → ValidX；文档优化；添加开源协议 | 无 | [查看](docs/version/v1.0.1/README_CN.md) | [查看](docs/version/v1.0.1/CHANGELOG_CN.md) | - |
 | **v1.0.0** | 2026-05-01 | 首次发布，提供 100+ 验证注解，支持注解和链式两种使用方式 | 无 | [查看](docs/version/v1.0.0/README_CN.md) | - | - |
@@ -685,6 +685,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **身份验证相关** | [@TaiwanResidence](#taiwanresidence) | 台湾居民居住证 | 1.0.0 | - |
 | **身份验证相关** | [@TaiwanPass](#taiwanpass) | 台湾居民来往大陆通行证 | 1.0.0 | - |
 | **身份验证相关** | [@ForeignerWorkPermit](#foreignerworkpermit) | 外国人工作许可证 | 1.0.0 | - |
+| **身份验证相关** | [@NationalityCode](#nationalitycode) | 国籍国代码（ISO 3166-1） | 1.2.0 | - |
 | **身份验证相关** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | 统一社会信用代码 | 1.0.0 | - |
 | **身份验证相关** | [@ChinesePhone](#chinesephone) | 中国手机号验证 | 1.0.0 | - |
 | **身份验证相关** | [@ChineseLandline](#chineselandline) | 中国座机号验证 | 1.0.0 | - |
@@ -2625,6 +2626,34 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   ValidX validator = ValidX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @NationalityCode
+* 校验规则：国籍国代码验证，验证 ISO 3166-1 国家/地区代码（两字母、三字母或三位数字）。
+* 示例格式：`CA`、`CAN`、`124`
+* 使用示例：
+  ```java
+  // 注解方式使用（默认三种形式均可）
+  @NationalityCode
+  private String countryCode;
+
+  // 注解方式使用（仅数字形式，用于五星卡第 4~6 位复核）
+  // 单值可省略花括号，等价于 formats = {NUMERIC}
+  @NationalityCode(formats = NationalityCode.NationalityCodeType.NUMERIC)
+  private String nationalityCode;
+
+  // 注解方式使用（仅两字母和三字母两种形式，多个值必须使用花括号）
+  @NationalityCode(formats = {NationalityCode.NationalityCodeType.ALPHA_2, NationalityCode.NationalityCodeType.ALPHA_3})
+  private String alphaCode;
+
+  // 链式调用方式使用
+  ValidX validator = ValidX.init();
+  validator.isNationalityCode("124");
+  validator.isNationalityCode("124", new NationalityCode.NationalityCodeType[]{NationalityCode.NationalityCodeType.NUMERIC});
+  ```
+
+> 说明：`formats` 为数组类型，单个值可省略花括号（`formats = ALPHA_2`，等价于 `formats = {ALPHA_2}`）；两个及以上值必须使用花括号（`formats = {ALPHA_2, ALPHA_3}`）。
 
 [↑ 返回快速查询表](#快速查询表)
 

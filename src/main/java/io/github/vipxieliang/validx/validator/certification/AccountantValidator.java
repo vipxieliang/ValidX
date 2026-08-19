@@ -17,12 +17,12 @@
 package io.github.vipxieliang.validx.validator.certification;
 
 import io.github.vipxieliang.validx.annotations.Accountant;
+import io.github.vipxieliang.validx.enums.AccountantCategory;
+import io.github.vipxieliang.validx.enums.AccountantInstitution;
+import io.github.vipxieliang.validx.enums.ChinaMainlandProvince;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -42,64 +42,6 @@ public class AccountantValidator implements ConstraintValidator<Accountant, Stri
     
     // 会计资格证书编号格式: 11位数字
     private static final Pattern ACCOUNTANT_PATTERN = Pattern.compile("^\\d{11}$");
-    
-    // 省、自治区、直辖市或国务院行业部门代码映射
-    private static final Map<String, String> VALID_PROVINCE_CODES = new HashMap<>();
-    
-    // 机构识别代码映射
-    private static final Map<String, String> VALID_INSTITUTION_CODES = new HashMap<>();
-    
-    // 证书类别（等级）代码映射
-    private static final Map<String, String> VALID_CATEGORY_CODES = new HashMap<>();
-    
-    static {
-        // 初始化省级行政区代码映射
-        VALID_PROVINCE_CODES.put("11", "北京市");
-        VALID_PROVINCE_CODES.put("12", "天津市");
-        VALID_PROVINCE_CODES.put("13", "河北省");
-        VALID_PROVINCE_CODES.put("14", "山西省");
-        VALID_PROVINCE_CODES.put("15", "内蒙古自治区");
-        VALID_PROVINCE_CODES.put("21", "辽宁省");
-        VALID_PROVINCE_CODES.put("22", "吉林省");
-        VALID_PROVINCE_CODES.put("23", "黑龙江省");
-        VALID_PROVINCE_CODES.put("31", "上海市");
-        VALID_PROVINCE_CODES.put("32", "江苏省");
-        VALID_PROVINCE_CODES.put("33", "浙江省");
-        VALID_PROVINCE_CODES.put("34", "安徽省");
-        VALID_PROVINCE_CODES.put("35", "福建省");
-        VALID_PROVINCE_CODES.put("36", "江西省");
-        VALID_PROVINCE_CODES.put("37", "山东省");
-        VALID_PROVINCE_CODES.put("41", "河南省");
-        VALID_PROVINCE_CODES.put("42", "湖北省");
-        VALID_PROVINCE_CODES.put("43", "湖南省");
-        VALID_PROVINCE_CODES.put("44", "广东省");
-        VALID_PROVINCE_CODES.put("45", "广西壮族自治区");
-        VALID_PROVINCE_CODES.put("46", "海南省");
-        VALID_PROVINCE_CODES.put("50", "重庆市");
-        VALID_PROVINCE_CODES.put("51", "四川省");
-        VALID_PROVINCE_CODES.put("52", "贵州省");
-        VALID_PROVINCE_CODES.put("53", "云南省");
-        VALID_PROVINCE_CODES.put("54", "西藏自治区");
-        VALID_PROVINCE_CODES.put("61", "陕西省");
-        VALID_PROVINCE_CODES.put("62", "甘肃省");
-        VALID_PROVINCE_CODES.put("63", "青海省");
-        VALID_PROVINCE_CODES.put("64", "宁夏回族自治区");
-        VALID_PROVINCE_CODES.put("65", "新疆维吾尔自治区");
-        
-        // 初始化机构识别代码映射
-        VALID_INSTITUTION_CODES.put("0", "财政部门");
-        VALID_INSTITUTION_CODES.put("1", "人力资源社会保障部门");
-        VALID_INSTITUTION_CODES.put("2", "教育部门");
-        VALID_INSTITUTION_CODES.put("3", "卫生部门");
-        VALID_INSTITUTION_CODES.put("4", "其他部门");
-        
-        // 初始化证书类别代码映射
-        VALID_CATEGORY_CODES.put("1", "初级会计师");
-        VALID_CATEGORY_CODES.put("2", "中级会计师");
-        VALID_CATEGORY_CODES.put("3", "高级会计师");
-        VALID_CATEGORY_CODES.put("4", "注册会计师");
-        VALID_CATEGORY_CODES.put("5", "税务师");
-    }
     
     @Override
     public void initialize(Accountant constraintAnnotation) {
@@ -138,18 +80,18 @@ public class AccountantValidator implements ConstraintValidator<Accountant, Stri
             return false;
         }
         
-        // 验证省、自治区、直辖市或国务院行业部门代码
-        if (!VALID_PROVINCE_CODES.containsKey(provinceCode)) {
+        // 验证省、自治区、直辖市或国务院行业部门代码（大陆 31 省）
+        if (!ChinaMainlandProvince.fromCode(provinceCode).isPresent()) {
             return false;
         }
         
         // 验证机构识别代码
-        if (!VALID_INSTITUTION_CODES.containsKey(institutionCode)) {
+        if (!AccountantInstitution.fromCode(institutionCode).isPresent()) {
             return false;
         }
         
         // 验证证书类别（等级）代码
-        if (!VALID_CATEGORY_CODES.containsKey(categoryCode)) {
+        if (!AccountantCategory.fromCode(categoryCode).isPresent()) {
             return false;
         }
         

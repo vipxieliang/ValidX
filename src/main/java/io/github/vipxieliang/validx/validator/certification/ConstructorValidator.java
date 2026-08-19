@@ -17,12 +17,11 @@
 package io.github.vipxieliang.validx.validator.certification;
 
 import io.github.vipxieliang.validx.annotations.Constructor;
+import io.github.vipxieliang.validx.enums.ChinaMainlandProvince;
+import io.github.vipxieliang.validx.enums.ConstructorLevel;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -42,12 +41,6 @@ public class ConstructorValidator implements ConstraintValidator<Constructor, St
     
     // 建造师证书编号格式: 1个汉字 + 12位数字
     private static final Pattern CONSTRUCTOR_PATTERN = Pattern.compile("^[\\u4e00-\\u9fa5][12]\\d{11}$");
-    
-    // 省级行政区划代码集合 (部分示例)
-    private static final Set<String> VALID_PROVINCE_CODES = new HashSet<>(Arrays.asList(
-        "11", "12", "13", "14", "15", "21", "22", "23", "31", "32", "33", "34", "35", "36", "37",
-        "41", "42", "43", "44", "45", "46", "50", "51", "52", "53", "54", "61", "62", "63", "64", "65", "99"
-    ));
     
     @Override
     public void initialize(Constructor constraintAnnotation) {
@@ -75,12 +68,12 @@ public class ConstructorValidator implements ConstraintValidator<Constructor, St
         String registerYearCode = cleanValue.substring(6, 8); // 初始注册年份
         
         // 验证级别代码 (必须是1或2)
-        if (!"1".equals(levelCode) && !"2".equals(levelCode)) {
+        if (!ConstructorLevel.fromCode(levelCode).isPresent()) {
             return false;
         }
         
-        // 验证省级行政区划代码
-        if (!VALID_PROVINCE_CODES.contains(provinceCode)) {
+        // 验证省级行政区划代码（大陆 31 省，另允许中央/特殊代码 99）
+        if (!ChinaMainlandProvince.fromCode(provinceCode).isPresent() && !"99".equals(provinceCode)) {
             return false;
         }
         

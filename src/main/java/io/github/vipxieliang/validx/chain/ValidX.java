@@ -17,6 +17,7 @@
 package io.github.vipxieliang.validx.chain;
 
 import io.github.vipxieliang.validx.annotations.Ip;
+import io.github.vipxieliang.validx.annotations.NationalityCode;
 import io.github.vipxieliang.validx.chain.china.ChinaValidation;
 import io.github.vipxieliang.validx.chain.phone.PhoneValidation;
 import io.github.vipxieliang.validx.i18n.MessageManager;
@@ -1442,6 +1443,36 @@ public class ValidX {
             return this;
         }
         foreignValidation.validateForeignerWorkPermit(value, errors, getLocale());
+        return this;
+    }
+
+    /**
+     * 验证国籍国代码（默认任一 ISO 3166-1 编码形式通过即算通过）
+     *
+     * @param value 要验证的国籍国代码（如 "CA"、"CAN"、"124"）
+     * @return 当前验证链实例
+     */
+    public ValidX isNationalityCode(Object value) {
+        return isNationalityCode(value, new NationalityCode.NationalityCodeType[]{
+                NationalityCode.NationalityCodeType.ALPHA_2,
+                NationalityCode.NationalityCodeType.ALPHA_3,
+                NationalityCode.NationalityCodeType.NUMERIC
+        });
+    }
+
+    /**
+     * 验证国籍国代码（指定允许的编码形式）
+     *
+     * @param value   要验证的国籍国代码
+     * @param formats 允许的编码形式数组，与 {@link NationalityCode#formats()} 保持一致
+     *                （如五星卡复核应传 new NationalityCodeType[]{NationalityCodeType.NUMERIC}）
+     * @return 当前验证链实例
+     */
+    public ValidX isNationalityCode(Object value, NationalityCode.NationalityCodeType[] formats) {
+        if (checkRequirement(value, "Nationality Code", errors, getLocale())) {
+            return this;
+        }
+        foreignValidation.validateNationalityCode(value, formats, errors, getLocale());
         return this;
     }
 

@@ -17,12 +17,12 @@
 package io.github.vipxieliang.validx.validator.education;
 
 import io.github.vipxieliang.validx.annotations.Teacher;
+import io.github.vipxieliang.validx.enums.ChinaMainlandProvince;
+import io.github.vipxieliang.validx.enums.TeacherGender;
+import io.github.vipxieliang.validx.enums.TeacherType;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -42,70 +42,6 @@ public class TeacherValidator implements ConstraintValidator<Teacher, String> {
     
     // 教师资格证编号格式: 17位数字
     private static final Pattern TEACHER_QUALIFICATION_PATTERN = Pattern.compile("^\\d{17}$");
-    
-    // 省级行政区代码映射
-    private static final Map<String, String> VALID_PROVINCE_CODES;
-    
-    // 教师资格类型代码映射
-    private static final Map<String, String> VALID_TYPE_CODES;
-    
-    // 性别代码映射
-    private static final Map<String, String> VALID_GENDER_CODES;
-    
-    static {
-        // 初始化省级行政区代码映射
-        Map<String, String> provinceCodes = new HashMap<>();
-        provinceCodes.put("11", "北京市");
-        provinceCodes.put("12", "天津市");
-        provinceCodes.put("13", "河北省");
-        provinceCodes.put("14", "山西省");
-        provinceCodes.put("15", "内蒙古自治区");
-        provinceCodes.put("21", "辽宁省");
-        provinceCodes.put("22", "吉林省");
-        provinceCodes.put("23", "黑龙江省");
-        provinceCodes.put("31", "上海市");
-        provinceCodes.put("32", "江苏省");
-        provinceCodes.put("33", "浙江省");
-        provinceCodes.put("34", "安徽省");
-        provinceCodes.put("35", "福建省");
-        provinceCodes.put("36", "江西省");
-        provinceCodes.put("37", "山东省");
-        provinceCodes.put("41", "河南省");
-        provinceCodes.put("42", "湖北省");
-        provinceCodes.put("43", "湖南省");
-        provinceCodes.put("44", "广东省");
-        provinceCodes.put("45", "广西壮族自治区");
-        provinceCodes.put("46", "海南省");
-        provinceCodes.put("50", "重庆市");
-        provinceCodes.put("51", "四川省");
-        provinceCodes.put("52", "贵州省");
-        provinceCodes.put("53", "云南省");
-        provinceCodes.put("54", "西藏自治区");
-        provinceCodes.put("61", "陕西省");
-        provinceCodes.put("62", "甘肃省");
-        provinceCodes.put("63", "青海省");
-        provinceCodes.put("64", "宁夏回族自治区");
-        provinceCodes.put("65", "新疆维吾尔自治区");
-        VALID_PROVINCE_CODES = Collections.unmodifiableMap(provinceCodes);
-        
-        // 初始化教师资格类型代码映射
-        Map<String, String> typeCodes = new HashMap<>();
-        typeCodes.put("1", "幼儿园教师资格");
-        typeCodes.put("2", "小学教师资格");
-        typeCodes.put("3", "初级中学教师资格");
-        typeCodes.put("4", "高级中学教师资格");
-        typeCodes.put("5", "中等职业学校教师资格");
-        typeCodes.put("6", "中等职业学校实习指导教师资格");
-        typeCodes.put("7", "高等学校教师资格");
-        VALID_TYPE_CODES = Collections.unmodifiableMap(typeCodes);
-        
-        // 初始化性别代码映射
-        Map<String, String> genderCodes = new HashMap<>();
-        genderCodes.put("0", "男性");
-        genderCodes.put("1", "女性");
-        genderCodes.put("2", "未知");
-        VALID_GENDER_CODES = Collections.unmodifiableMap(genderCodes);
-    }
     
     @Override
     public void initialize(Teacher constraintAnnotation) {
@@ -145,18 +81,18 @@ public class TeacherValidator implements ConstraintValidator<Teacher, String> {
             return false;
         }
         
-        // 验证省级行政区代码
-        if (!VALID_PROVINCE_CODES.containsKey(provinceCode)) {
+        // 验证省级行政区代码（大陆 31 省）
+        if (!ChinaMainlandProvince.fromCode(provinceCode).isPresent()) {
             return false;
         }
         
         // 验证教师资格类型代码
-        if (!VALID_TYPE_CODES.containsKey(typeCode)) {
+        if (!TeacherType.fromCode(typeCode).isPresent()) {
             return false;
         }
         
         // 验证性别代码
-        if (!VALID_GENDER_CODES.containsKey(genderCode)) {
+        if (!TeacherGender.fromCode(genderCode).isPresent()) {
             return false;
         }
         

@@ -66,7 +66,7 @@
 
 | Version | Release Date | Key Features | Breaking Changes | Documentation | Changelog | Migration Guide |
 |---------|-------------|--------------|------------------|---------------|-----------|-----------------|
-| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@FileSize` with MIME type validation; `@Url` protocol whitelist; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String`; method renames: `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
+| **v1.2.0** | TBD | New `@StartsWithAny`, `@EndsWithAny` annotations; `@NationalityCode` annotation (ISO 3166-1 country code); `@FileSize` with MIME type validation; `@Url` protocol whitelist; Code refactoring for 20+ validators | Chain API parameter change: `isStartsWith()`/`isEndsWith()` from `String[]` to `String`; method renames: `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()` | - | [View](docs/version/v1.2.0/CHANGELOG.md) | [View](docs/version/v1.2.0/MIGRATION_v1.2.0.md) |
 | **v1.1.0** | 2026-08-10 | 6 new annotations: `@Date`, `@DateTime`, `@PastDateTime`, `@FutureDateTime`, `@ChineseName`, `@NotContains`; Enhanced date validation strictness | `@PastDate`/`@FutureDate` no longer support time formats, use `@PastDateTime`/`@FutureDateTime` instead | [View](docs/version/v1.1.0/README.md) | [View](docs/version/v1.1.0/CHANGELOG.md) | [View](docs/version/v1.1.0/MIGRATION_v1.1.0.md) |
 | **v1.0.1** | 2026-07-31 | New `@Contains` annotation; Core class renamed ValidaX → ValidX; Documentation improvements; Added open source license | None | [View](docs/version/v1.0.1/README.md) | [View](docs/version/v1.0.1/CHANGELOG.md) | - |
 | **v1.0.0** | 2026-05-01 | Initial release with 100+ validation annotations, supporting both annotation and chain API styles | None | [View](docs/version/v1.0.0/README.md) | - | - |
@@ -685,6 +685,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Identity Validation** | [@TaiwanResidence](#taiwanresidence) | Taiwan residence permit | 1.0.0   | - |
 | **Identity Validation** | [@TaiwanPass](#taiwanpass) | Taiwan travel permit | 1.0.0   | - |
 | **Identity Validation** | [@ForeignerWorkPermit](#foreignerworkpermit) | Foreigner work permit | 1.0.0   | - |
+| **Identity Validation** | [@NationalityCode](#nationalitycode) | Nationality country code (ISO 3166-1) | 1.2.0   | - |
 | **Identity Validation** | [@UnifiedSocialCreditCode](#unifiedsocialcreditcode) | Unified Social Credit Code | 1.0.0   | - |
 | **Identity Validation** | [@ChinesePhone](#chinesephone) | Chinese mobile phone | 1.0.0   | - |
 | **Identity Validation** | [@ChineseLandline](#chineselandline) | Chinese landline | 1.0.0   | - |
@@ -2617,6 +2618,34 @@ Click on the annotation name to jump to its detailed documentation.
   ValidX validator = ValidX.init();
   validator.isForeignerWorkPermit(" foreigners work permit number ");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @NationalityCode
+* Validation Rule: Nationality country code validation, validating ISO 3166-1 country codes (two-letter, three-letter, or three-digit).
+* Example Format: `CA`, `CAN`, `124`
+* Usage Example:
+  ```java
+  // Annotation-based usage (default: all three formats accepted)
+  @NationalityCode
+  private String countryCode;
+
+  // Annotation-based usage (numeric only, for Foreigner Permanent Residence ID digits 4-6)
+  // A single value may omit the braces, equivalent to formats = {NUMERIC}
+  @NationalityCode(formats = NationalityCode.NationalityCodeType.NUMERIC)
+  private String nationalityCode;
+
+  // Annotation-based usage (alpha-2 and alpha-3 only; multiple values require braces)
+  @NationalityCode(formats = {NationalityCode.NationalityCodeType.ALPHA_2, NationalityCode.NationalityCodeType.ALPHA_3})
+  private String alphaCode;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  validator.isNationalityCode("124");
+  validator.isNationalityCode("124", new NationalityCode.NationalityCodeType[]{NationalityCode.NationalityCodeType.NUMERIC});
+  ```
+
+> Note: `formats` is an array type. A single value may be written without braces (`formats = ALPHA_2`, equivalent to `formats = {ALPHA_2}`); two or more values must be enclosed in braces (`formats = {ALPHA_2, ALPHA_3}`).
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

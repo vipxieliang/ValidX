@@ -17,12 +17,10 @@
 package io.github.vipxieliang.validx.validator.certification;
 
 import io.github.vipxieliang.validx.annotations.PMP;
+import io.github.vipxieliang.validx.enums.PMPPrefix;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
@@ -41,11 +39,6 @@ public class PMPValidator implements ConstraintValidator<PMP, String> {
     
     // PMP证书编号格式: 7位纯数字 或 前缀(2-6个大写字母)+数字(6-8位)
     private static final Pattern PMP_PATTERN = Pattern.compile("^\\d{7}$|^[A-Z]{2,6}\\d{6,8}$");
-    
-    // 有效的PMP前缀集合
-    private static final Set<String> VALID_PREFIXES = new HashSet<>(Arrays.asList(
-        "PMP", "PMI", "CITEF", "CAPM", "PgMP", "PfMP"
-    ));
     
     @Override
     public void initialize(PMP constraintAnnotation) {
@@ -72,8 +65,8 @@ public class PMPValidator implements ConstraintValidator<PMP, String> {
         }
         
         // 如果是带前缀的格式，验证前缀是否有效
-        for (String prefix : VALID_PREFIXES) {
-            if (cleanValue.startsWith(prefix)) {
+        for (PMPPrefix prefix : PMPPrefix.values()) {
+            if (cleanValue.startsWith(prefix.getValue())) {
                 return true;
             }
         }

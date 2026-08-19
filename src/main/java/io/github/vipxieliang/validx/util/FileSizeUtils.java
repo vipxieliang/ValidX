@@ -16,6 +16,8 @@
 
 package io.github.vipxieliang.validx.util;
 
+import io.github.vipxieliang.validx.enums.FileSizeUnit;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

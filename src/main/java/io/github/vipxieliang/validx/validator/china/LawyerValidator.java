@@ -17,12 +17,12 @@
 package io.github.vipxieliang.validx.validator.china;
 
 import io.github.vipxieliang.validx.annotations.Lawyer;
+import io.github.vipxieliang.validx.enums.ChinaMainlandProvince;
+import io.github.vipxieliang.validx.enums.LawyerCategory;
+import io.github.vipxieliang.validx.enums.LawyerGender;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -62,65 +62,6 @@ public class LawyerValidator implements ConstraintValidator<Lawyer, String> {
     
     // 法律职业资格证书格式：16位数字
     private static final Pattern LEGAL_QUALIFICATION_CERTIFICATE_PATTERN_16 = Pattern.compile("^\\d{16}$");
-    
-    // 省、自治区、直辖市代码映射
-    private static final Map<String, String> VALID_PROVINCE_CODES = new HashMap<>();
-    
-    // 律师执业类别代码映射
-    private static final Map<String, String> VALID_CATEGORY_CODES = new HashMap<>();
-    
-    // 性别代码映射
-    private static final Map<String, String> VALID_GENDER_CODES = new HashMap<>();
-
-    static {
-        // 初始化省级行政区代码映射
-        VALID_PROVINCE_CODES.put("11", "北京市");
-        VALID_PROVINCE_CODES.put("12", "天津市");
-        VALID_PROVINCE_CODES.put("13", "河北省");
-        VALID_PROVINCE_CODES.put("14", "山西省");
-        VALID_PROVINCE_CODES.put("15", "内蒙古自治区");
-        VALID_PROVINCE_CODES.put("21", "辽宁省");
-        VALID_PROVINCE_CODES.put("22", "吉林省");
-        VALID_PROVINCE_CODES.put("23", "黑龙江省");
-        VALID_PROVINCE_CODES.put("31", "上海市");
-        VALID_PROVINCE_CODES.put("32", "江苏省");
-        VALID_PROVINCE_CODES.put("33", "浙江省");
-        VALID_PROVINCE_CODES.put("34", "安徽省");
-        VALID_PROVINCE_CODES.put("35", "福建省");
-        VALID_PROVINCE_CODES.put("36", "江西省");
-        VALID_PROVINCE_CODES.put("37", "山东省");
-        VALID_PROVINCE_CODES.put("41", "河南省");
-        VALID_PROVINCE_CODES.put("42", "湖北省");
-        VALID_PROVINCE_CODES.put("43", "湖南省");
-        VALID_PROVINCE_CODES.put("44", "广东省");
-        VALID_PROVINCE_CODES.put("45", "广西壮族自治区");
-        VALID_PROVINCE_CODES.put("46", "海南省");
-        VALID_PROVINCE_CODES.put("50", "重庆市");
-        VALID_PROVINCE_CODES.put("51", "四川省");
-        VALID_PROVINCE_CODES.put("52", "贵州省");
-        VALID_PROVINCE_CODES.put("53", "云南省");
-        VALID_PROVINCE_CODES.put("54", "西藏自治区");
-        VALID_PROVINCE_CODES.put("61", "陕西省");
-        VALID_PROVINCE_CODES.put("62", "甘肃省");
-        VALID_PROVINCE_CODES.put("63", "青海省");
-        VALID_PROVINCE_CODES.put("64", "宁夏回族自治区");
-        VALID_PROVINCE_CODES.put("65", "新疆维吾尔自治区");
-        
-        // 初始化律师执业类别代码映射
-        VALID_CATEGORY_CODES.put("1", "专职律师");
-        VALID_CATEGORY_CODES.put("2", "兼职律师");
-        VALID_CATEGORY_CODES.put("3", "香港居民律师");
-        VALID_CATEGORY_CODES.put("4", "澳门居民律师");
-        VALID_CATEGORY_CODES.put("5", "台湾居民律师");
-        VALID_CATEGORY_CODES.put("6", "公职律师");
-        VALID_CATEGORY_CODES.put("7", "公司律师");
-        VALID_CATEGORY_CODES.put("8", "法律援助律师");
-        VALID_CATEGORY_CODES.put("9", "军队律师");
-        
-        // 初始化性别代码映射
-        VALID_GENDER_CODES.put("0", "男");
-        VALID_GENDER_CODES.put("1", "女");
-    }
 
     @Override
     public void initialize(Lawyer constraintAnnotation) {
@@ -161,7 +102,7 @@ public class LawyerValidator implements ConstraintValidator<Lawyer, String> {
         
         // 第2-3位为省（自治区、直辖市）代码
         String provinceCode = value.substring(1, 3);
-        if (!VALID_PROVINCE_CODES.containsKey(provinceCode)) {
+        if (!ChinaMainlandProvince.fromCode(provinceCode).isPresent()) {
             return false;
         }
         
@@ -181,13 +122,13 @@ public class LawyerValidator implements ConstraintValidator<Lawyer, String> {
         
         // 第10位为律师执业类别代码
         String categoryCode = value.substring(9, 10);
-        if (!VALID_CATEGORY_CODES.containsKey(categoryCode)) {
+        if (!LawyerCategory.fromCode(categoryCode).isPresent()) {
             return false;
         }
         
         // 第11位为性别代码
         String genderCode = value.substring(10, 11);
-        if (!VALID_GENDER_CODES.containsKey(genderCode)) {
+        if (!LawyerGender.fromCode(genderCode).isPresent()) {
             return false;
         }
         
@@ -216,7 +157,7 @@ public class LawyerValidator implements ConstraintValidator<Lawyer, String> {
         
         // 第5-6位为省、自治区、直辖市代码
         String provinceCode = value.substring(4, 6);
-        if (!VALID_PROVINCE_CODES.containsKey(provinceCode)) {
+        if (!ChinaMainlandProvince.fromCode(provinceCode).isPresent()) {
             return false;
         }
         

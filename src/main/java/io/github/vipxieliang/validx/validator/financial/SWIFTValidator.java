@@ -17,6 +17,7 @@
 package io.github.vipxieliang.validx.validator.financial;
 
 import io.github.vipxieliang.validx.annotations.SWIFT;
+import io.github.vipxieliang.validx.enums.IsoCountry;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -42,35 +43,7 @@ public class SWIFTValidator implements ConstraintValidator<SWIFT, String> {
     // 2位位置代码: 字母或数字
     // 3位分行代码(可选): 字母或数字
     private static final Pattern SWIFT_PATTERN = Pattern.compile("^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$");
-    
-    // 有效的国家代码列表 (ISO 3166-1 alpha-2)
-    private static final java.util.Set<String> VALID_COUNTRY_CODES = new java.util.HashSet<>();
-    
-    static {
-        // 初始化有效的国家代码列表 (部分常见国家)
-        String[] countryCodes = {
-            "AD", "AE", "AF", "AG", "AI", "AL", "AM", "AO", "AQ", "AR", "AS", "AT", "AU", "AW", "AX", "AZ",
-            "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BL", "BM", "BN", "BO", "BQ", "BR", "BS",
-            "BT", "BV", "BW", "BY", "BZ", "CA", "CC", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN",
-            "CO", "CR", "CU", "CV", "CW", "CX", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE",
-            "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FO", "FR", "GA", "GB", "GD", "GE", "GF",
-            "GG", "GH", "GI", "GL", "GM", "GN", "GP", "GQ", "GR", "GS", "GT", "GU", "GW", "GY", "HK", "HM",
-            "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IO", "IQ", "IR", "IS", "IT", "JE", "JM",
-            "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KN", "KP", "KR", "KW", "KY", "KZ", "LA", "LB", "LC",
-            "LI", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MC", "MD", "ME", "MF", "MG", "MH", "MK",
-            "ML", "MM", "MN", "MO", "MP", "MQ", "MR", "MS", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA",
-            "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG",
-            "PH", "PK", "PL", "PM", "PN", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW",
-            "SA", "SB", "SC", "SD", "SE", "SG", "SH", "SI", "SJ", "SK", "SL", "SM", "SN", "SO", "SR", "SS",
-            "ST", "SV", "SX", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO",
-            "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "UM", "US", "UY", "UZ", "VA", "VC", "VE", "VG", "VI",
-            "VN", "VU", "WF", "WS", "YE", "YT", "ZA", "ZM", "ZW"
-        };
-        
-        for (String code : countryCodes) {
-            VALID_COUNTRY_CODES.add(code);
-        }
-    }
+
 
     @Override
     public void initialize(SWIFT constraintAnnotation) {
@@ -96,8 +69,8 @@ public class SWIFTValidator implements ConstraintValidator<SWIFT, String> {
             return false;
         }
         
-        // 国家代码检查
+        // 国家代码检查（复用 ISO 3166-1 alpha-2 表）
         String countryCode = cleanValue.substring(4, 6);
-        return VALID_COUNTRY_CODES.contains(countryCode);
+        return IsoCountry.fromAlpha2(countryCode).isPresent();
     }
 }

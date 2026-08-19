@@ -1,0 +1,99 @@
+/*
+ * Copyright 2025-2026 vipxieliang
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package io.github.vipxieliang.validx.enums;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * 会计资格证书机构识别代码枚举
+ * <p>
+ * 对应会计资格证书编号第 7 位机构识别代码。
+ * </p>
+ */
+public enum AccountantInstitution {
+
+    /**
+     * 0 - 财政部门
+     */
+    FINANCE("0", "财政部门"),
+
+    /**
+     * 1 - 人力资源社会保障部门
+     */
+    HUMAN_RESOURCES_SOCIAL_SECURITY("1", "人力资源社会保障部门"),
+
+    /**
+     * 2 - 教育部门
+     */
+    EDUCATION("2", "教育部门"),
+
+    /**
+     * 3 - 卫生部门
+     */
+    HEALTH("3", "卫生部门"),
+
+    /**
+     * 4 - 其他部门
+     */
+    OTHER("4", "其他部门");
+
+    private static final Map<String, AccountantInstitution> CODE_MAP = new HashMap<>();
+
+    static {
+        for (AccountantInstitution institution : values()) {
+            CODE_MAP.put(institution.code, institution);
+        }
+    }
+
+    private final String code;
+    private final String name;
+
+    AccountantInstitution(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    /**
+     * 获取机构识别代码
+     * @return 机构识别代码
+     */
+    public String getCode() {
+        return code;
+    }
+
+    /**
+     * 获取机构名称
+     * @return 机构名称
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 根据机构识别代码查找枚举（null 安全）
+     * @param code 机构识别代码，如 "0"、"1"
+     * @return 匹配的枚举，未找到返回 Optional.empty()
+     */
+    public static Optional<AccountantInstitution> fromCode(String code) {
+        if (code == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(CODE_MAP.get(code));
+    }
+}

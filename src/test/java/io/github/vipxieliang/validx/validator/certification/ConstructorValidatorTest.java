@@ -64,7 +64,7 @@ public class ConstructorValidatorTest {
         assertFalse(validator.isValid("京311050700001", mock(ConstraintValidatorContext.class))); // 级别代码为3
         assertFalse(validator.isValid("京011050700001", mock(ConstraintValidatorContext.class))); // 级别代码为0
         
-        // 测试无效的省级代码 (使用不在VALID_PROVINCE_CODES集合中的代码)
+        // 测试无效的省级代码（88 不属于大陆 31 省，也不属于特殊代码 99）
         assertFalse(validator.isValid("京188050700001", mock(ConstraintValidatorContext.class))); // 无效省级代码88
         
         // 测试无效的年份代码 (虽然00-99在技术上是有效的，但我们可以测试一些边界情况)
