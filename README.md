@@ -52,7 +52,7 @@
 ### v1.2.0 Key Updates
 
 - ⚠️ **Breaking Change**: `isStartsWith()` and `isEndsWith()` chain API parameter changed from `String[]` to `String`; chain API method renames `isAlphaNum()` → `isAlphaNumber()`, `isMacAddress()` → `isMac()` (aligned 1:1 with annotation names)
-- ✨ **New Features**: `@StartsWithAny` and `@EndsWithAny` annotations for multiple value validation
+- ✨ **New Features**: `@StartsWithAny` and `@EndsWithAny` annotations for multiple value validation; `@NationalityCode` nationality code validation annotation (ISO 3166-1)
 - 🔧 **Enhancements**: `@FileSize` now supports MIME type validation (`allowedTypes` parameter); `@Url` now supports protocol whitelist configuration (`protocols` parameter, default: http / https / ftp)
 - 🎯 **Code Optimization**: Simplified initialization code across 20+ validator classes
 

@@ -52,7 +52,7 @@
 ### v1.2.0 主要更新
 
 - ⚠️ **破坏性变更**：`isStartsWith()` 和 `isEndsWith()` 链式 API 参数从 `String[]` 改为 `String`；`isAlphaNum()` → `isAlphaNumber()`、`isMacAddress()` → `isMac()` 链式方法重命名（与注解命名 1:1 对齐）
-- ✨ **新增功能**：`@StartsWithAny` 和 `@EndsWithAny` 多值验证注解
+- ✨ **新增功能**：`@StartsWithAny` 和 `@EndsWithAny` 多值验证注解；`@NationalityCode` 国籍国代码验证注解（ISO 3166-1）
 - 🔧 **功能增强**：`@FileSize` 支持 MIME 类型验证（`allowedTypes` 参数）；`@Url` 支持协议白名单配置（`protocols` 参数，默认 http / https / ftp）
 - 🎯 **代码优化**：简化 20+ 个验证器类的初始化代码
 
