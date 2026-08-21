@@ -1,4 +1,4 @@
-# ValidX vs JPA @Temporal 对比
+# ValidX 的 Date 和 DateTime vs JPA 的 Temporal 对比
 
 ## 概述
 
@@ -451,9 +451,3 @@ public class UserService {
 **一句话总结**：
 - `@Temporal`告诉数据库"这个字段应该存储为什么类型"
 - ValidX告诉应用"前端传入的数据是否合法"
-
----
-
-**文档版本**：v1.2.0
-**最后更新**：2026-08-11
-**作者**：ValidX Team

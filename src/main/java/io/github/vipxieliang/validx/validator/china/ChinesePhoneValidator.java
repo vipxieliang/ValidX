@@ -29,11 +29,13 @@ import java.util.regex.Pattern;
 public class ChinesePhoneValidator implements ConstraintValidator<ChinesePhone, String> {
 
     /**
-     * 手机号码正则表达式
-     * 支持中国移动、中国联通、中国电信的主要号段
+     * 手机号码正则表达式（宽松格式校验）
+     * 仅校验基础格式：11 位数字、1 开头、第二位为 3-9。
+     * 不枚举具体号段：号段持续动态演进，精确枚举会导致新放号段被误杀，
+     * 号码的真实性与可用性应由短信验证码、运营商接口等后续关卡保证。
      */
     private static final Pattern MOBILE_PATTERN = Pattern.compile(
-        "^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\\d{8}$"
+        "^1[3-9]\\d{9}$"
     );
 
     @Override

@@ -1,4 +1,4 @@
-# ValidX vs Spring @DateTimeFormat 对比
+# ValidX 的Date 和 DateTime  vs Spring 的 DateTimeFormat 对比详解
 
 ## 概述
 
@@ -340,8 +340,3 @@ public class EventDTO {
 
 3. **组合使用** → 根据具体场景选择
 
----
-
-**文档版本**：v1.2.0
-**最后更新**：2026-08-11
-**作者**：ValidX Team

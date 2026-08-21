@@ -34,6 +34,9 @@ public class ChinesePhoneValidatorTest {
         assertTrue(validator.isValid("17712345678", null), "有效的177号段手机号码应该通过验证");
         assertTrue(validator.isValid("138 1234 5678", null), "带空格的手机号码应该通过验证");
         assertTrue(validator.isValid("138-1234-5678", null), "带横线的手机号码应该通过验证");
+        // 宽松格式校验：不枚举具体号段，未来新放号段自动兼容
+        assertTrue(validator.isValid("15412345678", null), "宽松模式下154号段应通过验证（格式层不枚举号段）");
+        assertTrue(validator.isValid("19412345678", null), "宽松模式下194号段应通过验证（格式层不枚举号段）");
     }
 
     @Test
