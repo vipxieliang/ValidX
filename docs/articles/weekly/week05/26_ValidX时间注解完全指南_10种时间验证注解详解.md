@@ -38,7 +38,7 @@ ValidX 把时间验证拆成了 **10 个注解**，按职责分工：
 通读全部源码后，可以提炼出 ValidX 时间验证的三个贯穿性设计：
 
 1. **空值一律放行**。10 个注解对 `null` 和空字符串都返回 `true`，把"是否必填"的职责完全交给 `@NotNull` / `@NotEmpty`。这样 `@Date` 可以叠加在可选字段上而不误伤。
-2. **pattern 强自检**。`@Date` 的 pattern 不允许出现时间符号，`@DateTime` 的 pattern 必须出现时间符号——配置写错不会产生莫名其妙的解析失败，而是会得到明确的 pattern 错误：注解方式在每次校验时返回固定的错误消息，链式方式直接抛 `IllegalArgumentException`。
+2. **pattern 强自检**。`@Date` 的 pattern 不允许出现时间符号，`@DateTime` 的 pattern 必须出现时间符号——配置写错不会产生莫名其妙的解析失败，而是会得到明确的 pattern 错误：注解方式在每次校验时返回固定的错误消息（`patternInvalid` 分支）；链式方式则返回 `false` 并把错误消息塞进 `errors` 列表（注意：**并不会抛异常**，原因见 7.1 坑 5）。
 3. **严格优于宽松**。`@Date` / `@DateTime` 显式使用 `ResolverStyle.STRICT`，拒绝 `2024-2-5` 这类缺零填充、拒绝 `2024-02-30` 这类无效日期。但下面会看到，`@PastDate` / `@FutureDate` 系列走的却是默认的 SMART 模式，行为并不一致——这是本文想重点提醒的一个坑。
 
 ---
@@ -281,7 +281,7 @@ if (containsTimePattern(pattern)) {
 
 ### 4.1 @Timestamp：秒与毫秒的"位数"与"数值"双重校验
 
-`@Timestamp` 是 10 个注解里唯一同时支持 `String` 和 `Long` 的，校验逻辑因类型而异：
+`@Timestamp` 是 10 个注解里唯一支持数值类型的（`String`、`Long`，以及 `Integer` 等其他 `Number` 子类——`isValid` 里对非 `String`/`Long` 的 `Number` 统一走 `longValue()` 后按 `Long` 规则校验），校验逻辑因类型而异：
 
 ```java
 // 注解用法
@@ -295,7 +295,7 @@ private String createTimeSec;
 private Long createTimeMs;
 ```
 
-**String 类型走"位数"校验**：
+**String 类型以"位数"校验为主**（位数通过后还会再走一次数值范围校验，但 10 位秒 / 13 位毫秒天然落在各自范围内，位数对了范围必然通过，等效于纯位数校验）：
 
 | unit | 允许位数 |
 |------|:---:|
@@ -421,7 +421,7 @@ if (!vx.passed()) {                                 // passed() 返回 boolean
 
 这两条路径的错误消息机制完全不同，排查线上问题时容易被误导：
 
-- **注解方式**走 Bean Validation 的消息插值：`@Date` 失败显示 `日期格式不正确`，`@PastDate` 失败显示 `日期必须是过去的日期`，消息模板定义在 `ValidationMessages*.properties`（9 种语言）。
+- **注解方式**走 Bean Validation 的消息插值：`@Date` 失败显示 `日期格式不正确`，`@PastDate` 失败显示 `日期必须是过去的日期`，消息模板定义在 `ValidationMessages*.properties`（9 个语言文件：默认英文 + de/es/fr/ja/ko/ru/zh 等 8 种语言）。
 - **链式方式**走 `BaseValidation` + `MessageManager`：把校验器实例化后直接 `isValid(value, null)`，失败时把消息 key 翻译成文案塞进 `errors` 列表。
 
 两条路径共用的是**同一批 Validator**——链式方法里 `baseValidation.validateXxx(...)` 内部就是 `new PastDateValidator()` 再调 `initialize` / `isValid`。所以校验逻辑一致，只是错误消息的组装方式不同。
@@ -487,7 +487,9 @@ private String publishDate;
 | 2 | SMART 静默纠正 | `@PastDate` / `@FutureDate` 会把 `2024-02-30` 解析成 `2024-02-29` | 叠加 `@Date`（STRICT）先卡格式 |
 | 3 | `datetime.format` 消息 key 缺失 | 见 7.3，`@DateTime` 默认消息无法解析 | 显式指定 `message`，或关注后续修复 |
 | 4 | Timestamp 类型双标 | `Long 100L` 在 `ANY` 下通过，`"100"` 被拒 | 明确 `unit`，并自行加范围校验 |
-| 5 | pattern 写错不报编译错 | `@Date(pattern = "yyyy-MM-dd HH:mm:ss")` 运行期才暴露 | 链式方式会抛异常，注解方式返回固定错误——建议写单测 |
+| 5 | pattern 写错不报编译错 | `@Date(pattern = "yyyy-MM-dd HH:mm:ss")` 运行期才暴露 | 注解方式返回固定 pattern 错误消息；链式方式返回 `false` 并记录错误（不抛异常）——建议写单测 |
+
+> 关于坑 5 的实现细节：链式 `isDate(value, pattern)` 内部走 `DateValidator.isValidDateFormat`，该方法对 pattern 自检失败时会 `throw new IllegalArgumentException(...)`，但**这条异常会被方法自身的 `catch (Exception e) { return false; }` 捕获并转为返回 `false`**——所以链式方式并不会抛异常，而是校验失败并把错误消息写入 `errors` 列表。若你希望在代码里显式感知 pattern 错误（而不是得到一条校验失败消息），需要自行对 pattern 做一次 `containsTimePattern` 检查（`@DateTime` 则判断"是否缺失"），或者在写单测时用注解方式验证 `patternInvalid` 分支。
 
 ### 7.2 FAQ
 
