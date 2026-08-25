@@ -21,21 +21,18 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * <p>
- * ISO 3166-1 国家/地区枚举
- * 每个国家携带三种标准编码（两字母 alpha-2、三字母 alpha-3、三位数字 numeric）
- * 以及英文全称（English Name）与中文名（Chinese Name）
- * </p>
+ * ISO 3166-1 国家/地区枚举。
  *
- * <p>
- * 三种编码一一对应、由同一枚举常量承载，从根本上避免"多张表数据不同步"的问题。
- * 典型应用场景：
+ * <p>每个国家携带三种标准编码（两字母 alpha-2、三字母 alpha-3、三位数字 numeric）
+ * 以及英文全称（English Name）与中文名（Chinese Name）。</p>
+ *
+ * <p>三种编码一一对应、由同一枚举常量承载，从根本上避免"多张表数据不同步"的问题。
+ * 典型应用场景：</p>
  * <ul>
  *   <li>SWIFT/BIC 银行代码中的国家代码（alpha-2）</li>
  *   <li>国际航空、联合国文件中的国家代码（alpha-3）</li>
  *   <li>外国人永久居留身份证（五星卡）号码第 4~6 位国籍国代码（numeric）</li>
  * </ul>
- * </p>
  *
  * @author vipxieliang
  * @since 2026/08/18
