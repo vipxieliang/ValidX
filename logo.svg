@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="100%" height="100%">
+  <defs>
+    <!-- 深色背景渐变 -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1e1b4b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f172a;stop-opacity:1" />
+    </linearGradient>
+    <!-- 青色渐变（用于 X） -->
+    <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06b6d4" />
+      <stop offset="100%" style="stop-color:#3b82f6" />
+    </linearGradient>
+    <!-- 紫色渐变（图标内部使用） -->
+    <linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8b5cf6" />
+      <stop offset="100%" style="stop-color:#d946ef" />
+    </linearGradient>
+  </defs>
+
+  <!-- 白色展示底板 -->
+  <rect width="900" height="400" fill="#ffffff" rx="16" />
+
+  <!-- 图标容器（圆角方形深色底） -->
+  <rect x="60" y="100" width="200" height="200" rx="48" fill="url(#bgGrad)" />
+  <rect x="60" y="100" width="200" height="200" rx="48" fill="none" stroke="#06b6d4" stroke-width="2" opacity="0.3" />
+
+  <!-- 核心图形：V（对勾）与 X（交叉）几何融合（保持不变） -->
+  <path d="M115 140 L160 200 L205 140" stroke="url(#cyanGrad)" stroke-width="20" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+  <path d="M130 160 L190 240" stroke="url(#purpleGrad)" stroke-width="20" fill="none" stroke-linecap="round" />
+  <path d="M190 160 L130 240" stroke="url(#purpleGrad)" stroke-width="20" fill="none" stroke-linecap="round" />
+
+  <!-- 文字部分：ValidX（精确大小写） -->
+  <text x="300" y="215" font-family="'Inter', 'Segoe UI', Helvetica, sans-serif" font-size="76" font-weight="800" letter-spacing="2">
+    <tspan fill="#0f172a">Valid</tspan><tspan fill="url(#cyanGrad)">X</tspan>
+  </text>
+
+  <!-- 品牌标语（小写无影响） -->
+  <text x="300" y="275" font-family="'Inter', 'Segoe UI', Helvetica, sans-serif" font-size="20" font-weight="600" fill="#94a3b8" letter-spacing="6">验证 · 精准 · 未来</text>
+</svg>

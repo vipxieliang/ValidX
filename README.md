@@ -6,6 +6,8 @@
 
 <div align="center">
 
+<img src="logo.svg" alt="ValidX" width="300"/>
+
 # ValidX
 
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.vipxieliang/validx?color=blue)](https://central.sonatype.com/artifact/io.github.vipxieliang/validx)
