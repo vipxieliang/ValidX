@@ -1,4 +1,4 @@
-# ValidX错误消息国际化完全指南：9种语言包与三级回退机制
+# ValidX错误消息国际化完全指南：8种语言9个语言包与三级回退机制
 
 ## 引言
 
@@ -10,7 +10,7 @@
 
 这些都是"验证错误消息国际化"没做好的典型表现。一个成熟的开源验证库，错误消息应该**开箱即用、随用户语言自动切换**——不用你翻译、不用你配置语言分支。
 
-ValidX 的多语言支持正是这个思路：内置 **9 个语言包**（简体中文、英文、日文、韩文、法文、德文、西班牙文、俄文），注解方式与链式 API **两条路径共用一套消息体系**，并提供**三级回退**保证任何语言环境下都能拿到可读的报错。本文对照源码逐层拆解这套机制，并给出可直接照抄的实战用法。
+ValidX 的多语言支持正是这个思路：内置 **9 个语言包文件、覆盖 8 种语言**（简体中文、英文、日文、韩文、法文、德文、西班牙文、俄文；中文由无后缀默认包与 `_zh` 包两个文件承载），注解方式与链式 API **两条路径共用一套消息体系**，并提供**三级回退**保证任何语言环境下都能拿到可读的报错。本文对照源码逐层拆解这套机制，并给出可直接照抄的实战用法。
 
 > 说明：文中所有实现细节均对照 ValidX v1.2.0 源码（`MessageManager`、`ValidX`、`ValidationMessages_*.properties`）逐一核实；示例代码与测试用例引自项目测试目录，可自行复现。
 
@@ -109,7 +109,7 @@ String message() default "{io.github.vipxieliang.validx.annotation.email}";
 String message() default "{io.github.vipxieliang.validx.annotation.date.format}";
 ```
 
-花括号中的 key 与 properties 文件的键一一对应。这就是"开箱即用"的来源：**你只要写上 `@Email`，报错文案就已经是 9 种语言的了。**
+花括号中的 key 与 properties 文件的键一一对应。这就是"开箱即用"的来源：**你只要写上 `@Email`，报错文案就已经是 8 种语言的了。**
 
 ---
 
@@ -131,17 +131,18 @@ public class UserDTO {
 
 ### 3.2 显式指定语言（Hibernate Validator 配置）
 
-要固定使用某种语言，配置 `messageInterpolator(new ResourceBundleMessageInterpolator())` 即可：
+注意：`new ResourceBundleMessageInterpolator()` 只负责把 `{key}` 解析为具体文案，**语言仍由线程 / 默认 Locale 决定**，光配它并不能"固定"语言。要固定语言，正确做法是配合设置默认 Locale：
 
 ```java
-ValidatorFactory englishFactory = Validation.byDefaultProvider()
-    .configure()
-    .messageInterpolator(new ResourceBundleMessageInterpolator())
-    .buildValidatorFactory();
-Validator englishValidator = englishFactory.getValidator();
+Locale.setDefault(Locale.ENGLISH);   // 影响整个 JVM 的默认语言（生产环境慎用，注意还原）
+
+ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+Validator englishValidator = factory.getValidator();
 
 Set<ConstraintViolation<UserDTO>> violations = englishValidator.validate(dto);
 ```
+
+更推荐的做法：在 Spring 中配置固定的 `LocaleResolver`，或用 ValidX 链式 API 的 `withLocale()` / 线程级 `MessageManager.setCurrentLocale()`（见下文 §4），作用范围更可控。
 
 ### 3.3 Spring Boot：自动跟随 Accept-Language
 
@@ -233,7 +234,7 @@ private Locale getLocale() {
 ```java
 ValidX validator = ValidX.init()
         .field("邮箱").isEmail("invalid-email")
-        .field("电话").isPhone("123");
+        .field("电话").isPhoneNumber("123");
 
 validator.passed();             // false，是否全部通过
 validator.isValid();            // false，同上
@@ -281,7 +282,7 @@ Java 的 `PropertyResourceBundle` 默认按 ISO-8859-1 读取 properties，中�
 return new PropertyResourceBundle(new InputStreamReader(stream, StandardCharsets.UTF_8));
 ```
 
-所以语言包文件可以**直接以 UTF-8 明文存中文/日文/韩文**，不需要转成 `\uXXXX` 转义序列——维护起来就是纯文本，一眼可读。
+因此语言包文件**既可以**以 UTF-8 明文保存中文/日文/韩文（UTF8Control 可直接读取），**也可以**沿用 Java properties 的 `\uXXXX` 转义格式（当前仓库 9 个语言包文件即为此格式）——两种写法 UTF8Control 都能正确加载。
 
 ### 5.3 中文不回退的细节
 
@@ -359,7 +360,7 @@ public class CertNoCheckUtil {
     public static String checkCertNo(String certNo, Locale locale) {
         ValidX validator = ValidX.init()
                 .withLocale(locale)
-                .field("证件号").isCertNo(certNo);
+                .field("证件号").isChineseIdCard(certNo);
         return validator.isValid() ? "OK" : validator.getErrorMessage();
     }
 }
@@ -386,7 +387,7 @@ public Result<List<String>> handleValid(MethodArgumentNotValidException e) {
 
 ### 7.1 语言包完整性测试
 
-`DateValidatorI18nTest`、`DateTimeValidatorI18nTest` 断言：**8 种语言包里验证器级与注解级 key 都存在、非空，且中/英/日消息互不相同**——确保每个语言包都是"真翻译"，而不是全部回退英文充数。
+`DateValidatorI18nTest`、`DateTimeValidatorI18nTest` 断言：**8 种语言包里验证器级 key 都存在、非空，且中/英/日消息互不相同**——确保每个语言包都是"真翻译"，而不是全部回退英文充数。
 
 ### 7.2 Locale 优先级测试
 
@@ -402,19 +403,19 @@ public Result<List<String>> handleValid(MethodArgumentNotValidException e) {
 
 ## 八、最佳实践清单
 
-1. **注解方式零配置**：默认 `{key}` 消息已内置 9 种语言，别急着写死 `message`；
+1. **注解方式零配置**：默认 `{key}` 消息已内置 8 种语言，别急着写死 `message`；
 2. **局部覆盖用自定义 key**：需要自定义文案时，优先用 `"{myapp.xxx}"` 放进自己的 `ValidationMessages.properties`，而不是硬编码中文；
 3. **Spring Boot 里用注解验证**：自动跟随 `Accept-Language`，不要自己写语言分支；
 4. **链式 API 场景**：单次指定用 `withLocale()`；线程内统一用 `MessageManager.setCurrentLocale()`，**用完务必 `clearCurrentLocale()`**（尤其线程池环境）；
 5. **新增语言包不要漏 key**：三级回退保证不崩，但漏 key 会让用户看到 key 字符串，上线前用测试遍历所有 key × 所有语言；
-6. **语言包文件保持 UTF-8**：`UTF8Control` 支持明文多语言，别手动转 `\uXXXX` 转义；
+6. **语言包文件两种格式皆可**：`UTF8Control` 支持 UTF-8 明文与 `\uXXXX` 转义两种写法（仓库现有文件为转义格式），改动时与既有格式保持一致即可；
 7. **优先级记牢**：`withLocale` > 线程级 > 系统默认，别让显式设置被覆盖。
 
 ---
 
 ## 总结
 
-- ValidX 内置 **9 个语言包**（中文默认、英文兜底 + 日/韩/法/德/西/俄），注解与链式 API **共用一套消息体系**；
+- ValidX 内置 **9 个语言包文件、8 种语言**（中文默认、英文兜底 + 日/韩/法/德/西/俄），注解与链式 API **共用一套消息体系**；
 - 注解方式通过 `{完全限定key}` + Bean Validation 的 `MessageInterpolator` 解析，Spring Boot 下**自动跟随 `Accept-Language`**；
 - 链式 API 通过 `MessageManager` 实现，`withLocale()` 显式指定、线程级 `setCurrentLocale()` 自动切换；
 - 核心机制四件套：**三级回退**（指定语言→英文→key）、**UTF8Control**（强制 UTF-8）、**语言包缓存**（ConcurrentHashMap）、**中文不回退**（避免中文环境拿英文）；
