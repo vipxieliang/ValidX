@@ -431,8 +431,3 @@ Apache Commons Validator 是"时代的功臣"，在 Java 验证的蛮荒年代�
 
 > 如果你正从 Commons Validator 迁移到 ValidX，建议从"订单/用户"等核心 DTO 开始，先替换邮箱、URL 等通用规则，再逐步接入身份证、手机号等中国业务规则，每步都有测试兜底，迁移会非常平稳。
 
----
-
-**文档版本**：v1.0
-**创建日期**：2026-08-28
-**对比版本**：Apache Commons Validator 1.7 vs ValidX v1.2.0
