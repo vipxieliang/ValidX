@@ -158,7 +158,7 @@ ValidX 是一个专注于中国业务场景的开源 Java 验证库，让验证�
 <dependency>
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
 

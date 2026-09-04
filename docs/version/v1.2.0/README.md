@@ -156,7 +156,7 @@ We hope ValidX can become the standard tool for every Java application serving C
 <dependency>
     <groupId>io.github.vipxieliang</groupId>
     <artifactId>validx</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
