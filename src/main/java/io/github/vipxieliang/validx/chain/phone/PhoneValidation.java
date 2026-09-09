@@ -17,6 +17,7 @@ package io.github.vipxieliang.validx.chain.phone;
 
 import io.github.vipxieliang.validx.i18n.MessageManager;
 import io.github.vipxieliang.validx.validator.phone.IMEIValidator;
+import io.github.vipxieliang.validx.validator.phone.IMSIValidator;
 
 import java.util.List;
 import java.util.Locale;
@@ -27,6 +28,13 @@ public class PhoneValidation {
         IMEIValidator validator = new IMEIValidator();
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.imei", locale));
+        }
+    }
+
+    public void validateIMSI(Object value, List<String> errors, Locale locale) {
+        IMSIValidator validator = new IMSIValidator();
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.imsi", locale));
         }
     }
 

@@ -1485,6 +1485,14 @@ public class ValidX {
         return this;
     }
 
+    public ValidX isIMSI(Object value) {
+        if (checkRequirement(value, "IMSI", errors, getLocale())) {
+            return this;
+        }
+        phoneValidation.validateIMSI(value, errors, getLocale());
+        return this;
+    }
+
     /**
      * 验证PMP证书编号
      * 

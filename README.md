@@ -734,6 +734,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Book-Related Validation** | [@ORCID](#orcid) | ORCID researcher ID | 1.0.0   | - |
 | **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification | 1.0.0   | - |
 | **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number | 1.0.0   | - |
+| **Mobile Device Validation** | [@IMSI](#imsi) | IMSI subscriber identity | 1.2.1 | - |
 
 ---
 
@@ -3549,6 +3550,22 @@ Click on the annotation name to jump to its detailed documentation.
   // Chain call usage
   ValidX validator = ValidX.init();
   validator.isIMEI("123412341234564");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @IMSI
+* Validation Rule: IMSI validation, validating whether the string is a valid International Mobile Subscriber Identity (ITU-T E.212 / 3GPP TS 23.003). IMSI identifies the "subscriber/SIM" (IMEI identifies the "device"), structured as MCC(3) + MNC(2-3) + MSIN(<=10); the MCC of mainland China is 460. After removing spaces and hyphens, it should be 14-15 pure digits. IMSI has no built-in check digit; authenticity must be confirmed by the carrier network.
+* Example Format: `460001234567890`, `4600-0123-4567-890`
+* Usage Example:
+  ```java
+  // Annotation-based usage
+  @IMSI
+  private String imsi;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  validator.isIMSI("460001234567890");
   ```
 
 [↑ Back to Quick Reference](#quick-reference-table)
