@@ -423,4 +423,4 @@ ValidX validator = ValidX.init()
 
 如果你正在用 ValidX 写验证，建议先问一句：这条规则属于"数据的形状"，还是"本次调用的要求"？答案会直接告诉你该用哪种方式。
 
-> ValidX 是面向中国业务场景的 Java 验证库，基于 Jakarta Bean Validation 规范，注解与链式 API 双模式，内置身份证、手机号、邮箱、姓名等 100+ 验证规则。项目地址：`github.com/vipxieliang/validx`
+> ValidX 是面向中国业务场景的 Java 验证库，基于 Jakarta Bean Validation 规范，注解与链式 API 双模式，内置身份证、手机号、邮箱、姓名等 100+ 验证规则。项目地址：https://github.com/vipxieliang/ValidX

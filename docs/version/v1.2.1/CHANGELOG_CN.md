@@ -8,6 +8,7 @@
 
 - ✨ [新增功能](#新增功能-)
   - 新增 `@IMSI` 国际移动用户识别码验证注解（ITU-T E.212 / 3GPP TS 23.003）
+  - 新增 `@ICCID` 集成电路卡识别码验证注解（ITU-T E.118 / GSMA SGP.22，20 位 + Luhn 校验位）
 - ✅ [无破坏性变更](#无破坏性变更-)
   - v1.2.1 与 v1.2.0 完全向后兼容，无需迁移
 - 🌍 [国际化支持](#国际化支持-)
@@ -101,11 +102,92 @@ ValidX validator = ValidX.init()
 
 ---
 
+### @ICCID 集成电路卡识别码验证注解
+
+新增 ICCID 验证注解，用于验证字符串是否为有效的集成电路卡识别码（ICCID）。
+
+**背景知识 —— ICCID 与 IMSI / IMEI 的区别：**
+- ICCID 印刷在 SIM/eSIM 卡体上，唯一标识"卡"本身；IMSI 标识"签约用户/SIM"，IMEI 标识"设备"
+- 依据 ITU-T E.118 / GSMA SGP.22，现代 UICC/eSIM 的 ICCID 为 20 位数字：`89`（电信行业标识符）+ 国家码（ISO 3166-1，中国 `86`）+ 运营商代码 + 用户账号 + Luhn 校验位
+- 中国大陆 SIM 卡通常以 `8986` 开头（如 `8986 0115 2449 3909 2661`）
+
+**功能特性：**
+- 验证字符串是否为 ICCID：先去除空格与连字符，剩余内容必须为 **20 位纯数字**
+- 整串必须通过 **Luhn** 校验（第 20 位为对前 19 位计算所得校验位，可防输入笔误 / 错位）
+- 与 `@IMSI`（无内置校验位）不同，ICCID 自带 Luhn 校验位
+- null 和空字符串默认通过验证
+- 完整的国际化支持（9 种语言）
+- `89`/`8986` 前缀仅作背景说明、不作强制规则；卡是否真实存在需运营商侧确认
+- 链式 API：`isICCID(Object value)`
+
+**注解方式示例：**
+
+```java
+public class SimCardDTO {
+    // 示例 1：标准 20 位 ICCID（中国大陆卡，8986 开头）
+    @ICCID
+    private String iccid;  // "89860115244939092661" 通过
+
+    // 示例 2：另一个合法 20 位 ICCID
+    @ICCID
+    private String otherIccid;  // "89866604876475938248" 通过
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 基本用法
+validator.field("ICCID").isICCID("89860115244939092661");
+
+// 格式化输入（验证前自动去除连字符 / 空格）
+validator.isICCID("8986-0115-2449-3909-2661");
+validator.isICCID("8986 0115 2449 3909 2661");
+
+// 检查验证结果
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：SIM / eSIM 卡开卡登记与档案管理
+public class SimRegistrationDTO {
+    @NotBlank(message = "ICCID 不能为空")
+    @ICCID
+    private String iccid;  // 印刷在卡体上的号码
+}
+
+// 场景 2：物联网模块 / eSIM 设备台账管理
+public class IotModuleDTO {
+    @ICCID
+    private String iccid;
+}
+
+// 场景 3：链式验证扫码 / OCR 录入的 ICCID
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("ICCID").isICCID("89860115244939092661");
+```
+
+**注意事项：**
+- 验证前自动去除空格与连字符；其他分隔符不接受
+- 全角数字（如 `８９８６...`）会被拒绝 —— 它们不属于 ASCII 数字集
+- null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotBlank` 使用）
+- Luhn 校验可拦截笔误，但不能证明卡真实存在 —— 卡的真实性需运营商侧确认
+- 常见应用场景：SIM/eSIM/UICC 开卡登记、物联网模块台账、ICCID 条码/OCR 录入校验
+
+---
+
 ## 无破坏性变更 ✅
 
 v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 
-- 未修改或删除任何链式 API 签名（新增的 `isIMSI()` 是纯增量）
+- 未修改或删除任何链式 API 签名（新增的 `isIMSI()`、`isICCID()` 是纯增量）
 - 未改变任何既有注解的语义
 - 无依赖或配置变更
 - 从 v1.2.0 升级为直接替换即可，无需任何迁移步骤
@@ -127,6 +209,7 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 
 **错误消息：**
 - `@IMSI`："IMSI号码格式不正确"（消息键：`io.github.vipxieliang.validx.annotation.imsi`）
+- `@ICCID`："ICCID号码格式不正确"（消息键：`io.github.vipxieliang.validx.annotation.iccid`）
 
 所有语言包的消息格式保持一致，采用正确的 Unicode 编码。
 
@@ -142,7 +225,13 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 **链式验证测试：**
 - `IMSIValidationChainTest`：3 个测试方法，覆盖 null/空值、合法值（标准 15 位、连字符分隔、空格分隔、14 位）与非法值（过长、过短、含非数字字符）
 
-**总计：** 6 个新增测试方法，全部通过 ✅
+**ICCID 验证器测试（Bean Validation 框架）：**
+- `ICCIDValidatorTest`：3 个测试方法，覆盖 null/空值、7 个合法用例（`8986` 开头 20 位且 Luhn 通过、连字符分隔、空格分隔）与 7 个非法用例（19/21/22 位长度越界、Luhn 校验位错误、含字母、全角数字）
+
+**ICCID 链式验证测试：**
+- `ICCIDValidationChainTest`：3 个测试方法，覆盖 null/空值、合法值（标准 20 位、连字符分隔、空格分隔、另一个 Luhn 合法号）与非法值（过短、过长、校验位错误、含非数字字符）
+
+**总计：** 12 个新增测试方法，全部通过 ✅
 
 ---
 

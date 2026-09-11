@@ -458,6 +458,6 @@ ValidX validator = ValidX.init()
 
 📧 Email: [vipxieliang@126.com](mailto:vipxieliang@126.com)
 
-🌟 GitHub: [https://github.com/vipxieliang/ValidX](https://github.com/vipxieliang/ValidX)
+🌟 GitHub: https://github.com/vipxieliang/ValidX
 
-🌟 Gitee: [https://gitee.com/vipxieliang/ValidX](https://gitee.com/vipxieliang/ValidX)
+🌟 Gitee: https://gitee.com/vipxieliang/ValidX

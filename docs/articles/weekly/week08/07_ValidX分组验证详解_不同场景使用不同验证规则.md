@@ -483,4 +483,4 @@ public Result audit(@Validated(UserDTO.AuditGroup.class) @RequestBody UserDTO dt
 - Spring 中用 `@Validated(分组.class)` 指定分组，`@Valid` 不支持；
 - **ValidX 的能力边界**：注解方式支持分组，链式 API（`chain/ValidX.java`）不支持——多场景 DTO 复用请走注解方式。
 
-> ValidX 是基于 Jakarta Bean Validation 规范的 Java 验证库，注解与链式 API 双模式，内置 100+ 验证规则。项目地址：`github.com/vipxieliang/validx`
+> ValidX 是基于 Jakarta Bean Validation 规范的 Java 验证库，注解与链式 API 双模式，内置 100+ 验证规则。项目地址：https://github.com/vipxieliang/ValidX

@@ -388,9 +388,9 @@ io.github.vipxieliang.validx.annotation.chinese.zip.code=邮政编码格式不�
 
 ## 项目地址
 
-- **GitHub**：<https://github.com/vipxieliang/ValidX>
-- **Gitee**：<https://gitee.com/vipxieliang/ValidX>
-- **Maven Central**：<https://central.sonatype.com/artifact/io.github.vipxieliang/validx>
+- **GitHub**：https://github.com/vipxieliang/ValidX
+- **Gitee**：https://gitee.com/vipxieliang/ValidX
+- **Maven Central**：https://central.sonatype.com/artifact/io.github.vipxieliang/validx
 
 Maven 引入：
 

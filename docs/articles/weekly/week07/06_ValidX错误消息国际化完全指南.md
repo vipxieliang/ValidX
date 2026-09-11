@@ -421,4 +421,4 @@ public Result<List<String>> handleValid(MethodArgumentNotValidException e) {
 - 核心机制四件套：**三级回退**（指定语言→英文→key）、**UTF8Control**（强制 UTF-8）、**语言包缓存**（ConcurrentHashMap）、**中文不回退**（避免中文环境拿英文）；
 - 国际化做得好的标志：**用户永远看到自己语言的可读报错，开发者永远不需要写语言分支。**
 
-> ValidX 是基于 Jakarta Bean Validation 规范的 Java 验证库，注解与链式 API 双模式，内置 100+ 验证规则。项目地址：`github.com/vipxieliang/validx`
+> ValidX 是基于 Jakarta Bean Validation 规范的 Java 验证库，注解与链式 API 双模式，内置 100+ 验证规则。项目地址：https://github.com/vipxieliang/ValidX

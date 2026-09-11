@@ -484,6 +484,6 @@ ValidX 遵循 Bean Validation 的约定：`null` 视为"不需要校验"，空�
 
 ---
 
-项目地址：[https://github.com/vipxieliang/ValidX](https://github.com/vipxieliang/ValidX)
+项目地址：https://github.com/vipxieliang/ValidX
 
 更多场景实战：`@TradeOrderNumber` 校验交易订单号（支持 T 开头 18 位数字 / 纯 18 位数字 / UUID 三种格式，是电商订单中心现成的订单号校验器）；`@ExpressNumber` 校验快递单号，配合本文的 SKU/价格/库存组合，可覆盖"商品发布 → 下单 → 发货"的完整电商链路。
