@@ -11,6 +11,8 @@ This document records the changes from v1.2.0 to v1.2.1.
   - New `@ICCID` Integrated Circuit Card Identifier validation annotation (ITU-T E.118 / GSMA SGP.22, 20 digits + Luhn check digit)
 - ✅ [No Breaking Changes](#no-breaking-changes-)
   - v1.2.1 is fully backward compatible with v1.2.0; no migration required
+- ♻️ [Internal Improvements](#internal-improvements-)
+  - Extracted a shared `LuhnUtils`, unifying the Luhn check used by `@BankCard` / `@ICCID` / `@IMEI` (no behavior change)
 - 🌍 [Internationalization Support](#internationalization-support-)
   - Full 9-language message support for the new annotation
 
@@ -191,6 +193,14 @@ v1.2.1 contains **no breaking changes** and is fully backward compatible with v1
 - No annotation semantics were altered
 - No dependency or configuration changes
 - Upgrade from v1.2.0 is a drop-in replacement; no migration steps required
+
+---
+
+## Internal Improvements ♻️
+
+- Added the utility class `io.github.vipxieliang.validx.util.LuhnUtils`, consolidating three duplicated Luhn implementations previously scattered across `BankCardValidator`, `IMEIValidator`, and `ICCIDValidator` into a single method `LuhnUtils.isValid(String)`
+- `@BankCard`, `@ICCID`, and `@IMEI` now share the same implementation, eliminating duplicated code
+- Purely internal refactoring — **external behavior is unchanged** (all existing tests pass)
 
 ---
 

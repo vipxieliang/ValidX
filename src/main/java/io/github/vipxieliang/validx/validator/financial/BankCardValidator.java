@@ -17,6 +17,7 @@
 package io.github.vipxieliang.validx.validator.financial;
 
 import io.github.vipxieliang.validx.annotations.BankCard;
+import io.github.vipxieliang.validx.util.LuhnUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -52,33 +53,6 @@ public class BankCardValidator implements ConstraintValidator<BankCard, String> 
         }
         
         // 使用Luhn算法验证银行卡号
-        return isLuhnValid(cleanValue);
-    }
-    
-    /**
-     * 使用Luhn算法验证银行卡号
-     * @param cardNumber 银行卡号
-     * @return 是否有效
-     */
-    private boolean isLuhnValid(String cardNumber) {
-        int sum = 0;
-        boolean isEven = false;
-        
-        // 从右向左遍历
-        for (int i = cardNumber.length() - 1; i >= 0; i--) {
-            int digit = Character.getNumericValue(cardNumber.charAt(i));
-            
-            if (isEven) {
-                digit *= 2;
-                if (digit > 9) {
-                    digit -= 9;
-                }
-            }
-            
-            sum += digit;
-            isEven = !isEven;
-        }
-        
-        return sum % 10 == 0;
+        return LuhnUtils.isValid(cleanValue);
     }
 }

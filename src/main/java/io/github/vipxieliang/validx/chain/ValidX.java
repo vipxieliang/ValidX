@@ -1493,6 +1493,14 @@ public class ValidX {
         return this;
     }
 
+    public ValidX isICCID(Object value) {
+        if (checkRequirement(value, "ICCID", errors, getLocale())) {
+            return this;
+        }
+        phoneValidation.validateICCID(value, errors, getLocale());
+        return this;
+    }
+
     /**
      * 验证PMP证书编号
      * 

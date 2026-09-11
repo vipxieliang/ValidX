@@ -1,5 +1,5 @@
 /*
- * Copyright 2025-2025 vipxieliang
+ * Copyright 2025-2026 vipxieliang
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,29 @@
 
 package io.github.vipxieliang.validx.validator.phone;
 
-import io.github.vipxieliang.validx.annotations.IMEI;
+import io.github.vipxieliang.validx.annotations.ICCID;
 import io.github.vipxieliang.validx.util.LuhnUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * IMEI验证器
- * 验证字符串是否为有效的IMEI号码
+ * ICCID 验证器
+ * <p>
+ * 验证字符串是否为有效的集成电路卡识别码（ICCID）。
+ * 现代 UICC / eSIM 的 ICCID 为 20 位纯数字，末位为 Luhn 校验位
+ * （对前 19 位计算得出，可防输入笔误），中国大陆 SIM 卡通常以 {@code 8986} 开头
+ * （89 电信行业标识 + 86 中国国家码）。
+ * </p>
+ * <p>
+ * 校验规则：去除空格与连字符后为 20 位纯数字，且整串通过 Luhn 校验。
+ * </p>
  */
-public class IMEIValidator implements ConstraintValidator<IMEI, String> {
+public class ICCIDValidator implements ConstraintValidator<ICCID, String> {
 
     @Override
-    public void initialize(IMEI constraintAnnotation) {
-        // 初始化逻辑（如果有必要）
+    public void initialize(ICCID constraintAnnotation) {
+        // 无参数，无需初始化
     }
 
     @Override
@@ -40,22 +48,19 @@ public class IMEIValidator implements ConstraintValidator<IMEI, String> {
         }
 
         // 移除可能存在的分隔符（空格、连字符等）
-        String cleanIMEI = value.replaceAll("[\\s\\-]+", "");
+        String cleanICCID = value.replaceAll("[\\s\\-]+", "");
 
-        // 检查长度是否为15位或17位
-        if (cleanIMEI.length() != 15 && cleanIMEI.length() != 17) {
+        // ICCID 为 20 位
+        if (cleanICCID.length() != 20) {
             return false;
         }
 
         // 检查是否全为数字
-        if (!cleanIMEI.matches("\\d+")) {
+        if (!cleanICCID.matches("\\d+")) {
             return false;
         }
 
-        // 如果是17位，只需要验证前15位
-        String imeiToCheck = cleanIMEI.substring(0, 15);
-
-        // 使用Luhn算法验证校验位
-        return LuhnUtils.isValid(imeiToCheck);
+        // 末位为 Luhn 校验位，整串通过 Luhn 校验即合法
+        return LuhnUtils.isValid(cleanICCID);
     }
 }

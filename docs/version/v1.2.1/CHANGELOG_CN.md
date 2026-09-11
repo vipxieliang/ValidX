@@ -11,6 +11,8 @@
   - 新增 `@ICCID` 集成电路卡识别码验证注解（ITU-T E.118 / GSMA SGP.22，20 位 + Luhn 校验位）
 - ✅ [无破坏性变更](#无破坏性变更-)
   - v1.2.1 与 v1.2.0 完全向后兼容，无需迁移
+- ♻️ [内部改进](#内部改进-)
+  - 抽取公共 `LuhnUtils`，统一 `@BankCard` / `@ICCID` / `@IMEI` 的 Luhn 校验实现（对外行为不变）
 - 🌍 [国际化支持](#国际化支持-)
   - 新注解支持完整的 9 种语言消息
 
@@ -191,6 +193,14 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 - 未改变任何既有注解的语义
 - 无依赖或配置变更
 - 从 v1.2.0 升级为直接替换即可，无需任何迁移步骤
+
+---
+
+## 内部改进 ♻️
+
+- 新增工具类 `io.github.vipxieliang.validx.util.LuhnUtils`，将此前分散在 `BankCardValidator`、`IMEIValidator`、`ICCIDValidator` 中的三段重复 Luhn 实现，统一为单一方法 `LuhnUtils.isValid(String)`
+- `@BankCard`、`@ICCID`、`@IMEI` 现共用同一实现，消除重复代码
+- 纯内部重构，**对外行为完全不变**（既有全部测试用例通过）
 
 ---
 

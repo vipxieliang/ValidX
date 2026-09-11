@@ -16,6 +16,7 @@
 package io.github.vipxieliang.validx.chain.phone;
 
 import io.github.vipxieliang.validx.i18n.MessageManager;
+import io.github.vipxieliang.validx.validator.phone.ICCIDValidator;
 import io.github.vipxieliang.validx.validator.phone.IMEIValidator;
 import io.github.vipxieliang.validx.validator.phone.IMSIValidator;
 
@@ -35,6 +36,13 @@ public class PhoneValidation {
         IMSIValidator validator = new IMSIValidator();
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.imsi", locale));
+        }
+    }
+
+    public void validateICCID(Object value, List<String> errors, Locale locale) {
+        ICCIDValidator validator = new ICCIDValidator();
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.iccid", locale));
         }
     }
 

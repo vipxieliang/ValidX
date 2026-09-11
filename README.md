@@ -735,6 +735,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Book-Related Validation** | [@IPC](#ipc) | International Patent Classification | 1.0.0   | - |
 | **Mobile Device Validation** | [@IMEI](#imei) | IMEI device number | 1.0.0   | - |
 | **Mobile Device Validation** | [@IMSI](#imsi) | IMSI subscriber identity | 1.2.1 | - |
+| **Mobile Device Validation** | [@ICCID](#iccid) | ICCID card identifier | 1.2.1 | - |
 
 ---
 
@@ -3566,6 +3567,22 @@ Click on the annotation name to jump to its detailed documentation.
   // Chain call usage
   ValidX validator = ValidX.init();
   validator.isIMSI("460001234567890");
+  ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @ICCID
+* Validation Rule: ICCID validation, validating whether the string is a valid Integrated Circuit Card Identifier (ITU-T E.118 / GSMA SGP.22). The ICCID is printed on the SIM/eSIM card body and uniquely identifies the "card" itself (IMSI identifies the "subscriber/SIM", IMEI identifies the "device"). Modern UICC/eSIM ICCIDs are 20 digits, structured as 89 (telecom industry identifier) + country code (ISO 3166-1, 86 for China) + carrier code + account number + Luhn check digit; mainland China SIM cards usually start with `8986`. After removing spaces and hyphens, it should be 20 pure digits and the whole string must pass the Luhn check (the last digit is the check digit, which guards against typing errors); card authenticity must still be confirmed by the carrier.
+* Example Format: `89860115244939092661`, `8986-0115-2449-3909-2661`
+* Usage Example:
+  ```java
+  // Annotation-based usage
+  @ICCID
+  private String iccid;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  validator.isICCID("89860115244939092661");
   ```
 
 [↑ Back to Quick Reference](#quick-reference-table)
