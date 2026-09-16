@@ -641,7 +641,8 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Lower](#lower) | Lowercase character validation | 1.0.0   | - |
 | **Basic Validation** | [@Upper](#upper) | Uppercase character validation | 1.0.0   | - |
 | **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   | - |
-| **Basic Validation** | [@Ascii](#ascii) | ASCII string validation (printable ASCII 0x20~0x7E by default) | 1.2.1   | allowControlChar |
+| **Basic Validation** | [@Ascii](#ascii) | ASCII string validation (full ASCII 0x00~0x7F, including control characters) | 1.2.1   | - |
+| **Basic Validation** | [@Printable](#printable) | Printable ASCII validation (0x20~0x7E, no control characters) | 1.2.1   | - |
 | **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   | - |
 | **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
 | **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
@@ -1468,28 +1469,43 @@ Click on the annotation name to jump to its detailed documentation.
 [↑ Back to Quick Reference](#quick-reference-table)
 
 #### @Ascii
-* Validation Rule: ASCII string validation, ensuring the string contains only ASCII characters (Unicode 0x00~0x7F). By default, only **printable ASCII** (0x20~0x7E) is allowed; control characters such as TAB, LF, CR, and DEL are rejected.
-* Validation Rules:
-  - allowControlChar: Whether to allow ASCII control characters (0x00~0x1F, 0x7F). Default `false`, allowing only printable ASCII.
-* Example Format: `Hello, World!` (default mode), `abc\tdef` (allowControlChar=true)
+* Validation Rule: ASCII string validation, ensuring the string contains only ASCII characters (Unicode **0x00~0x7F**, including all 33 control characters). This follows the textbook definition — equivalent to C's `isascii()` and Python's `str.isascii()`. **Newlines (`\n`) and tabs (`\t`) are allowed**, but non-ASCII characters such as Chinese and Emoji are rejected.
+* No configurable parameters.
+* Example Format: `Hello, World!`, `line1\nline2`, `abc\tdef`
 * Usage Example:
   ```java
-  // Annotation-based usage: only allow printable ASCII (0x20~0x7E)
+  // Annotation-based usage: multi-line text / description (may contain newlines, but no Chinese or Emoji)
   @Ascii
-  private String protocolCode;
-
-  // Allow all ASCII including control characters (0x00~0x7F)
-  @Ascii(allowControlChar = true)
-  private String rawSerial;
+  private String description;
 
   // Chain call usage
   ValidX validator = ValidX.init();
-  // Default mode: only allow printable ASCII
   validator.isAscii("Hello, World!");
-  // Allow control characters
-  validator.isAscii("abc\tdef", true);
+  validator.isAscii("line1\nline2"); // multi-line text passes
   ```
-* Typical scenarios: protocol codes, terminal commands, SN/IMEI and other "pure ASCII channel" fields; pre-check imported CSV/TXT files for non-ASCII characters (such as Chinese/Emoji); validating "must not contain non-ASCII" interface contracts.
+* Typical scenarios: multi-line text / description / remarks ("may contain newlines and tabs, but no Chinese or Emoji"); protocol codes, terminal commands, SN/IMEI and other "pure ASCII channel" fields; pre-check imported CSV/TXT files for non-ASCII characters; validating "must not contain non-ASCII" interface contracts.
+* Related: if you require characters to be **fully visible** (not even newlines allowed), use [@Printable](#printable) (0x20~0x7E).
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @Printable
+* Validation Rule: Printable ASCII character validation, ensuring the string contains only **printable ASCII characters** (Unicode **0x20~0x7E**, i.e. space plus all visible characters). All 33 control characters (0x00~0x1F, 0x7F such as TAB, LF, CR, DEL) are rejected. This follows the standard definition — equivalent to PHP's `ctype_print()`, C's `isprint()`, and Python's `str.isprintable()`.
+* No configurable parameters.
+* Example Format: `Hello, World!`, `abc123`, `Tom & Jerry`
+* Usage Example:
+  ```java
+  // Annotation-based usage: single-line text / nickname / label (characters must be fully visible)
+  @Printable
+  private String nickname;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  validator.isPrintable("Hello, World!");
+  validator.isPrintable("Tom & Jerry"); // passes
+  // "Tom\tJerry" is rejected (contains a tab)
+  ```
+* Typical scenarios: user nickname / remark / comment content (must be displayable, no invisible control bytes); printed labels, receipts, SMS body; exporting TXT / logs without control characters to avoid display glitches; semantic-level constraint for UI input fields ("content the user can see").
+* Related: if you need to allow newlines for multi-line text, use [@Ascii](#ascii) (0x00~0x7F).
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

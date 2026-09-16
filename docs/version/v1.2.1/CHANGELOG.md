@@ -9,7 +9,8 @@ This document records the changes from v1.2.0 to v1.2.1.
 - ✨ [New Features](#new-features-)
   - New `@IMSI` International Mobile Subscriber Identity validation annotation (ITU-T E.212 / 3GPP TS 23.003)
   - New `@ICCID` Integrated Circuit Card Identifier validation annotation (ITU-T E.118 / GSMA SGP.22, 20 digits + Luhn check digit)
-  - New `@Ascii` ASCII character validation annotation (printable ASCII 0x20~0x7E by default, `allowControlChar` to allow 0x00~0x7F)
+  - New `@Ascii` ASCII character validation annotation (full ASCII 0x00~0x7F, including control characters)
+  - New `@Printable` printable ASCII character validation annotation (fixed at 0x20~0x7E, no control characters allowed)
 - ✅ [No Breaking Changes](#no-breaking-changes-)
   - v1.2.1 is fully backward compatible with v1.2.0; no migration required
 - ♻️ [Internal Improvements](#internal-improvements-)
@@ -188,33 +189,42 @@ ValidX validator = ValidX.init()
 
 ### @Ascii ASCII Character Validation Annotation
 
-Added an ASCII validation annotation to verify that a string contains only ASCII characters (Unicode 0x00~0x7F).
+Added an ASCII validation annotation to verify that a string contains only ASCII characters (Unicode **0x00~0x7F**, including all 33 control characters).
 
 **Background:**
 - ASCII (American Standard Code for Information Interchange) covers 7-bit code points 0x00~0x7F
-- **Printable ASCII** (0x20~0x7E) excludes the 33 control characters (0x00~0x1F + 0x7F) such as TAB, LF, CR, DEL
+- This annotation follows the **textbook definition**, equivalent to C's `isascii()` and Python's `str.isascii()`
+- **Printable ASCII** (0x20~0x7E) excludes the 33 control characters (0x00~0x1F + 0x7F) such as TAB, LF, CR, DEL — that case is covered by the separate `@Printable` annotation
+- Multi-line text needs "newlines and tabs allowed, but no Chinese or Emoji" — exactly the 0x00~0x7F range
 - Many system integration scenarios require "pure ASCII channels": protocol codes, terminal commands, SN/IMEI labels, etc.
 - During CSV / TXT file import, pre-screening for non-ASCII content (Chinese / Japanese / Emoji) is a common requirement
 
 **Features:**
-- Validates that the string contains only ASCII characters; non-ASCII characters (e.g., Chinese, Japanese, Emoji) are rejected
-- Default: only **printable ASCII** (0x20~0x7E) is allowed; control characters such as TAB, LF, CR, DEL are rejected
-- Optional `allowControlChar = true` to allow all ASCII (0x00~0x7F, including all control characters)
+- Validates that the string contains only ASCII characters (0x00~0x7F, control characters included)
+- Newlines (`\n`), tabs (`\t`), carriage returns (`\r`), NUL (0x00) and DEL (0x7F) are all allowed
+- Non-ASCII characters (≥0x80, e.g., Chinese, Japanese, Emoji, full-width digits) are rejected
+- No configurable parameters — the semantics are fixed by the definition of ASCII
 - Null and empty strings pass validation by default
 - Full internationalization support (9 languages)
-- Chain API: `isAscii(Object value)` (default), `isAscii(Object value, boolean allowControlChar)` (with control char option)
+- Chain API: `isAscii(Object value)`
+
+**Relationship with `@Printable`:** complementary and non-overlapping:
+- `@Ascii` (0x00~0x7F) — allows `"\n"` and `"\t"`, but rejects Chinese / Emoji (common for multi-line text)
+- `@Printable` (0x20~0x7E) — even `"\n"` is rejected; characters must be fully visible (common for single-line text / labels)
+
+In short: **use `@Ascii` for multi-line text, `@Printable` for single-line / must-be-visible content.**
 
 **Annotation Examples:**
 
 ```java
-public class ProtocolDTO {
-    // Example 1: only printable ASCII (default), rejects TAB / LF / CR
+public class ContentDTO {
+    // Multi-line text: newlines allowed, but no Chinese / Emoji
     @Ascii
-    private String protocolCode;  // "GET /api/v1/users" passes; "GET /api/v1\r\n" fails
+    private String description;  // "line1\nline2" passes; "你好" fails
 
-    // Example 2: allow control characters, suitable for raw serial streams
-    @Ascii(allowControlChar = true)
-    private String rawSerial;  // "abc\tdef" passes
+    // Need fully visible characters? Use @Printable instead
+    @Printable
+    private String nickname;     // "Tom & Jerry" passes; "Tom\tJerry" fails
 }
 ```
 
@@ -223,11 +233,8 @@ public class ProtocolDTO {
 ```java
 ValidX validator = ValidX.init();
 
-// Default: only printable ASCII
-validator.field("Protocol Code").isAscii("GET /api/v1/users");
-
-// Allow control characters
-validator.field("Raw Serial").isAscii("abc\tdef", true);
+validator.field("Description").isAscii("line1\nline2");   // passes (control chars are ASCII)
+validator.field("Nickname").isPrintable("Tom & Jerry");   // passes
 
 // Check validation result
 if (!validator.passed()) {
@@ -238,17 +245,18 @@ if (!validator.passed()) {
 **Real-World Use Cases:**
 
 ```java
-// Use Case 1: protocol / terminal command field
+// Use Case 1: multi-line description — newlines allowed, but no Chinese / Emoji
+public class ArticleDTO {
+    @NotBlank(message = "Description is required")
+    @Ascii
+    private String description;
+}
+
+// Use Case 2: protocol / terminal command field
 public class CommandDTO {
     @NotBlank(message = "Command is required")
     @Ascii
     private String command;
-}
-
-// Use Case 2: SN / IMEI label raw stream (may contain control bytes)
-public class LabelDTO {
-    @Ascii(allowControlChar = true)
-    private String rawSerial;
 }
 
 // Use Case 3: CSV import — reject rows containing non-ASCII (Chinese / Emoji) to avoid silent garbling
@@ -258,10 +266,70 @@ ValidX validator = ValidX.init()
 ```
 
 **Notes:**
-- The default mode aligns with `@Lower` / `@Upper` / `@Xdigit`: rejects all control characters, only printable ASCII is accepted
-- When `allowControlChar = true`, only the full 0x00~0x7F range is allowed; 0x80 and above are still rejected
+- Follows the textbook definition: ASCII = 0x00~0x7F (128 characters, 33 of which are control characters)
+- Only the full 0x00~0x7F range is allowed; every non-ASCII character (≥0x80) is rejected
 - Null and empty strings pass validation (use with `@NotNull` or `@NotBlank` for required fields)
-- Common use cases: protocol code / terminal command fields, SN / IMEI raw labels, CSV / TXT import non-ASCII pre-check, system integration "no non-ASCII" contract verification
+- Common use cases: multi-line text / description / remarks, protocol code / terminal command fields, SN / IMEI raw labels, CSV / TXT import non-ASCII pre-check, system integration "no non-ASCII" contract verification
+
+---
+
+### @Printable Printable ASCII Character Validation Annotation
+
+Added a `@Printable` annotation to verify that a string contains only **printable ASCII characters** (Unicode 0x20~0x7E).
+
+**Background:**
+- "Printable character" is a well-established concept: PHP's `ctype_print()`, C's `isprint()`, Python's `str.isprintable()`
+- Printable ASCII = space (0x20) + all visible ASCII up to `~` (0x7E); it excludes the 33 control characters
+- Many business scenarios care about "is the character visible / displayable on screen" rather than "is the character inside the ASCII encoding boundary"
+
+**Relationship with `@Ascii`:** complementary and non-overlapping — each covers exactly one half of what used to be a single boolean switch:
+- `@Ascii` (0x00~0x7F) — allows `"\n"` and `"\t"`, but rejects Chinese / Emoji (common for multi-line text)
+- `@Printable` (0x20~0x7E) — even `"\n"` is rejected; characters must be fully visible (common for single-line text / labels)
+
+**Features:**
+- Validates that the string contains only printable ASCII (0x20~0x7E)
+- Always rejects all 33 ASCII control characters (0x00~0x1F and 0x7F)
+- Always rejects non-ASCII characters (Chinese, Japanese, Emoji, full-width digits, etc.)
+- Null and empty strings pass validation by default
+- Full internationalization support (9 languages)
+- Chain API: `isPrintable(Object value)`
+
+**Annotation Examples:**
+
+```java
+public class ProfileDTO {
+    // Reject TAB / LF / CR / DEL — only visible characters allowed
+    @Printable
+    private String nickname;  // "Tom & Jerry" passes; "Tom\tJerry" fails
+
+    @NotBlank(message = "comment is required")
+    @Printable
+    private String comment;
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+validator.field("Nickname").isPrintable("Alice");
+validator.field("Comment").isPrintable("Hello, world!");
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-World Use Cases:**
+- User nickname / comment / review content (must be visible, no invisible control bytes)
+- Print labels, receipts, SMS body
+- Export TXT / log files without control characters to avoid display glitches
+- UI input box semantic-level constraint ("content the user can see")
+
+**Notes:**
+- Complements `@Ascii` instead of duplicating it: `@Ascii` allows control characters, `@Printable` requires fully visible characters
+- All 33 ASCII control characters (0x00~0x1F + 0x7F) are rejected
+- All non-ASCII characters (≥0x80) are rejected
+- Null and empty strings pass validation (use with `@NotNull` or `@NotBlank` for required fields)
 
 ---
 
@@ -269,7 +337,7 @@ ValidX validator = ValidX.init()
 
 v1.2.1 contains **no breaking changes** and is fully backward compatible with v1.2.0:
 
-- No chain API signatures were changed or removed (the new `isIMSI()`, `isICCID()`, and `isAscii()` are purely additive)
+- No chain API signatures were changed or removed (the new `isIMSI()`, `isICCID()`, `isAscii()`, and `isPrintable()` are purely additive)
 - No annotation semantics were altered
 - No dependency or configuration changes
 - Upgrade from v1.2.0 is a drop-in replacement; no migration steps required
@@ -300,7 +368,8 @@ The new annotation supports the following 9 languages:
 **Error Message:**
 - `@IMSI`: "Invalid IMSI number format" (message key: `io.github.vipxieliang.validx.annotation.imsi`)
 - `@ICCID`: "Invalid ICCID number format" (message key: `io.github.vipxieliang.validx.annotation.iccid`)
-- `@Ascii`: "Can only contain ASCII characters (0x20-0x7E, excluding control characters)" (message key: `io.github.vipxieliang.validx.annotation.ascii`)
+- `@Ascii`: "Can only contain ASCII characters (0x00-0x7F, including control characters)" (message key: `io.github.vipxieliang.validx.annotation.ascii`)
+- `@Printable`: "Can only contain printable ASCII characters (0x20-0x7E, excluding control characters)" (message key: `io.github.vipxieliang.validx.annotation.printable`)
 
 All language packs maintain consistent message format with proper Unicode encoding.
 
@@ -323,12 +392,18 @@ Comprehensive test coverage for the new feature (both annotation and chain paths
 - `ICCIDValidationChainTest`: 3 test methods covering null/empty values, valid values (standard 20-digit, hyphen-separated, space-separated, another Luhn-valid number) and invalid values (too short, too long, wrong check digit, non-digit characters)
 
 **Ascii Validator Tests (Bean Validation Framework):**
-- `AsciiValidatorTest`: 23 test methods (annotation-based, using `Validator` against DTOs annotated with `@Ascii` / `@Ascii(allowControlChar = true)`) covering valid printable ASCII (`Hello, World!`, alphanumeric, punctuation, space, the full 0x20~0x7E range), rejection by default of Chinese / Japanese / Emoji / TAB / LF / CR / DEL 0x7F / NUL 0x00; acceptance of the full 0x00~0x7F range with `allowControlChar = true`; 0x80 / 0xFF still rejected; null / empty values pass
+- `AsciiValidatorTest`: 24 test methods (annotation-based, using `Validator` against DTOs annotated with `@Ascii`) covering acceptance of plain ASCII (`Hello, World!`, alphanumeric, punctuation, space), acceptance of control characters (LF / TAB / CR / NUL 0x00 / DEL 0x7F), acceptance of the full 0x00~0x7F range plus both boundaries, rejection of non-ASCII (Chinese / Japanese / Emoji / 0x80 / 0xFF / full-width digit U+FF11), the boundary contrast with `@Printable` (newline passes `@Ascii` but fails `@Printable`), and null / empty values passing
 
 **Ascii Chain Validation Tests:**
-- `AsciiValidationChainTest`: 7 test methods covering null / empty values, valid printable ASCII strings, rejection of non-ASCII (Chinese), rejection of control characters by default, acceptance of TAB with `allowControlChar = true`, `allowControlChar = true` still rejects non-ASCII, and chaining with other rules
+- `AsciiValidationChainTest`: 13 test methods covering plain ASCII, control characters (TAB / LF) and multi-line text acceptance, the full 0x00~0x7F range, rejection of non-ASCII (Chinese / Emoji / 0x80 / mixed with control chars), the contrast with `isPrintable`, null / empty values, and chaining with other rules
 
-**Total:** 42 new test methods, all passing ✅
+**Printable Validator Tests (Bean Validation Framework):**
+- `PrintableValidatorTest`: 24 test methods (annotation-based, using `Validator` against DTOs annotated with `@Printable`) covering valid printable ASCII (`Hello, World!`, alphanumeric, punctuation, space, leading/trailing space, the full 0x20~0x7E range, lower boundary 0x20, upper boundary 0x7E); rejection of all 33 ASCII control characters (0x00~0x1F and 0x7F: TAB, LF, CR, DEL, NUL, last C0 char 0x1F, etc.), rejection of non-ASCII (Chinese, Japanese, Emoji, full-width digit 0xFF11, 0x80, 0xFF); null / empty values pass
+
+**Printable Chain Validation Tests:**
+- `PrintableValidationChainTest`: 20 test methods covering null / empty values, valid printable ASCII strings (including lower/upper boundary and full range), rejection of control characters (TAB / LF / CR / DEL / NUL), rejection of non-ASCII (Chinese, Emoji, 0x80), and chaining with other rules (`isUpper`, multiple `isPrintable` calls, multi-failure accumulation)
+
+**Total:** 81 new test methods, all passing ✅
 
 ---
 

@@ -76,18 +76,38 @@ public class BaseValidation {
     }
 
     /**
-     * 验证字符串是否只包含 ASCII 字符（默认仅可打印 ASCII 0x20~0x7E）。
+     * 验证字符串是否只包含 ASCII 字符（0x00~0x7F，含全部控制字符）。
      *
-     * @param value           待验证的值
-     * @param allowControlChar 是否允许 ASCII 控制字符（0x00~0x1F、0x7F）
-     * @param errors          错误消息列表
-     * @param locale          语言环境
+     * <p>允许 {@code "\n"}、{@code "\t"}，但不允许中文 / Emoji 等非 ASCII 字符。
+     * 若要求"字符完全可见、不含任何控制字符"，请使用
+     * {@link #validatePrintable(Object, List, Locale)}（0x20~0x7E）。</p>
+     *
+     * @param value  待验证的值
+     * @param errors 错误消息列表
+     * @param locale 语言环境
      */
-    public void validateAscii(Object value, boolean allowControlChar, List<String> errors, Locale locale) {
+    public void validateAscii(Object value, List<String> errors, Locale locale) {
         AsciiValidator validator = new AsciiValidator();
-        validator.initialize(allowControlChar);
         if (!validator.isValid((String) value, null)) {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ascii", locale));
+        }
+    }
+
+    /**
+     * 验证字符串是否只包含<b>可打印 ASCII 字符</b>（0x20~0x7E，
+     * 含空格、字母、数字、标点，排除全部控制字符）。
+     *
+     * <p>与 {@link #validateAscii(Object, List, Locale)} 职责互补：
+     * {@code Ascii} 允许控制字符（0x00~0x7F），{@code Printable} 则要求完全可见（0x20~0x7E）。</p>
+     *
+     * @param value  待验证的值
+     * @param errors 错误消息列表
+     * @param locale 语言环境
+     */
+    public void validatePrintable(Object value, List<String> errors, Locale locale) {
+        PrintableValidator validator = new PrintableValidator();
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.printable", locale));
         }
     }
     

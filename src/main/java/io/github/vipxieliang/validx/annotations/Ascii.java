@@ -30,14 +30,24 @@ import java.lang.annotation.*;
  * </p>
  *
  * <p>
- * 默认仅允许 <b>可打印 ASCII</b>（0x20 ~ 0x7E，排除制表符/换行等控制字符），
- * 与 {@link Lower} / {@link Upper} / {@link Xdigit} 等字符类验证器保持同一档位；
- * 通过 {@code allowControlChar=true} 可放行全部 ASCII（含控制字符）。
+ * 这里采用 <b>教科书定义</b>：ASCII 共 128 个字符，包含 33 个控制字符
+ * （0x00~0x1F、0x7F，如 NUL / TAB / LF / CR / DEL）。
+ * 对应 C 的 {@code isascii()}、Python 的 {@code str.isascii()}。
+ * </p>
+ *
+ * <p>
+ * 若业务上要求"字符完全可见、不允许任何控制字符"，请改用 {@link Printable}（0x20~0x7E）。
+ * 二者职责互补、不重叠：
+ * <ul>
+ *     <li>{@code @Ascii}（0x00~0x7F）—— 允许 {@code "\n"}、{@code "\t"}，但不允许中文 / Emoji 等非 ASCII 字符；</li>
+ *     <li>{@link Printable}（0x20~0x7E）—— 连 {@code "\n"} 也不允许，字符必须全部可见。</li>
+ * </ul>
  * </p>
  *
  * <p>
  * 典型场景：
  * <ul>
+ *     <li>多行文本 / 描述 / 备注："可以有换行与制表符，但不能出现中文、Emoji"；</li>
  *     <li>协议号、终端命令、SN/IMEI 等需要"纯 ASCII 通道"的字段；</li>
  *     <li>导入 CSV/TXT 文件前，识别是否含中文/表情/Emoji 等非 ASCII 字符；</li>
  *     <li>系统间对接时校验"不应出现非 ASCII 字符"的接口契约。</li>
@@ -49,29 +59,24 @@ import java.lang.annotation.*;
  * </p>
  *
  * <pre>
- * // 默认：仅可打印 ASCII（0x20~0x7E）
+ * // 允许换行、制表符，但不允许中文 / Emoji
  * &#64;Ascii
- * private String protocolCode;
+ * private String description;
  *
- * // 允许控制字符（0x00~0x7F 全部 ASCII）
- * &#64;Ascii(allowControlChar = true)
- * private String rawSerial;
+ * // 若要求"连换行都不能有、字符必须完全可见"，改用：
+ * &#64;Printable
+ * private String nickname;
  * </pre>
  *
  * @author vipxieliang
  * @since 2026/09/15
+ * @see Printable
  */
 @Target({ElementType.METHOD, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = AsciiValidator.class)
 public @interface Ascii {
-    /**
-     * 是否允许 ASCII 控制字符（0x00~0x1F、0x7F）。
-     * 默认 {@code false}，仅允许可打印 ASCII（0x20~0x7E）。
-     */
-    boolean allowControlChar() default false;
-
     String message() default "{io.github.vipxieliang.validx.annotation.ascii}";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

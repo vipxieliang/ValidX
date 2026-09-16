@@ -641,7 +641,8 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **基础验证** | [@Lower](#lower) | 小写字符验证 | 1.0.0 | - |
 | **基础验证** | [@Upper](#upper) | 大写字符验证 | 1.0.0 | - |
 | **基础验证** | [@Xdigit](#xdigit) | 十六进制字符串验证 | 1.0.0 | - |
-| **基础验证** | [@Ascii](#ascii) | ASCII 字符串验证（默认仅可打印 ASCII 0x20~0x7E） | 1.2.1 | allowControlChar |
+| **基础验证** | [@Ascii](#ascii) | ASCII 字符串验证（完整 ASCII 0x00~0x7F，含控制字符） | 1.2.1 | - |
+| **基础验证** | [@Printable](#printable) | 可打印 ASCII 验证（0x20~0x7E，不含任何控制字符） | 1.2.1 | - |
 | **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） | 1.0.0 | - |
 | **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） | 1.0.0 | - |
 | **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 | 1.0.0 | - |
@@ -1476,28 +1477,43 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 [↑ 返回快速查询表](#快速查询表)
 
 #### @Ascii
-* 校验规则：ASCII 字符串验证，确保字符串只包含 ASCII 字符（Unicode 0x00~0x7F）。默认仅允许**可打印 ASCII**（0x20~0x7E），控制字符（如 TAB、LF、CR、DEL 等）会被拒绝。
-* 校验规则：
-  - allowControlChar：是否允许 ASCII 控制字符（0x00~0x1F、0x7F），默认 `false`，仅允许可打印 ASCII。
-* 示例格式：`Hello, World!`（默认模式）、`abc\tdef`（allowControlChar=true）
+* 校验规则：ASCII 字符串验证，确保字符串只包含 ASCII 字符（Unicode **0x00~0x7F**，含 33 个控制字符）。采用教科书定义——对应 C 的 `isascii()`、Python 的 `str.isascii()`。**允许换行（`\n`）、制表符（`\t`）**，但不允许中文、Emoji 等非 ASCII 字符。
+* 无配置参数。
+* 示例格式：`Hello, World!`、`line1\nline2`、`abc\tdef`
 * 使用示例：
   ```java
-  // 注解方式：仅允许可打印 ASCII（0x20~0x7E）
+  // 注解方式：多行文本 / 描述（可以有换行，但不能有中文、Emoji）
   @Ascii
-  private String protocolCode;
-
-  // 允许全部 ASCII（含控制字符 0x00~0x7F）
-  @Ascii(allowControlChar = true)
-  private String rawSerial;
+  private String description;
 
   // 链式调用方式
   ValidX validator = ValidX.init();
-  // 默认仅允许可打印 ASCII
   validator.isAscii("Hello, World!");
-  // 允许控制字符
-  validator.isAscii("abc\tdef", true);
+  validator.isAscii("line1\nline2"); // 多行文本通过
   ```
-* 典型场景：协议号、终端命令、SN/IMEI 等需要"纯 ASCII 通道"的字段；导入 CSV/TXT 文件前识别是否含中文/Emoji 等非 ASCII 字符；系统对接时校验"不应出现非 ASCII 字符"的接口契约。
+* 典型场景：多行文本 / 描述 / 备注（"可以有换行与制表符，但不能出现中文、Emoji"）；协议号、终端命令、SN/IMEI 等需要"纯 ASCII 通道"的字段；导入 CSV/TXT 文件前识别是否含中文/Emoji 等非 ASCII 字符；系统对接时校验"不应出现非 ASCII 字符"的接口契约。
+* 相关：若要求"字符完全可见、连换行都不允许"，请使用 [@Printable](#printable)（0x20~0x7E）。
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @Printable
+* 校验规则：可打印 ASCII 字符验证，确保字符串只包含**可打印 ASCII 字符**（Unicode **0x20~0x7E**，即空格 + 全部可见字符）。拒绝全部 33 个控制字符（0x00~0x1F、0x7F，如 TAB、LF、CR、DEL）。采用标准定义——对应 PHP 的 `ctype_print()`、C 的 `isprint()`、Python 的 `str.isprintable()`。
+* 无配置参数。
+* 示例格式：`Hello, World!`、`abc123`、`Tom & Jerry`
+* 使用示例：
+  ```java
+  // 注解方式：单行文本 / 昵称 / 标签（字符必须完全可见）
+  @Printable
+  private String nickname;
+
+  // 链式调用方式
+  ValidX validator = ValidX.init();
+  validator.isPrintable("Hello, World!");
+  validator.isPrintable("Tom & Jerry"); // 通过
+  // "Tom\tJerry" 会被拒绝（含制表符）
+  ```
+* 典型场景：用户昵称 / 备注 / 评论内容（应当可显示，不应混入不可见的控制字节）；打印标签、票据、短信内容；导出 TXT / 日志时排除特殊控制字符，避免显示乱码；UI 输入框的语义层面约束（"用户能看到的内容"）。
+* 相关：若需要放行换行等多行文本，请使用 [@Ascii](#ascii)（0x00~0x7F）。
 
 [↑ 返回快速查询表](#快速查询表)
 

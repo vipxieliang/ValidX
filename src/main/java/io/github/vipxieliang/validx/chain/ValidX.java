@@ -500,28 +500,37 @@ public class ValidX {
     }
 
     /**
-     * 校验字符串是否只包含 ASCII 字符（默认仅可打印 ASCII 0x20~0x7E）。
+     * 校验字符串是否只包含 ASCII 字符（0x00~0x7F，含 NUL / TAB / LF / CR / DEL 等控制字符）。
+     *
+     * <p>允许 {@code "\n"}、{@code "\t"}，但不允许中文 / Emoji 等非 ASCII 字符。
+     * 若要求"字符完全可见、不含任何控制字符"，请使用 {@link #isPrintable(Object)}（0x20~0x7E）。</p>
      *
      * @param value 待校验的值
      * @return 当前 ValidX 实例，支持链式调用
      */
     public ValidX isAscii(Object value) {
-        return isAscii(value, false);
-    }
-
-    /**
-     * 校验字符串是否只包含 ASCII 字符。
-     *
-     * @param value           待校验的值
-     * @param allowControlChar 是否放行 ASCII 控制字符（0x00~0x1F、0x7F），
-     *                         默认 {@code false}，仅允许可打印 ASCII
-     * @return 当前 ValidX 实例，支持链式调用
-     */
-    public ValidX isAscii(Object value, boolean allowControlChar) {
         if (checkRequirement(value, "Ascii", errors, getLocale())) {
             return this;
         }
-        baseValidation.validateAscii(value, allowControlChar, errors, getLocale());
+        baseValidation.validateAscii(value, errors, getLocale());
+        return this;
+    }
+
+    /**
+     * 校验字符串是否只包含<b>可打印 ASCII 字符</b>（0x20~0x7E，含空格与全部可见 ASCII，
+     * 排除 TAB / LF / CR / DEL 等控制字符）。
+     *
+     * <p>与 {@link #isAscii(Object)} 职责互补：{@code isAscii} 允许控制字符（0x00~0x7F），
+     * {@code isPrintable} 则要求字符完全可见（0x20~0x7E），更贴合打印、显示、UI 输入框等场景。</p>
+     *
+     * @param value 待校验的值
+     * @return 当前 ValidX 实例，支持链式调用
+     */
+    public ValidX isPrintable(Object value) {
+        if (checkRequirement(value, "Printable", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validatePrintable(value, errors, getLocale());
         return this;
     }
 

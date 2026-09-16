@@ -16,30 +16,34 @@
 
 package io.github.vipxieliang.validx.validator.base;
 
-import io.github.vipxieliang.validx.annotations.Ascii;
+import io.github.vipxieliang.validx.annotations.Printable;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.regex.Pattern;
 
 /**
- * ASCII 验证器
+ * Printable 验证器
  * <p>
- * 校验字符串是否只包含 ASCII 字符（Unicode 0x00 ~ 0x7F，含全部控制字符）。
- * 对应 C 的 {@code isascii()}、Python 的 {@code str.isascii()}。
+ * 验证字符串是否只包含可打印 ASCII 字符（Unicode 0x20 ~ 0x7E）。
  * </p>
  *
  * <p>
- * 要求"字符完全可见、不含控制字符"时请改用 {@link PrintableValidator}（0x20~0x7E）。
+ * 33 个被拒绝的控制字符包括：0x00~0x1F（TAB / LF / CR / ESC / ...）以及 0x7F（DEL）。
+ * </p>
+ *
+ * <p>
+ * 与 {@link AsciiValidator} 职责互补：{@code AsciiValidator} 放行全部 ASCII（0x00~0x7F，含控制字符），
+ * 本验证器则要求字符完全可见（0x20~0x7E）。
  * </p>
  */
-public class AsciiValidator implements ConstraintValidator<Ascii, String> {
+public class PrintableValidator implements ConstraintValidator<Printable, String> {
 
-    /** 完整 ASCII：0x00~0x7F（含全部 33 个控制字符） */
-    private static final Pattern FULL_ASCII_PATTERN = Pattern.compile("^[\\x00-\\x7F]+$");
+    /** 可打印 ASCII：0x20~0x7E（含空格、剔除全部控制字符） */
+    private static final Pattern PRINTABLE_PATTERN = Pattern.compile("^[\\x20-\\x7E]+$");
 
     @Override
-    public void initialize(Ascii constraintAnnotation) {
+    public void initialize(Printable constraintAnnotation) {
         // 无可配置参数
     }
 
@@ -48,6 +52,6 @@ public class AsciiValidator implements ConstraintValidator<Ascii, String> {
         if (value == null || value.isEmpty()) {
             return true; // 空值放行，由 @NotBlank / @NotNull 处理
         }
-        return FULL_ASCII_PATTERN.matcher(value).matches();
+        return PRINTABLE_PATTERN.matcher(value).matches();
     }
 }
