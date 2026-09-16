@@ -9,6 +9,7 @@
 - ✨ [新增功能](#新增功能-)
   - 新增 `@IMSI` 国际移动用户识别码验证注解（ITU-T E.212 / 3GPP TS 23.003）
   - 新增 `@ICCID` 集成电路卡识别码验证注解（ITU-T E.118 / GSMA SGP.22，20 位 + Luhn 校验位）
+  - 新增 `@Ascii` ASCII 字符验证注解（默认仅可打印 ASCII 0x20~0x7E，`allowControlChar` 可放行 0x00~0x7F）
 - ✅ [无破坏性变更](#无破坏性变更-)
   - v1.2.1 与 v1.2.0 完全向后兼容，无需迁移
 - ♻️ [内部改进](#内部改进-)
@@ -185,11 +186,90 @@ ValidX validator = ValidX.init()
 
 ---
 
+### @Ascii ASCII 字符验证注解
+
+新增 ASCII 字符验证注解，用于验证字符串是否只包含 ASCII 字符（Unicode 0x00~0x7F）。
+
+**背景知识：**
+- ASCII（美国信息交换标准代码）覆盖 7 位编码 0x00~0x7F 共 128 个码位
+- **可打印 ASCII**（0x20~0x7E）排除了 33 个控制字符（0x00~0x1F + 0x7F），如 TAB、LF、CR、DEL 等
+- 大量系统对接场景要求"纯 ASCII 通道"：协议号、终端命令、SN/IMEI 标签等
+- CSV / TXT 文件导入时，常需预先筛掉含中文 / 日文 / Emoji 等非 ASCII 字符的行
+
+**功能特性：**
+- 验证字符串只包含 ASCII 字符；中文、日文、Emoji 等非 ASCII 字符一律拒绝
+- 默认仅允许**可打印 ASCII**（0x20~0x7E），TAB、LF、CR、DEL 等控制字符会被拒绝
+- 可选 `allowControlChar = true` 放行全部 ASCII（0x00~0x7F，含所有控制字符）
+- null 和空字符串默认通过验证
+- 完整的国际化支持（9 种语言）
+- 链式 API：`isAscii(Object value)`（默认），`isAscii(Object value, boolean allowControlChar)`（带控制字符开关）
+
+**注解方式示例：**
+
+```java
+public class ProtocolDTO {
+    // 示例 1：默认仅允许可打印 ASCII（拒绝 TAB / LF / CR）
+    @Ascii
+    private String protocolCode;  // "GET /api/v1/users" 通过；"GET /api/v1\r\n" 不通过
+
+    // 示例 2：放行控制字符，适用于原始字节流
+    @Ascii(allowControlChar = true)
+    private String rawSerial;  // "abc\tdef" 通过
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 默认仅允许可打印 ASCII
+validator.field("Protocol Code").isAscii("GET /api/v1/users");
+
+// 放行控制字符
+validator.field("Raw Serial").isAscii("abc\tdef", true);
+
+// 检查验证结果
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：协议 / 终端命令字段
+public class CommandDTO {
+    @NotBlank(message = "命令不能为空")
+    @Ascii
+    private String command;
+}
+
+// 场景 2：SN / IMEI 标签原始字节流（可能含控制字节）
+public class LabelDTO {
+    @Ascii(allowControlChar = true)
+    private String rawSerial;
+}
+
+// 场景 3：CSV 导入 —— 拒绝含中文 / Emoji 的行，避免静默乱码
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("CSV Cell").isAscii(row[0]);
+```
+
+**注意事项：**
+- 默认模式与 `@Lower` / `@Upper` / `@Xdigit` 保持同档：拒绝所有控制字符，仅允许可打印 ASCII
+- `allowControlChar = true` 时也仅放行 0x00~0x7F；0x80 及以上仍被拒绝
+- null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotBlank` 使用）
+- 常见应用场景：协议号 / 终端命令字段、SN / IMEI 原始标签、CSV / TXT 导入非 ASCII 预检、系统对接"不应出现非 ASCII"接口契约校验
+
+---
+
 ## 无破坏性变更 ✅
 
 v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 
-- 未修改或删除任何链式 API 签名（新增的 `isIMSI()`、`isICCID()` 是纯增量）
+- 未修改或删除任何链式 API 签名（新增的 `isIMSI()`、`isICCID()`、`isAscii()` 是纯增量）
 - 未改变任何既有注解的语义
 - 无依赖或配置变更
 - 从 v1.2.0 升级为直接替换即可，无需任何迁移步骤
@@ -220,6 +300,7 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 **错误消息：**
 - `@IMSI`："IMSI号码格式不正确"（消息键：`io.github.vipxieliang.validx.annotation.imsi`）
 - `@ICCID`："ICCID号码格式不正确"（消息键：`io.github.vipxieliang.validx.annotation.iccid`）
+- `@Ascii`："只能包含ASCII字符（0x20-0x7E，不含控制字符）"（消息键：`io.github.vipxieliang.validx.annotation.ascii`）
 
 所有语言包的消息格式保持一致，采用正确的 Unicode 编码。
 
@@ -241,7 +322,13 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 **ICCID 链式验证测试：**
 - `ICCIDValidationChainTest`：3 个测试方法，覆盖 null/空值、合法值（标准 20 位、连字符分隔、空格分隔、另一个 Luhn 合法号）与非法值（过短、过长、校验位错误、含非数字字符）
 
-**总计：** 12 个新增测试方法，全部通过 ✅
+**Ascii 验证器测试（Bean Validation 框架）：**
+- `AsciiValidatorTest`：23 个测试方法（注解方式，通过 `Validator` 校验标注了 `@Ascii` / `@Ascii(allowControlChar = true)` 的 DTO），覆盖合法的可打印 ASCII（`Hello, World!`、字母数字、标点、空格、完整 0x20~0x7E 区间），默认拒绝中文/日文/Emoji/TAB/LF/CR/DEL 0x7F/NUL 0x00；`allowControlChar = true` 时放行完整 0x00~0x7F；0x80 / 0xFF 仍被拒绝；null/空值通过
+
+**Ascii 链式验证测试：**
+- `AsciiValidationChainTest`：7 个测试方法，覆盖 null/空值、合法的可打印 ASCII 字符串、拒绝含中文的字符串、默认情况下拒绝控制字符、`allowControlChar = true` 时允许 TAB、`allowControlChar = true` 时仍拒绝非 ASCII、与其他规则链式调用
+
+**总计：** 42 个新增测试方法，全部通过 ✅
 
 ---
 

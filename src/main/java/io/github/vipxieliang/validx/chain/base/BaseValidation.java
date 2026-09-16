@@ -74,6 +74,22 @@ public class BaseValidation {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.xdigit", locale));
         }
     }
+
+    /**
+     * 验证字符串是否只包含 ASCII 字符（默认仅可打印 ASCII 0x20~0x7E）。
+     *
+     * @param value           待验证的值
+     * @param allowControlChar 是否允许 ASCII 控制字符（0x00~0x1F、0x7F）
+     * @param errors          错误消息列表
+     * @param locale          语言环境
+     */
+    public void validateAscii(Object value, boolean allowControlChar, List<String> errors, Locale locale) {
+        AsciiValidator validator = new AsciiValidator();
+        validator.initialize(allowControlChar);
+        if (!validator.isValid((String) value, null)) {
+            errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.ascii", locale));
+        }
+    }
     
     public void validateIn(Object value, String[] values, List<String> errors, Locale locale) {
         InValidator validator = new InValidator();

@@ -9,6 +9,7 @@ This document records the changes from v1.2.0 to v1.2.1.
 - ✨ [New Features](#new-features-)
   - New `@IMSI` International Mobile Subscriber Identity validation annotation (ITU-T E.212 / 3GPP TS 23.003)
   - New `@ICCID` Integrated Circuit Card Identifier validation annotation (ITU-T E.118 / GSMA SGP.22, 20 digits + Luhn check digit)
+  - New `@Ascii` ASCII character validation annotation (printable ASCII 0x20~0x7E by default, `allowControlChar` to allow 0x00~0x7F)
 - ✅ [No Breaking Changes](#no-breaking-changes-)
   - v1.2.1 is fully backward compatible with v1.2.0; no migration required
 - ♻️ [Internal Improvements](#internal-improvements-)
@@ -185,11 +186,90 @@ ValidX validator = ValidX.init()
 
 ---
 
+### @Ascii ASCII Character Validation Annotation
+
+Added an ASCII validation annotation to verify that a string contains only ASCII characters (Unicode 0x00~0x7F).
+
+**Background:**
+- ASCII (American Standard Code for Information Interchange) covers 7-bit code points 0x00~0x7F
+- **Printable ASCII** (0x20~0x7E) excludes the 33 control characters (0x00~0x1F + 0x7F) such as TAB, LF, CR, DEL
+- Many system integration scenarios require "pure ASCII channels": protocol codes, terminal commands, SN/IMEI labels, etc.
+- During CSV / TXT file import, pre-screening for non-ASCII content (Chinese / Japanese / Emoji) is a common requirement
+
+**Features:**
+- Validates that the string contains only ASCII characters; non-ASCII characters (e.g., Chinese, Japanese, Emoji) are rejected
+- Default: only **printable ASCII** (0x20~0x7E) is allowed; control characters such as TAB, LF, CR, DEL are rejected
+- Optional `allowControlChar = true` to allow all ASCII (0x00~0x7F, including all control characters)
+- Null and empty strings pass validation by default
+- Full internationalization support (9 languages)
+- Chain API: `isAscii(Object value)` (default), `isAscii(Object value, boolean allowControlChar)` (with control char option)
+
+**Annotation Examples:**
+
+```java
+public class ProtocolDTO {
+    // Example 1: only printable ASCII (default), rejects TAB / LF / CR
+    @Ascii
+    private String protocolCode;  // "GET /api/v1/users" passes; "GET /api/v1\r\n" fails
+
+    // Example 2: allow control characters, suitable for raw serial streams
+    @Ascii(allowControlChar = true)
+    private String rawSerial;  // "abc\tdef" passes
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// Default: only printable ASCII
+validator.field("Protocol Code").isAscii("GET /api/v1/users");
+
+// Allow control characters
+validator.field("Raw Serial").isAscii("abc\tdef", true);
+
+// Check validation result
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-World Use Cases:**
+
+```java
+// Use Case 1: protocol / terminal command field
+public class CommandDTO {
+    @NotBlank(message = "Command is required")
+    @Ascii
+    private String command;
+}
+
+// Use Case 2: SN / IMEI label raw stream (may contain control bytes)
+public class LabelDTO {
+    @Ascii(allowControlChar = true)
+    private String rawSerial;
+}
+
+// Use Case 3: CSV import — reject rows containing non-ASCII (Chinese / Emoji) to avoid silent garbling
+ValidX validator = ValidX.init()
+    .config(ValidXConfig.GLOBAL_NOT_NULL)
+    .field("CSV Cell").isAscii(row[0]);
+```
+
+**Notes:**
+- The default mode aligns with `@Lower` / `@Upper` / `@Xdigit`: rejects all control characters, only printable ASCII is accepted
+- When `allowControlChar = true`, only the full 0x00~0x7F range is allowed; 0x80 and above are still rejected
+- Null and empty strings pass validation (use with `@NotNull` or `@NotBlank` for required fields)
+- Common use cases: protocol code / terminal command fields, SN / IMEI raw labels, CSV / TXT import non-ASCII pre-check, system integration "no non-ASCII" contract verification
+
+---
+
 ## No Breaking Changes ✅
 
 v1.2.1 contains **no breaking changes** and is fully backward compatible with v1.2.0:
 
-- No chain API signatures were changed or removed (the new `isIMSI()` and `isICCID()` are purely additive)
+- No chain API signatures were changed or removed (the new `isIMSI()`, `isICCID()`, and `isAscii()` are purely additive)
 - No annotation semantics were altered
 - No dependency or configuration changes
 - Upgrade from v1.2.0 is a drop-in replacement; no migration steps required
@@ -220,6 +300,7 @@ The new annotation supports the following 9 languages:
 **Error Message:**
 - `@IMSI`: "Invalid IMSI number format" (message key: `io.github.vipxieliang.validx.annotation.imsi`)
 - `@ICCID`: "Invalid ICCID number format" (message key: `io.github.vipxieliang.validx.annotation.iccid`)
+- `@Ascii`: "Can only contain ASCII characters (0x20-0x7E, excluding control characters)" (message key: `io.github.vipxieliang.validx.annotation.ascii`)
 
 All language packs maintain consistent message format with proper Unicode encoding.
 
@@ -241,7 +322,13 @@ Comprehensive test coverage for the new feature (both annotation and chain paths
 **ICCID Chain Validation Tests:**
 - `ICCIDValidationChainTest`: 3 test methods covering null/empty values, valid values (standard 20-digit, hyphen-separated, space-separated, another Luhn-valid number) and invalid values (too short, too long, wrong check digit, non-digit characters)
 
-**Total:** 12 new test methods, all passing ✅
+**Ascii Validator Tests (Bean Validation Framework):**
+- `AsciiValidatorTest`: 23 test methods (annotation-based, using `Validator` against DTOs annotated with `@Ascii` / `@Ascii(allowControlChar = true)`) covering valid printable ASCII (`Hello, World!`, alphanumeric, punctuation, space, the full 0x20~0x7E range), rejection by default of Chinese / Japanese / Emoji / TAB / LF / CR / DEL 0x7F / NUL 0x00; acceptance of the full 0x00~0x7F range with `allowControlChar = true`; 0x80 / 0xFF still rejected; null / empty values pass
+
+**Ascii Chain Validation Tests:**
+- `AsciiValidationChainTest`: 7 test methods covering null / empty values, valid printable ASCII strings, rejection of non-ASCII (Chinese), rejection of control characters by default, acceptance of TAB with `allowControlChar = true`, `allowControlChar = true` still rejects non-ASCII, and chaining with other rules
+
+**Total:** 42 new test methods, all passing ✅
 
 ---
 

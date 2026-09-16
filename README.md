@@ -641,6 +641,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Lower](#lower) | Lowercase character validation | 1.0.0   | - |
 | **Basic Validation** | [@Upper](#upper) | Uppercase character validation | 1.0.0   | - |
 | **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   | - |
+| **Basic Validation** | [@Ascii](#ascii) | ASCII string validation (printable ASCII 0x20~0x7E by default) | 1.2.1   | allowControlChar |
 | **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   | - |
 | **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
 | **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
@@ -1463,6 +1464,32 @@ Click on the annotation name to jump to its detailed documentation.
   ValidX validator = ValidX.init();
   validator.isXdigit("0a1B2c3D");
   ```
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @Ascii
+* Validation Rule: ASCII string validation, ensuring the string contains only ASCII characters (Unicode 0x00~0x7F). By default, only **printable ASCII** (0x20~0x7E) is allowed; control characters such as TAB, LF, CR, and DEL are rejected.
+* Validation Rules:
+  - allowControlChar: Whether to allow ASCII control characters (0x00~0x1F, 0x7F). Default `false`, allowing only printable ASCII.
+* Example Format: `Hello, World!` (default mode), `abc\tdef` (allowControlChar=true)
+* Usage Example:
+  ```java
+  // Annotation-based usage: only allow printable ASCII (0x20~0x7E)
+  @Ascii
+  private String protocolCode;
+
+  // Allow all ASCII including control characters (0x00~0x7F)
+  @Ascii(allowControlChar = true)
+  private String rawSerial;
+
+  // Chain call usage
+  ValidX validator = ValidX.init();
+  // Default mode: only allow printable ASCII
+  validator.isAscii("Hello, World!");
+  // Allow control characters
+  validator.isAscii("abc\tdef", true);
+  ```
+* Typical scenarios: protocol codes, terminal commands, SN/IMEI and other "pure ASCII channel" fields; pre-check imported CSV/TXT files for non-ASCII characters (such as Chinese/Emoji); validating "must not contain non-ASCII" interface contracts.
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

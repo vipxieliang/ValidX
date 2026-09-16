@@ -499,6 +499,32 @@ public class ValidX {
         return this;
     }
 
+    /**
+     * 校验字符串是否只包含 ASCII 字符（默认仅可打印 ASCII 0x20~0x7E）。
+     *
+     * @param value 待校验的值
+     * @return 当前 ValidX 实例，支持链式调用
+     */
+    public ValidX isAscii(Object value) {
+        return isAscii(value, false);
+    }
+
+    /**
+     * 校验字符串是否只包含 ASCII 字符。
+     *
+     * @param value           待校验的值
+     * @param allowControlChar 是否放行 ASCII 控制字符（0x00~0x1F、0x7F），
+     *                         默认 {@code false}，仅允许可打印 ASCII
+     * @return 当前 ValidX 实例，支持链式调用
+     */
+    public ValidX isAscii(Object value, boolean allowControlChar) {
+        if (checkRequirement(value, "Ascii", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateAscii(value, allowControlChar, errors, getLocale());
+        return this;
+    }
+
     public ValidX isIn(Object value, String[] values) {
         if (checkRequirement(value, "In", errors, getLocale())) {
             return this;
