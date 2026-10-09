@@ -252,7 +252,7 @@
 
 > 目标：给读者可复制的整套方案，形成"即抄即用"的收尾。
 
-#### 17 一套 Compose 搭起完整开发环境：MySQL + Redis + Nginx + ValidX demo
+#### 17 一套 Compose 搭起完整开发环境：MySQL + Redis + Nginx  demo
 
 - **前置依赖**：03、05、07
 - **核心内容**：

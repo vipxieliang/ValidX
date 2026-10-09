@@ -11,10 +11,12 @@
   - 新增 `@ICCID` 集成电路卡识别码验证注解（ITU-T E.118 / GSMA SGP.22，20 位 + Luhn 校验位）
   - 新增 `@Ascii` ASCII 字符验证注解（完整 ASCII 0x00~0x7F，含控制字符）
   - 新增 `@Printable` 可打印 ASCII 字符验证注解（固定为 0x20~0x7E，不允许任何控制字符）
+  - 新增 `@FixedLength` 定长字符串验证注解（长度恰好等于指定值，支持 trimStart / trimEnd 与 CHAR / CODE_POINT / GRAPHEME 三种计数口径）
 - ✅ [无破坏性变更](#无破坏性变更-)
   - v1.2.1 与 v1.2.0 完全向后兼容，无需迁移
 - ♻️ [内部改进](#内部改进-)
   - 抽取公共 `LuhnUtils`，统一 `@BankCard` / `@ICCID` / `@IMEI` 的 Luhn 校验实现（对外行为不变）
+  - 新增 Java 8 兼容工具类 `StringStripUtils` 与枚举 `LengthCountMode`，支撑 `@FixedLength`
 - 🌍 [国际化支持](#国际化支持-)
   - 新注解支持完整的 9 种语言消息
 
@@ -333,11 +335,113 @@ if (!validator.passed()) {
 
 ---
 
+### @FixedLength 定长字符串验证注解
+
+新增 `@FixedLength` 注解，用于验证字符串长度是否**恰好等于**指定的字符数。
+
+**背景知识：**
+- 大量业务规则是"恰好 N 位"，但 Bean Validation 的 `@Size(min = N, max = N)` 与既有字符集注解都表达不干净：`@Size` 写法啰嗦，且字面上看不出"精确等长"的语义
+- 字符集校验与长度校验是**正交**的两件事：`@Ascii` / `@Printable` / `@Numeric` 关心"出现哪些字符"，`@FixedLength` 只关心"有多少个字符"
+- 常见场景：短信 / 邮箱 / TOTP 验证码（6 位）、物流单号（京东 13 位，中通 / 顺丰 12 位）、EAN-13 / UPC-A / EAN-8 条码、API Key（32 / 40 / 64）、邀请码 / 短链（6-8）、工号 / 合同号 / 部门编号
+
+**功能特性：**
+- 验证字符串长度恰好等于 `length`（不是 `min~max` 区间）
+- `trimStart` / `trimEnd` 为两个独立的 boolean 开关，默认均为 `false` —— 校验器是**纯函数**，不改动输入，因此 `@FixedLength(10)` 的字面语义就是"恰好 10 个字符"
+  - 单独开启 `trimEnd` 即可容忍尾随污染（Excel 单元格、CSV 行尾 `\r\n`、OCR 末尾空白、终端粘贴）
+  - 两者皆开等价于"先 `String.strip()` 再判长度"
+- 通过新增的 `LengthCountMode` 枚举提供三档计数口径：
+  - `CHAR`（默认）：UTF-16 代码单元，等价 `String.length()`，性能最高，覆盖约 95% 场景
+  - `CODE_POINT`：Unicode 码点 —— 5 个 emoji 算 5 而不是 10
+  - `GRAPHEME`：字素簇 —— 对组合字符、带肤色 emoji、ZWJ 序列友好
+- null 和空字符串默认通过验证
+- 完整的国际化支持（9 种语言）
+- 链式 API：`isFixedLength(Object value, int length)`，并提供 trim / `LengthCountMode` 的重载
+
+**注解方式示例：**
+
+```java
+import io.github.vipxieliang.validx.enums.LengthCountMode;
+
+public class CodeDTO {
+    // 严格等长（最高频）
+    @FixedLength(length = 6)
+    private String smsCode;               // "123456" 通过；"12345" / "1234567" 不通过
+
+    // Excel / OCR 输入的尾部空白
+    @FixedLength(length = 8, trimEnd = true)
+    private String barcode;               // "1234567 " 尾随空格被剥离后通过
+
+    // emoji 友好计数
+    @FixedLength(length = 5, countMode = LengthCountMode.CODE_POINT)
+    private String emojiCode;             // "😀😀😀😀😀" 通过
+
+    // 与字符集规则叠加：恰好 16 位纯数字
+    @FixedLength(length = 16)
+    @Numeric
+    private String cardSerial;
+}
+```
+
+**链式 API 方式示例：**
+
+```java
+ValidX validator = ValidX.init();
+
+// 默认：CHAR 口径、不 trim
+validator.isFixedLength("123456", 6);
+
+// 仅开启 trimEnd
+validator.isFixedLength("123456  ", 6, false, true);
+
+// 指定计数口径
+validator.isFixedLength("😀😀😀😀😀", 5, LengthCountMode.CODE_POINT);
+
+// 全配：trimStart + trimEnd + countMode
+validator.isFixedLength("  😀😀😀😀😀", 5, true, false, LengthCountMode.CODE_POINT);
+
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**实际应用场景：**
+
+```java
+// 场景 1：验证码 —— 长度本身就是协议级约束
+public class SmsVerifyDTO {
+    @NotBlank(message = "验证码不能为空")
+    @FixedLength(length = 6)
+    private String code;
+}
+
+// 场景 2：物流单号（京东 13 位）
+public class LogisticsDTO {
+    @NotBlank(message = "运单号不能为空")
+    @FixedLength(length = 13)
+    private String trackingNo;
+}
+
+// 场景 3：企业内部定长编码
+public class OrgDTO {
+    @FixedLength(length = 8)
+    private String employeeId;
+}
+```
+
+**注意事项：**
+- 只约束"位数恰好为 N"，不约束字符内容；若需同时限制字符集，请与 `@Ascii` / `@Printable` / `@Numeric` / `@AlphaNumber` 叠加使用
+- `trimStart` / `trimEnd` 默认 `false`，校验器不会悄悄改变被校验的值，需要时按意图显式开启
+- null 和空字符串默认通过验证（如需必填请配合 `@NotNull` 或 `@NotBlank` 使用）
+- Java 8 基线下，strip 行为由 `io.github.vipxieliang.validx.util.StringStripUtils` 提供（JDK 11 的 `String.strip()` 不可用）
+- 常见应用场景：验证码、物流单号、商品条码、API Key、邀请码 / 短链、工号 / 合同号 / 部门编号
+
+---
+
 ## 无破坏性变更 ✅
 
 v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 
-- 未修改或删除任何链式 API 签名（新增的 `isIMSI()`、`isICCID()`、`isAscii()`、`isPrintable()` 是纯增量）
+- 未修改或删除任何链式 API 签名（新增的 `isIMSI()`、`isICCID()`、`isAscii()`、`isPrintable()`、`isFixedLength()` 是纯增量）
 - 未改变任何既有注解的语义
 - 无依赖或配置变更
 - 从 v1.2.0 升级为直接替换即可，无需任何迁移步骤
@@ -348,7 +452,9 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 
 - 新增工具类 `io.github.vipxieliang.validx.util.LuhnUtils`，将此前分散在 `BankCardValidator`、`IMEIValidator`、`ICCIDValidator` 中的三段重复 Luhn 实现，统一为单一方法 `LuhnUtils.isValid(String)`
 - `@BankCard`、`@ICCID`、`@IMEI` 现共用同一实现，消除重复代码
-- 纯内部重构，**对外行为完全不变**（既有全部测试用例通过）
+- 新增 Java 8 兼容工具类 `io.github.vipxieliang.validx.util.StringStripUtils`，提供 `strip()` / `stripLeading()` / `stripTrailing()`（语义对齐 JDK 11 的 `String.strip*()`，按 `Character.isWhitespace` 判定），供 `@FixedLength` 的注解验证器与链式校验共用，避免在 Java 8 基线上误用 JDK 11 API
+- 新增枚举 `io.github.vipxieliang.validx.enums.LengthCountMode`，统一定长计数口径
+- 纯内部重构与新增工具，**对外行为完全不变**（既有全部测试用例通过）
 
 ---
 
@@ -370,6 +476,7 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 - `@ICCID`："ICCID号码格式不正确"（消息键：`io.github.vipxieliang.validx.annotation.iccid`）
 - `@Ascii`："只能包含ASCII字符（0x00-0x7F，含控制字符）"（消息键：`io.github.vipxieliang.validx.annotation.ascii`）
 - `@Printable`："只能包含可打印ASCII字符（0x20-0x7E，不含控制字符）"（消息键：`io.github.vipxieliang.validx.annotation.printable`）
+- `@FixedLength`："字符串长度必须恰好为 {length} 个字符"（消息键：`io.github.vipxieliang.validx.annotation.fixed.length`，`{length}` 为动态替换的期望位数）
 
 所有语言包的消息格式保持一致，采用正确的 Unicode 编码。
 
@@ -403,7 +510,13 @@ v1.2.1 **无破坏性变更**，与 v1.2.0 完全向后兼容：
 **Printable 链式验证测试：**
 - `PrintableValidationChainTest`：20 个测试方法，覆盖 null/空值、合法的可打印 ASCII 字符串（含下/上边界与完整区间），拒绝控制字符（TAB / LF / CR / DEL / NUL），拒绝非 ASCII（中文、Emoji、0x80），以及链式调用（`isUpper`、多次 `isPrintable`、多次失败的累积）
 
-**总计：** 81 个新增测试方法，全部通过 ✅
+**FixedLength 验证器测试（Bean Validation 框架）：**
+- `FixedLengthValidatorTest`：18 个测试方法，覆盖 null/空值放行、定长基本正反（过短/过长）、前导零默认保留、`trimStart` / `trimEnd` 独立开关行为、`CHAR` / `CODE_POINT` / `GRAPHEME` 三档计数口径（含 5 个 emoji 在 CHAR 下算 10、在 CODE_POINT 与 GRAPHEME 下算 5 的对比）、错误消息 `{length}` 占位符替换
+
+**FixedLength 链式验证测试：**
+- `FixedLengthValidationChainTest`：18 个测试方法，覆盖 null/空值、4 个 `isFixedLength` 重载（默认 / trim / countMode / 全配）、前导零默认保留、trim 各组合、emoji 三档计数对比、错误消息占位符、以及链式多次调用与多失败累积
+
+**总计：** 117 个新增测试方法，全部通过 ✅
 
 ---
 

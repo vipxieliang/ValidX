@@ -110,7 +110,56 @@ public class BaseValidation {
             errors.add(MessageManager.getMessage("io.github.vipxieliang.validx.annotation.printable", locale));
         }
     }
-    
+
+    /**
+     * 定长校验：字符串长度恰好等于 {@code length}。
+     *
+     * <p>校验器是纯函数，默认不改输入；trimStart / trimEnd 由调用方按需开启。
+     * 长度计数口径由 {@code countMode} 指定，详见 {@link io.github.vipxieliang.validx.enums.LengthCountMode}。</p>
+     */
+    public void validateFixedLength(Object value, int length, boolean trimStart, boolean trimEnd,
+                                    io.github.vipxieliang.validx.enums.LengthCountMode countMode,
+                                    List<String> errors, Locale locale) {
+        if (value == null) {
+            return;
+        }
+        String stringValue = value.toString();
+        if (stringValue.isEmpty()) {
+            return;
+        }
+
+        String v = io.github.vipxieliang.validx.util.StringStripUtils
+                .applyTrim(stringValue, trimStart, trimEnd);
+
+        int actual = countLength(v, countMode);
+        if (actual != length) {
+            String message = MessageManager.getMessage(
+                    "io.github.vipxieliang.validx.annotation.fixed.length", locale);
+            errors.add(message.replace("{length}", String.valueOf(length)));
+        }
+    }
+
+    /**
+     * 定长校验：默认 {@link io.github.vipxieliang.validx.enums.LengthCountMode#CHAR} 口径，trim 开关均关闭。
+     */
+    public void validateFixedLength(Object value, int length, List<String> errors, Locale locale) {
+        validateFixedLength(value, length, false, false,
+                io.github.vipxieliang.validx.enums.LengthCountMode.CHAR, errors, locale);
+    }
+
+    private static int countLength(String value, io.github.vipxieliang.validx.enums.LengthCountMode mode) {
+        switch (mode) {
+            case CODE_POINT:
+                return value.codePointCount(0, value.length());
+            case GRAPHEME:
+                return io.github.vipxieliang.validx.validator.base.FixedLengthValidator
+                        .countGraphemes(value);
+            case CHAR:
+            default:
+                return value.length();
+        }
+    }
+
     public void validateIn(Object value, String[] values, List<String> errors, Locale locale) {
         InValidator validator = new InValidator();
         validator.initialize(values);

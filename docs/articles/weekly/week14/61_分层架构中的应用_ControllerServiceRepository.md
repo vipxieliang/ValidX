@@ -1053,8 +1053,9 @@ ValidX 在分层架构中的定位可以归纳为**两层入口、一条兜底�
 
 ValidX 的注解和链式 API 是**同一套规则**（注解底层调用的就是链式 `ValidX` 的同一组方法），所以不会出现"Controller 验过 `isChinesePhone`，Service 又验一次 `isChineseMobile` 不一致"的尴尬——这是 ValidX 在分层架构里最被低估的优势。
 
-这套分层思路与系列其他文章相互衔接：
-- 《订单数据验证：从购物车到支付的完整验证链路》（week09）展示了完整的端到端验证链路；
-- 《用户登录验证方案：用户名、手机号、邮箱多种方式》（week10）展示了 Service 层链式 API 的实战；
-- 《ValidX分组验证详解》（week08）专门展开分组验证的细节；
-- 《ValidX自定义验证注解开发入门》（week10）讲解了如何为分层架构补充自定义注解。
+
+## 项目地址
+
+- **GitHub**：https://github.com/vipxieliang/ValidX
+- **Gitee**：https://gitee.com/vipxieliang/ValidX
+- **Maven Central**：https://central.sonatype.com/artifact/io.github.vipxieliang/validx

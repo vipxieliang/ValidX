@@ -643,6 +643,7 @@ Click on the annotation name to jump to its detailed documentation.
 | **Basic Validation** | [@Xdigit](#xdigit) | Hexadecimal string validation | 1.0.0   | - |
 | **Basic Validation** | [@Ascii](#ascii) | ASCII string validation (full ASCII 0x00~0x7F, including control characters) | 1.2.1   | - |
 | **Basic Validation** | [@Printable](#printable) | Printable ASCII validation (0x20~0x7E, no control characters) | 1.2.1   | - |
+| **Basic Validation** | [@FixedLength](#fixedlength) | Fixed-length string validation (length exactly equals the given value; optional trim and count modes) | 1.2.1   | - |
 | **Basic Validation** | [@Longitude](#longitude) | Longitude validation (-180 to 180) | 1.0.0   | - |
 | **Basic Validation** | [@Latitude](#latitude) | Latitude validation (-90 to 90) | 1.0.0   | - |
 | **Basic Validation** | [@GeoPoint](#geopoint) | Geographic coordinate pair validation | 1.0.0   | - |
@@ -1506,6 +1507,42 @@ Click on the annotation name to jump to its detailed documentation.
   ```
 * Typical scenarios: user nickname / remark / comment content (must be displayable, no invisible control bytes); printed labels, receipts, SMS body; exporting TXT / logs without control characters to avoid display glitches; semantic-level constraint for UI input fields ("content the user can see").
 * Related: if you need to allow newlines for multi-line text, use [@Ascii](#ascii) (0x00~0x7F).
+
+[↑ Back to Quick Reference](#quick-reference-table)
+
+#### @FixedLength
+* Validation Rule: Fixed-length string validation, verifying that the string length is **exactly equal to** `length`. It is orthogonal to and composable with charset validations, e.g. `@FixedLength(length = 16) @Numeric` means "exactly 16 digits".
+* Configurable parameters:
+  - `length`: required, the exact number of characters, counted per `countMode`
+  - `trimStart`: whether to strip **leading** whitespace first; default `false` (the validator is a pure function and never mutates the input)
+  - `trimEnd`: whether to strip **trailing** whitespace first; default `false`; enable it alone for trailing pollution such as Excel cells, CSV `\r\n`, or OCR trailing spaces
+  - `countMode`: length counting mode, default `LengthCountMode.CHAR` (equivalent to `String.length()`); also `CODE_POINT` (Unicode code points, emoji-friendly) and `GRAPHEME` (grapheme clusters, combining-character-friendly)
+* Example Format: `123456` (SMS code), `JD12345678901` (13-digit order number), `00012345` (leading zeros preserved by default)
+* Usage Example:
+  ```java
+  import io.github.vipxieliang.validx.enums.LengthCountMode;
+
+  // Annotation-based: SMS verification code, fixed at 6 digits
+  @FixedLength(length = 6)
+  private String smsCode;
+
+  // Strings from Excel / OCR often carry trailing spaces — enable trimEnd only
+  @FixedLength(length = 8, trimEnd = true)
+  private String barcode;
+
+  // Emoji-friendly: count by Unicode code points
+  @FixedLength(length = 5, countMode = LengthCountMode.CODE_POINT)
+  private String emojiCode;
+
+  // Chain call usage (4 overloads)
+  ValidX validator = ValidX.init();
+  validator.isFixedLength("123456", 6);                                              // default: CHAR mode, no trim
+  validator.isFixedLength("123456  ", 6, false, true);                               // trimEnd enabled
+  validator.isFixedLength("😀😀😀😀😀", 5, LengthCountMode.CODE_POINT);                // explicit count mode
+  validator.isFixedLength("  😀😀😀😀😀", 5, true, false, LengthCountMode.CODE_POINT); // full config
+  ```
+* Typical scenarios: SMS / email / TOTP verification codes (6 digits); logistics tracking numbers (JD 13, ZTO / SF 12); EAN-13 / UPC-A / EAN-8 barcodes; API keys (32 / 40 / 64); invite codes / short links (6-8); enterprise internal fixed-length codes such as employee IDs, contract numbers and department codes.
+* Related: this annotation only constrains "length is exactly N" and says nothing about character content; to constrain the character set as well, stack it with [@Ascii](#ascii) / [@Printable](#printable) / [@AlphaNumber](#alphanumber). When the protocol itself has a check digit or a complex format (e.g. `@ISBN`, `@ICCID`), prefer the dedicated annotation.
 
 [↑ Back to Quick Reference](#quick-reference-table)
 

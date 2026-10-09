@@ -32,6 +32,7 @@ import io.github.vipxieliang.validx.chain.certification.CertificationValidation;
 import io.github.vipxieliang.validx.annotations.StockCode;
 import io.github.vipxieliang.validx.annotations.FinancialProductCode;
 import io.github.vipxieliang.validx.annotations.Timestamp;
+import io.github.vipxieliang.validx.enums.LengthCountMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -531,6 +532,53 @@ public class ValidX {
             return this;
         }
         baseValidation.validatePrintable(value, errors, getLocale());
+        return this;
+    }
+
+    /**
+     * 定长校验：字符串长度恰好等于 {@code length}。默认 {@link LengthCountMode#CHAR} 口径，
+     * trimStart / trimEnd 均关闭（默认不改输入）。
+     */
+    public ValidX isFixedLength(Object value, int length) {
+        if (checkRequirement(value, "FixedLength", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateFixedLength(value, length, errors, getLocale());
+        return this;
+    }
+
+    /**
+     * 定长校验：可指定 trimStart / trimEnd 是否开启。默认 {@link LengthCountMode#CHAR} 口径。
+     */
+    public ValidX isFixedLength(Object value, int length, boolean trimStart, boolean trimEnd) {
+        if (checkRequirement(value, "FixedLength", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateFixedLength(value, length, trimStart, trimEnd,
+                LengthCountMode.CHAR, errors, getLocale());
+        return this;
+    }
+
+    /**
+     * 定长校验：可指定长度计数口径（{@link LengthCountMode}）。trimStart / trimEnd 默认关闭。
+     */
+    public ValidX isFixedLength(Object value, int length, LengthCountMode countMode) {
+        if (checkRequirement(value, "FixedLength", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateFixedLength(value, length, false, false, countMode, errors, getLocale());
+        return this;
+    }
+
+    /**
+     * 定长校验：完整配置 trimStart / trimEnd 与 {@link LengthCountMode}。
+     */
+    public ValidX isFixedLength(Object value, int length, boolean trimStart, boolean trimEnd,
+                                LengthCountMode countMode) {
+        if (checkRequirement(value, "FixedLength", errors, getLocale())) {
+            return this;
+        }
+        baseValidation.validateFixedLength(value, length, trimStart, trimEnd, countMode, errors, getLocale());
         return this;
     }
 

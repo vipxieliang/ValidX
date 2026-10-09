@@ -11,10 +11,12 @@ This document records the changes from v1.2.0 to v1.2.1.
   - New `@ICCID` Integrated Circuit Card Identifier validation annotation (ITU-T E.118 / GSMA SGP.22, 20 digits + Luhn check digit)
   - New `@Ascii` ASCII character validation annotation (full ASCII 0x00~0x7F, including control characters)
   - New `@Printable` printable ASCII character validation annotation (fixed at 0x20~0x7E, no control characters allowed)
+  - New `@FixedLength` fixed-length string validation annotation (length must equal the given value; supports trimStart / trimEnd and CHAR / CODE_POINT / GRAPHEME counting modes)
 - ✅ [No Breaking Changes](#no-breaking-changes-)
   - v1.2.1 is fully backward compatible with v1.2.0; no migration required
 - ♻️ [Internal Improvements](#internal-improvements-)
   - Extracted a shared `LuhnUtils`, unifying the Luhn check used by `@BankCard` / `@ICCID` / `@IMEI` (no behavior change)
+  - Added the Java 8-compatible `StringStripUtils` utility and the `LengthCountMode` enum to support `@FixedLength`
 - 🌍 [Internationalization Support](#internationalization-support-)
   - Full 9-language message support for the new annotation
 
@@ -333,11 +335,113 @@ if (!validator.passed()) {
 
 ---
 
+### @FixedLength Fixed-Length String Validation Annotation
+
+Added a `@FixedLength` annotation to verify that a string's length is **exactly equal to** a given character count.
+
+**Background:**
+- Many business rules are "exactly N characters", but neither Bean Validation's `@Size(min = N, max = N)` nor the existing charset annotations express this cleanly: `@Size` is verbose and does not read as "exact" on its own
+- Charset validation and length validation are **orthogonal** concerns: `@Ascii` / `@Printable` / `@Numeric` care about *which* characters appear; `@FixedLength` cares only about *how many*
+- Common cases: SMS / email / TOTP verification codes (6), logistics tracking numbers (JD 13, ZTO / SF 12), EAN-13 / UPC-A / EAN-8 barcodes, API keys (32 / 40 / 64), invite codes / short links (6-8), employee IDs / contract numbers / department codes
+
+**Features:**
+- Validates that the string length equals `length` exactly (not a `min~max` range)
+- `trimStart` / `trimEnd` are two independent boolean switches, both defaulting to `false` — the validator is a **pure function** that never mutates the input, so `@FixedLength(10)` literally means "exactly 10 characters"
+  - Enable `trimEnd` alone to tolerate trailing pollution (Excel cells, CSV `\r\n`, OCR trailing spaces, terminal paste)
+  - Enabling both is the equivalent of "length after `String.strip()`"
+- Three counting modes via the new `LengthCountMode` enum:
+  - `CHAR` (default): UTF-16 code units, equivalent to `String.length()` — fastest, covers ~95% of cases
+  - `CODE_POINT`: Unicode code points — 5 emoji count as 5, not 10
+  - `GRAPHEME`: grapheme clusters — friendly to combining characters, skin-tone and ZWJ emoji sequences
+- Null and empty strings pass validation by default
+- Full internationalization support (9 languages)
+- Chain API: `isFixedLength(Object value, int length)`, plus overloads for `trimStart` / `trimEnd` and `LengthCountMode`
+
+**Annotation Examples:**
+
+```java
+import io.github.vipxieliang.validx.enums.LengthCountMode;
+
+public class CodeDTO {
+    // Exact length, most common
+    @FixedLength(length = 6)
+    private String smsCode;               // "123456" passes; "12345" / "1234567" fail
+
+    // Excel / OCR input with trailing whitespace
+    @FixedLength(length = 8, trimEnd = true)
+    private String barcode;               // "1234567 " passes after the trailing space is stripped
+
+    // Emoji-friendly counting
+    @FixedLength(length = 5, countMode = LengthCountMode.CODE_POINT)
+    private String emojiCode;             // "😀😀😀😀😀" passes
+
+    // Compose with a charset rule: exactly 16 digits
+    @FixedLength(length = 16)
+    @Numeric
+    private String cardSerial;
+}
+```
+
+**Chain API Examples:**
+
+```java
+ValidX validator = ValidX.init();
+
+// Default: CHAR mode, no trim
+validator.isFixedLength("123456", 6);
+
+// trimEnd only
+validator.isFixedLength("123456  ", 6, false, true);
+
+// Explicit count mode
+validator.isFixedLength("😀😀😀😀😀", 5, LengthCountMode.CODE_POINT);
+
+// Full config: trimStart + trimEnd + countMode
+validator.isFixedLength("  😀😀😀😀😀", 5, true, false, LengthCountMode.CODE_POINT);
+
+if (!validator.passed()) {
+    System.out.println(validator.getErrors());
+}
+```
+
+**Real-World Use Cases:**
+
+```java
+// Use Case 1: verification code — the length itself is the protocol constraint
+public class SmsVerifyDTO {
+    @NotBlank(message = "Verification code is required")
+    @FixedLength(length = 6)
+    private String code;
+}
+
+// Use Case 2: logistics tracking number (JD 13 digits)
+public class LogisticsDTO {
+    @NotBlank(message = "Tracking number is required")
+    @FixedLength(length = 13)
+    private String trackingNo;
+}
+
+// Use Case 3: enterprise internal fixed-length code
+public class OrgDTO {
+    @FixedLength(length = 8)
+    private String employeeId;
+}
+```
+
+**Notes:**
+- Only constrains "length is exactly N"; it does not constrain the character set — stack it with `@Ascii` / `@Printable` / `@Numeric` / `@AlphaNumber` when needed
+- `trimStart` / `trimEnd` default to `false` so the validator never silently changes what it validates; enable them by intent
+- Null and empty strings pass validation (use with `@NotNull` or `@NotBlank` for required fields)
+- On the Java 8 baseline, the strip behavior is provided by `io.github.vipxieliang.validx.util.StringStripUtils` (JDK 11's `String.strip()` is unavailable)
+- Common use cases: verification codes, logistics numbers, product barcodes, API keys, invite codes / short links, employee IDs / contract numbers / department codes
+
+---
+
 ## No Breaking Changes ✅
 
 v1.2.1 contains **no breaking changes** and is fully backward compatible with v1.2.0:
 
-- No chain API signatures were changed or removed (the new `isIMSI()`, `isICCID()`, `isAscii()`, and `isPrintable()` are purely additive)
+- No chain API signatures were changed or removed (the new `isIMSI()`, `isICCID()`, `isAscii()`, `isPrintable()`, and `isFixedLength()` are purely additive)
 - No annotation semantics were altered
 - No dependency or configuration changes
 - Upgrade from v1.2.0 is a drop-in replacement; no migration steps required
@@ -348,7 +452,9 @@ v1.2.1 contains **no breaking changes** and is fully backward compatible with v1
 
 - Added the utility class `io.github.vipxieliang.validx.util.LuhnUtils`, consolidating three duplicated Luhn implementations previously scattered across `BankCardValidator`, `IMEIValidator`, and `ICCIDValidator` into a single method `LuhnUtils.isValid(String)`
 - `@BankCard`, `@ICCID`, and `@IMEI` now share the same implementation, eliminating duplicated code
-- Purely internal refactoring — **external behavior is unchanged** (all existing tests pass)
+- Added the Java 8-compatible utility class `io.github.vipxieliang.validx.util.StringStripUtils`, providing `strip()` / `stripLeading()` / `stripTrailing()` (semantically aligned with JDK 11's `String.strip*()`, using `Character.isWhitespace`), shared by the `@FixedLength` validator and chain validation so the Java 8 baseline never relies on JDK 11 APIs
+- Added the enum `io.github.vipxieliang.validx.enums.LengthCountMode`, unifying fixed-length counting modes
+- Purely internal refactoring and additive utilities — **external behavior is unchanged** (all existing tests pass)
 
 ---
 
@@ -370,6 +476,7 @@ The new annotation supports the following 9 languages:
 - `@ICCID`: "Invalid ICCID number format" (message key: `io.github.vipxieliang.validx.annotation.iccid`)
 - `@Ascii`: "Can only contain ASCII characters (0x00-0x7F, including control characters)" (message key: `io.github.vipxieliang.validx.annotation.ascii`)
 - `@Printable`: "Can only contain printable ASCII characters (0x20-0x7E, excluding control characters)" (message key: `io.github.vipxieliang.validx.annotation.printable`)
+- `@FixedLength`: "String length must be exactly {length} characters" (message key: `io.github.vipxieliang.validx.annotation.fixed.length`; `{length}` is the dynamically substituted expected count)
 
 All language packs maintain consistent message format with proper Unicode encoding.
 
@@ -403,7 +510,13 @@ Comprehensive test coverage for the new feature (both annotation and chain paths
 **Printable Chain Validation Tests:**
 - `PrintableValidationChainTest`: 20 test methods covering null / empty values, valid printable ASCII strings (including lower/upper boundary and full range), rejection of control characters (TAB / LF / CR / DEL / NUL), rejection of non-ASCII (Chinese, Emoji, 0x80), and chaining with other rules (`isUpper`, multiple `isPrintable` calls, multi-failure accumulation)
 
-**Total:** 81 new test methods, all passing ✅
+**FixedLength Validator Tests (Bean Validation Framework):**
+- `FixedLengthValidatorTest`: 18 test methods covering null / empty values passing, exact-length basics (too short / too long), leading zeros preserved by default, independent `trimStart` / `trimEnd` switch behavior, the three `CHAR` / `CODE_POINT` / `GRAPHEME` counting modes (including the contrast where 5 emoji count as 10 under CHAR but 5 under CODE_POINT and GRAPHEME), and `{length}` placeholder substitution in the error message
+
+**FixedLength Chain Validation Tests:**
+- `FixedLengthValidationChainTest`: 18 test methods covering null / empty values, the 4 `isFixedLength` overloads (default / trim / countMode / full config), leading zeros preserved by default, each trim combination, the three-way emoji counting contrast, the error-message placeholder, and chained multiple calls with multi-failure accumulation
+
+**Total:** 117 new test methods, all passing ✅
 
 ---
 

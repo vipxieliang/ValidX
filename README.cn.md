@@ -643,6 +643,7 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
 | **基础验证** | [@Xdigit](#xdigit) | 十六进制字符串验证 | 1.0.0 | - |
 | **基础验证** | [@Ascii](#ascii) | ASCII 字符串验证（完整 ASCII 0x00~0x7F，含控制字符） | 1.2.1 | - |
 | **基础验证** | [@Printable](#printable) | 可打印 ASCII 验证（0x20~0x7E，不含任何控制字符） | 1.2.1 | - |
+| **基础验证** | [@FixedLength](#fixedlength) | 定长字符串验证（长度恰好等于指定值，可选 trim 与计数口径） | 1.2.1 | - |
 | **基础验证** | [@Longitude](#longitude) | 经度验证（-180到180） | 1.0.0 | - |
 | **基础验证** | [@Latitude](#latitude) | 纬度验证（-90到90） | 1.0.0 | - |
 | **基础验证** | [@GeoPoint](#geopoint) | 地理坐标对验证 | 1.0.0 | - |
@@ -1514,6 +1515,42 @@ ValidX 提供了丰富的验证注解，涵盖多种场景。以下是目前支�
   ```
 * 典型场景：用户昵称 / 备注 / 评论内容（应当可显示，不应混入不可见的控制字节）；打印标签、票据、短信内容；导出 TXT / 日志时排除特殊控制字符，避免显示乱码；UI 输入框的语义层面约束（"用户能看到的内容"）。
 * 相关：若需要放行换行等多行文本，请使用 [@Ascii](#ascii)（0x00~0x7F）。
+
+[↑ 返回快速查询表](#快速查询表)
+
+#### @FixedLength
+* 校验规则：定长字符串验证，验证字符串长度是否**恰好等于** `length`。与字符集校验正交、可叠加，例如 `@FixedLength(length = 16) @Numeric` 表示"恰好 16 位纯数字"。
+* 配置参数：
+  - `length`：必填，定长位数，按 `countMode` 口径计数
+  - `trimStart`：是否先去除**前导**空白，默认 `false`（校验器是纯函数，不改输入，所见即所得）
+  - `trimEnd`：是否先去除**尾部**空白，默认 `false`；处理 Excel 单元格、CSV 行尾 `\r\n`、OCR 末尾空白等"尾随污染"时单独开启即可
+  - `countMode`：长度计数口径，默认 `LengthCountMode.CHAR`（等价 `String.length()`）；可选 `CODE_POINT`（按 Unicode 码点，emoji 友好）、`GRAPHEME`（按字素簇，组合字符友好）
+* 示例格式：`123456`（短信验证码）、`JD12345678901`（京东快递单号 13 位）、`00012345`（前导零默认被保留）
+* 使用示例：
+  ```java
+  import io.github.vipxieliang.validx.enums.LengthCountMode;
+
+  // 注解方式：短信验证码固定 6 位
+  @FixedLength(length = 6)
+  private String smsCode;
+
+  // Excel / OCR 来的字符串常带尾随空白，单独开启 trimEnd
+  @FixedLength(length = 8, trimEnd = true)
+  private String barcode;
+
+  // emoji 友好：按 Unicode 码点计数
+  @FixedLength(length = 5, countMode = LengthCountMode.CODE_POINT)
+  private String emojiCode;
+
+  // 链式调用方式（4 个重载）
+  ValidX validator = ValidX.init();
+  validator.isFixedLength("123456", 6);                                              // 默认：CHAR 口径、不 trim
+  validator.isFixedLength("123456  ", 6, false, true);                               // 开启 trimEnd
+  validator.isFixedLength("😀😀😀😀😀", 5, LengthCountMode.CODE_POINT);                // 指定计数口径
+  validator.isFixedLength("  😀😀😀😀😀", 5, true, false, LengthCountMode.CODE_POINT); // 全配重载
+  ```
+* 典型场景：短信 / 邮箱 / TOTP 验证码（6 位）；物流单号（京东 13 位，中通 / 顺丰 12 位）；EAN-13 / UPC-A / EAN-8 条码；API Key（32 / 40 / 64）；邀请码 / 短链（6-8）；工号、合同号、部门编号等企业内部定长编码。
+* 相关：本注解只约束"位数恰好为 N"，不约束字符内容；若需同时限制字符集，请叠加 [@Ascii](#ascii) / [@Printable](#printable) / [@AlphaNumber](#alphanumber) 等。若协议本身带校验位或复杂格式（如 `@ISBN`、`@ICCID`），应优先使用对应专属注解。
 
 [↑ 返回快速查询表](#快速查询表)
 
